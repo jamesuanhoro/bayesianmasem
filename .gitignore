@@ -50,4 +50,4 @@ po/*~
 rsconnect/
 
 # Stan source
-src/*
+src/
