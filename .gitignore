@@ -51,3 +51,6 @@ rsconnect/
 
 # Stan source
 src/
+
+# Other files
+trash.R
