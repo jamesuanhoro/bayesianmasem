@@ -38,4 +38,4 @@ LinkingTo:
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
 Remotes: 
-    github:stan-dev/cmdstanr
+    stan-dev/cmdstanr
