@@ -177,3 +177,46 @@ get_asy_cov <- function(r_mat) {
     )
   return(ret)
 }
+
+#' Method hash function
+#' @description A function that swaps method from string to integer
+#' and vice-versa
+#' @inheritParams .converter_helper
+#' @returns If search_term is integer, returns string and vice-versa
+#' @keywords internal
+.method_hash <- function(search_term = NULL) {
+  # Reserving 90+ for methods with no residuals
+  list_methods <- c(
+    "normal" = 1,
+    "lasso" = 2,
+    "logistic" = 3,
+    "GDP" = 4,
+    "WB" = 90,
+    "WB-cond" = 91,
+    "WW" = 92,
+    "none" = 100
+  )
+  converted_value <- .converter_helper(search_term, list_methods)
+  return(converted_value)
+}
+
+#' converter function
+#' @description A function that swaps type from string to integer
+#' and vice-versa
+#' @param search_term Integer or string or NULL
+#' @param str_list Character vector of accepted values
+#' @returns If search_term is integer, returns string and vice-versa
+#' @keywords internal
+.converter_helper <- function(search_term, str_list) {
+  if (is.null(search_term)) {
+    converted_value <- names(str_list)
+  } else if (is.integer(search_term) || is.numeric(search_term)) {
+    search_term <- as.integer(search_term)
+    converted_value <- names(str_list)[which(search_term == str_list)]
+  } else if (is.character(search_term)) {
+    idx <- which(tolower(search_term) == tolower(names(str_list)))
+    converted_value <- as.integer(str_list[idx])
+  }
+
+  return(converted_value)
+}

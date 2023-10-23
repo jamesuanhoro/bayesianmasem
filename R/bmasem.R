@@ -47,8 +47,8 @@
 #' maximum tree depth.
 #' @param chains (positive integer) The number of Markov chains to run.
 #' @param ncores (positive integer) The number of chains to run in parallel.
-#' @param priors An object of ...
-#' See ... for more information.
+#' @param priors An object of \code{\link{bmasempriors-class}}.
+#' See \code{\link{new_bmasempriors}} for more information.
 #' @param show (Logical) If TRUE, show table of results, if FALSE, do not
 #' show table of results. As an example, use FALSE for simulation studies.
 #' @param show_messages (Logical) If TRUE, show messages from Stan sampler,
@@ -119,7 +119,7 @@ bmasem <- function(
     max_treedepth = 10,
     chains = 3,
     ncores = max(parallel::detectCores() - 2, 1),
-    priors = NULL,
+    priors = new_bmasempriors(),
     show = TRUE,
     show_messages = TRUE,
     cluster = NULL,
@@ -154,18 +154,20 @@ bmasem <- function(
     lav_fit <- lavaan::cfa(
       model,
       data = data, group = group, std.lv = TRUE,
+      likelihood = "wishart",
       do.fit = FALSE, se = "none", test = "none", orthogonal = orthogonal
     )
   } else {
     lav_fit <- lavaan::cfa(
       model,
       sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
+      likelihood = "wishart",
       do.fit = FALSE, se = "none", test = "none", orthogonal = orthogonal
     )
   }
 
   # Obtain data list for Stan
-  # data_list <- create_data_list_meta(
+  # data_list <- .create_data_list_meta(
   #   lavaan_object = lav_fit,
   #   method = method,
   #   type = type,

@@ -23,7 +23,7 @@ bmasem(
   max_treedepth = 10,
   chains = 3,
   ncores = max(parallel::detectCores() - 2, 1),
-  priors = NULL,
+  priors = new_bmasempriors(),
   show = TRUE,
   show_messages = TRUE,
   cluster = NULL,
@@ -83,8 +83,8 @@ maximum tree depth.}
 
 \item{ncores}{(positive integer) The number of chains to run in parallel.}
 
-\item{priors}{An object of ...
-See ... for more information.}
+\item{priors}{An object of \code{\link{bmasempriors-class}}.
+See \code{\link{new_bmasempriors}} for more information.}
 
 \item{show}{(Logical) If TRUE, show table of results, if FALSE, do not
 show table of results. As an example, use FALSE for simulation studies.}
