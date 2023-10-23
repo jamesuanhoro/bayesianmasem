@@ -54,3 +54,7 @@ src/
 
 # Other files
 trash.R
+
+# CmdStan files
+inst/cmdstan/*
+!inst/cmdstan/*.stan

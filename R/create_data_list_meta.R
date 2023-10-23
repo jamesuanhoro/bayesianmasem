@@ -10,7 +10,8 @@
     type = "re",
     simple_struc = TRUE,
     priors = NULL,
-    cluster = NULL) {
+    cluster = NULL,
+    correlation = TRUE) {
   data_list <- list()
 
   # Get number of groups
@@ -47,28 +48,41 @@
   methods::validObject(priors) # validate priors
   # Shape parameter for LKJ of interfactor corr
   data_list$shape_phi_c <- priors@lkj_shape
-  data_list$sl_par <- priors@sl_par # sigma loading parameter
-  data_list$fs_par <- priors@fs_par # sigma factor sd parameter
-  data_list$rs_par <- priors@rs_par # residual sd parameter
+  data_list$rm_par <- priors@rm_par # sigma(tau) parameter
   data_list$rc_par <- priors@rc_par # residual corr parameter
-  data_list$sc_par <- priors@sc_par # sigma coefficients parameter
-  data_list$fc_par <- priors@fc_par # factor correlation parameter
-  data_list$mln_par <- priors@mln_par # meta-reg intercept
-  data_list$mlb_par <- priors@mlb_par # meta-reg coefficient
+  data_list$rm_i_l_par <- priors@mr_par # meta-reg location(intercept)
+  data_list$rm_i_s_par <- priors@sr_par # meta-reg scale(intercept)
+  data_list$rm_b_s_par <- priors@br_par # meta-reg scale(beta)
 
   # Sample cov
   data_list$S <- lapply(lavaan::lavInspect(
     lavaan_object, "SampStat"
   ), "[[", "cov")
+  if (isTRUE(correlation)) {
+    data_list$S <- lapply(data_list$S, cov2cor)
+  } else {
+    stop("Only correlation analysis methods are implemented right now.")
+  }
   # Number of items
   data_list$Ni <- nrow(data_list$S[[1]])
   # Sample size
   data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
 
-  # Loading pattern, 0s and 1s
-  data_list$loading_pattern <- (param_structure$lambda > 0) * 1
+  # Loading pattern, 0s and 1s (fixme)
+  data_list$loading_pattern <- param_structure$lambda
   # Number of factors
   data_list$Nf <- ncol(data_list$loading_pattern)
+  # location(loading) parameter
+  data_list$load_est <- matrix(
+    priors@ml_par, data_list$Ni, data_list$Nf
+  )
+  # sigma(loading) parameter
+  data_list$load_se <- matrix(
+    priors@sl_par, data_list$Ni, data_list$Nf
+  )
+  data_list$loading_fixed <- matrix(
+    -999, data_list$Ni, data_list$Nf
+  )
 
   # Is this an SEM or a CFA?
   psi_mat <- param_structure$psi
@@ -77,8 +91,11 @@
     # This is a CFA
     data_list$sem_indicator <- 0
     data_list$complex_struc <- as.integer(ifelse(isFALSE(simple_struc), 1, 0))
-    # Set to 0 for uncorrelated factors, 1 for correlated
-    data_list$corr_fac <- ifelse(sum_off_diag_psi == 0, 0, 1)
+    data_list$corr_mask <- diag(data_list$Nf)
+    data_list$corr_mask[lower.tri(data_list$corr_mask)] <-
+      (psi_mat[lower.tri(psi_mat)] != 0) + 0
+    data_list$corr_mask[upper.tri(data_list$corr_mask)] <-
+      t(data_list$corr_mask)[upper.tri(data_list$corr_mask)]
   } else {
     stop("Only CFAs are implemented right now.")
     # This is an SEM
@@ -104,7 +121,7 @@
   data_list$markers <- array(dim = data_list$Nf)
   for (j in seq_len(ncol(data_list$loading_pattern))) {
     data_list$markers[j] <- which(
-      data_list$loading_pattern[, j] == 1
+      data_list$loading_pattern[, j] != 0
     )[1]
   }
 
@@ -131,11 +148,22 @@
   data_list$p_c <- 0
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
 
-  # Handle missing data
-  data_list <- prepare_missing_data_list(data_list)
-
-  # 1 for meta-analysis
-  data_list$meta <- 1
+  # Fail on missing data
+  if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
+    stop("All correlation matrices must have complete data")
+  } else {
+    data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
+      vec <- cov2cor(s)[lower.tri(s, diag = FALSE)]
+      g_map(vec)
+    }))
+    ni_sq <- ncol(data_list$r_obs_vec)
+    data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
+    for (i in seq_len(data_list$Ng)) {
+      data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
+        data_list$S[[i]], data_list$Np[i]
+      )
+    }
+  }
 
   return(data_list)
 }

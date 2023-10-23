@@ -10,7 +10,8 @@
   type = "re",
   simple_struc = TRUE,
   priors = NULL,
-  cluster = NULL
+  cluster = NULL,
+  correlation = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,10 @@ Asssume there are five groups, the first three belong to cluster 1
 and the last two belong to cluster 2,
 then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 This feature is experimental, see details below.}
+
+\item{correlation}{(LOGICAL)
+If TRUE (default): assume simple structure;
+If FALSE: estimate all cross-loadings using generalized}
 }
 \value{
 Data list object used in fitting Stan model

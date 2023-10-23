@@ -167,21 +167,22 @@ bmasem <- function(
   }
 
   # Obtain data list for Stan
-  # data_list <- .create_data_list_meta(
-  #   lavaan_object = lav_fit,
-  #   method = method,
-  #   type = type,
-  #   simple_struc = simple_struc,
-  #   priors = priors,
-  #   cluster = cluster
-  # )
+  data_list <- .create_data_list_meta(
+    lavaan_object = lav_fit,
+    method = method,
+    type = type,
+    simple_struc = simple_struc,
+    priors = priors,
+    cluster = cluster,
+    correlation = correlation
+  )
 
   message("User input fully processed :)\n Now to modeling.")
 
-  # stan_fit <- target_fitter(
-  #   target, data_list, seed, warmup, sampling, refresh,
-  #   adapt_delta, max_treedepth, chains, ncores, show_messages
-  # )
+  stan_fit <- .target_fitter(
+    target, data_list, seed, warmup, sampling, refresh,
+    adapt_delta, max_treedepth, chains, ncores, show_messages
+  )
 
   # mbsem_results <- clean_up_stan_fit(
   #   stan_fit = stan_fit, data_list = data_list, priors = priors
@@ -191,5 +192,6 @@ bmasem <- function(
   # }
 
   # return(mbsem_results)
-  return(NULL)
+  # return(NULL)
+  return(stan_fit)
 }

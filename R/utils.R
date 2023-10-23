@@ -220,3 +220,94 @@ get_asy_cov <- function(r_mat) {
 
   return(converted_value)
 }
+
+#' Initial values for Stan fitter
+#' @description A function that provides initial values for Stan fitter
+#' @param data_list A data list object
+#' @returns A function with initial values
+#' @keywords internal
+.init_fx <- function(dl) {
+  function() {
+    list(
+      resids = rep(0, (dl$method < 90) * ncol(dl$r_obs_vec)),
+      loadings_complex = rep(
+        0,
+        dl$complex_struc * (
+          prod(dim(dl$loading_pattern)) - max(dl$loading_pattern) -
+            sum(dl$loading_fixed != -999)
+        )
+      )
+    )
+  }
+}
+
+#' target fitter function
+#' @description A function that takes user input and fits the
+#' Stan model.
+#' @param data_list Data list object passed to Stan
+#' @inheritParams bmasem
+#' @returns Fitted Stan model
+#' @keywords internal
+.target_fitter <- function(
+    target,
+    data_list,
+    seed,
+    warmup,
+    sampling,
+    refresh,
+    adapt_delta,
+    max_treedepth,
+    chains,
+    ncores,
+    show_messages) {
+  init_resid <- .init_fx(data_list)
+
+  if (target == "rstan") {
+    suppressWarnings(stan_fit <- rstan::sampling(
+      stanmodels$mcfar,
+      data = data_list,
+      chains = chains,
+      cores = ncores,
+      seed = seed,
+      warmup = warmup,
+      iter = warmup + sampling,
+      refresh = refresh,
+      init = init_resid,
+      control = list(
+        adapt_delta = adapt_delta,
+        max_treedepth = max_treedepth
+      ),
+      show_messages = show_messages
+    ))
+    message(rstan::check_hmc_diagnostics(stan_fit))
+  } else if (target == "cmdstan") {
+    message(paste0(
+      "Compiling Stan code ...\n",
+      "This takes a while the first time you run a CFA ",
+      "and the first time you run an SEM"
+    ))
+
+    mcfar <- cmdstanr::cmdstan_model(
+      system.file("cmdstan/mcfar.stan", package = "bayesianmasem"),
+      stanc_options = list("O1")
+    )
+
+    message("Fitting Stan model ...")
+
+    stan_fit <- mcfar$sample(
+      data = data_list,
+      seed = seed,
+      iter_warmup = warmup,
+      iter_sampling = sampling,
+      refresh = refresh,
+      init = init_resid,
+      adapt_delta = adapt_delta,
+      max_treedepth = max_treedepth,
+      chains = chains,
+      parallel_chains = ncores,
+      show_messages = show_messages
+    )
+  }
+
+  return(stan_fit)
+}
