@@ -11,7 +11,8 @@ new_bmasempriors(
   rc_par = 2,
   mr_par = log(0.8),
   sr_par = 0.7,
-  br_par = 0.5
+  br_par = 0.5,
+  rm_par = 0.15
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ on the log-RMSEA.}
 
 \item{br_par}{(positive real) The scale parameter of the normal prior
 on the regression coefficients for the log-RMSEA.}
+
+\item{rm_par}{(positive real) The scale parameter of the normal prior
+on the tau / CRMR parameter.}
 }
 \value{
 An object of \code{\link{bmasempriors-class}}

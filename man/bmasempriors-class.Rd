@@ -29,5 +29,8 @@ on the log-RMSEA.}
 
 \item{\code{br_par}}{(positive real) The scale parameter of the normal prior
 on the regression coefficients for the log-RMSEA.}
+
+\item{\code{rm_par}}{(positive real) The scale parameter of the normal prior
+on the tau / CRMR parameter.}
 }}
 

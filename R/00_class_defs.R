@@ -13,6 +13,8 @@
 #' on the log-RMSEA.
 #' @slot br_par (positive real) The scale parameter of the normal prior
 #' on the regression coefficients for the log-RMSEA.
+#' @slot rm_par (positive real) The scale parameter of the normal prior
+#' on the tau / CRMR parameter.
 #'
 #' @name bmasempriors-class
 #' @rdname bmasempriors-class
@@ -26,7 +28,8 @@ methods::setClass(
     rc_par = "numeric",
     mr_par = "numeric",
     sr_par = "numeric",
-    br_par = "numeric"
+    br_par = "numeric",
+    rm_par = "numeric"
   ),
   prototype = list(
     lkj_shape = 2.0,
@@ -35,7 +38,8 @@ methods::setClass(
     rc_par = 2.0,
     mr_par = log(0.8),
     sr_par = 0.7,
-    br_par = 0.5
+    br_par = 0.5,
+    rm_par = 0.15
   )
 )
 
@@ -55,6 +59,8 @@ methods::setClass(
 #' on the log-RMSEA.
 #' @param br_par (positive real) The scale parameter of the normal prior
 #' on the regression coefficients for the log-RMSEA.
+#' @param rm_par (positive real) The scale parameter of the normal prior
+#' on the tau / CRMR parameter.
 #' @returns An object of \code{\link{bmasempriors-class}}
 #' @examples
 #' \dontrun{
@@ -79,7 +85,8 @@ new_bmasempriors <- function(
     rc_par = 2.0,
     mr_par = log(0.8),
     sr_par = 0.7,
-    br_par = 0.5) {
+    br_par = 0.5,
+    rm_par = 0.15) {
   bm_priors_object <- methods::new("bmasempriors")
   bm_priors_object <- methods::initialize(
     bm_priors_object,
@@ -89,7 +96,8 @@ new_bmasempriors <- function(
     rc_par = rc_par,
     mr_par = mr_par,
     sr_par = sr_par,
-    br_par = br_par
+    br_par = br_par,
+    rm_par = rm_par
   )
   return(bm_priors_object)
 }
