@@ -59,7 +59,7 @@
     lavaan_object, "SampStat"
   ), "[[", "cov")
   if (isTRUE(correlation)) {
-    data_list$S <- lapply(data_list$S, cov2cor)
+    data_list$S <- lapply(data_list$S, stats::cov2cor)
   } else {
     stop("Only correlation analysis methods are implemented right now.")
   }
@@ -153,7 +153,7 @@
     stop("All correlation matrices must have complete data")
   } else {
     data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
-      vec <- cov2cor(s)[lower.tri(s, diag = FALSE)]
+      vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
       g_map(vec)
     }))
     ni_sq <- ncol(data_list$r_obs_vec)

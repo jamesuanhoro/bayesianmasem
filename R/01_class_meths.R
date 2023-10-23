@@ -1,3 +1,12 @@
+#' @importFrom methods show
+methods::setMethod(
+  "show",
+  "bmasem",
+  function(object) {
+    pp_summary(object)
+  }
+)
+
 methods::setValidity("bmasempriors", function(object) {
   if (any(
     c(

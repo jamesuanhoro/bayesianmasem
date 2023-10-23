@@ -1,3 +1,14 @@
+methods::setClass("stan_fit", contains = "stanfit")
+methods::setClass("CmdStanMCMC")
+methods::setClass("CmdStanFit")
+methods::setClass("R6")
+methods::setClassUnion(
+  "cmdstan_classes", c("CmdStanMCMC", "CmdStanFit", "R6")
+)
+methods::setClassUnion(
+  "all_the_classes", c("stanfit", "cmdstan_classes")
+)
+
 #' A class for setting up priors.
 #'
 #' @slot lkj_shape (positive real) The shape parameter of the LKJ-prior on the
@@ -100,4 +111,33 @@ new_bmasempriors <- function(
     rm_par = rm_par
   )
   return(bm_priors_object)
+}
+
+#' A class for models fitted with the package.
+#'
+#' @slot major_parameters Summary statistics for structural parameters.
+#' @slot minor_factor_matrix Summary statistics for standardized
+#' residual covariances.
+#' @slot data_list Data used to fit the model.
+#' @slot priors Priors used to fit the model.
+#' @slot stan_fit Fitted RStan or CmdStan model.
+#' @slot version Package version used to fit model.
+#'
+#' @name bmasem-class
+#' @rdname bmasem-class
+#' @export
+methods::setClass(
+  "bmasem",
+  methods::representation(
+    major_parameters = "data.frame",
+    minor_factor_matrix = "data.frame",
+    data_list = "list",
+    priors = "bmasempriors",
+    stan_fit = "all_the_classes",
+    version = "character"
+  )
+)
+
+new_bmasem <- function() {
+  methods::new("bmasem")
 }

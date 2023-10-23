@@ -1,10 +1,9 @@
 #' Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
 #'
-#' @description A function to fit fixed- or
-#' random-effects Bayesian meta-analytic CFAs
-#' with minor factors assumed \insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.
-#' Builds off work by \insertCite{wu_quantifying_2015;textual}{bayesianmasem}.
-#' Does not yet accomodate moderators, and covariance matrices must be complete.
+#' @description A function to fit fixed-, random-effects, and clustered
+#' Bayesian meta-analytic CFAs with minor factors assumed.
+#' Does not yet accomodate moderators,
+#' and correlation matrices must be complete.
 #' This will change in the near future.
 #' @param model A description of the user-specified model, lavaan syntax.
 #' @param data An optional data frame containing the observed variables used in
@@ -25,6 +24,9 @@
 #' @param type (character) One of "fe", "re", or "dep" for fixed-effects,
 #' random-effects, and dependent-samples MASEM respectively.
 #' The "dep" argument is experimental, see details below.
+#' @param orthogonal (LOGICAL)
+#' If TRUE: constrain all factors orthogonal (overrides model syntax);
+#' If FALSE: according to model syntax.
 #' @param simple_struc (LOGICAL) Only relevant for CFAs.
 #' If TRUE: analyze correlation matrices;
 #' If FALSE: analyze covariance matrices.
@@ -55,7 +57,7 @@
 #' if FALSE, hide messages.
 #' @param target (character) One of "rstan" or "cmdstan". If "cmdstan",
 #' CmdStan and CmdStanR need to be installed on the device.
-#' @returns An object of ...
+#' @returns An object of \code{\link{bmasem-class}}
 #' @details
 #' CFAs assume standardized factors.
 #' Latent variable regression models are not yet implemented.
@@ -127,27 +129,27 @@ bmasem <- function(
   message("Processing user input ...")
 
   # Model cannot be NULL
-  # user_input_check("model", model)
+  .user_input_check("model", model)
 
-  # Priors must be class mbsempriors
-  # user_input_check("priors", priors)
+  # Priors must be class bmasempriors
+  .user_input_check("priors", priors)
 
   # method must be valid
-  # user_input_check("method-meta", method)
+  .user_input_check("method", method)
 
   # type must be valid
   # Future: when moderators are added, warn user that fixed-effects
   # ignores moderators.
-  # user_input_check("type-meta", type)
+  .user_input_check("type", type)
 
   # Must provide either data and group or sample_cov and sample_nobs
-  # user_input_check("data-meta", data, group, sample_cov, sample_nobs)
+  .user_input_check("data", data, group, sample_cov, sample_nobs)
 
   # target must be valid
-  # user_input_check("target", target)
+  .user_input_check("target", target)
 
   # check for cluster when type = "dep"
-  # user_input_check("meta-cluster", type, target, cluster)
+  .user_input_check("cluster", type, cluster)
 
   # Run lavaan fit
   if (!is.null(data)) {
@@ -184,14 +186,12 @@ bmasem <- function(
     adapt_delta, max_treedepth, chains, ncores, show_messages
   )
 
-  # mbsem_results <- clean_up_stan_fit(
-  #   stan_fit = stan_fit, data_list = data_list, priors = priors
-  # )
-  # if (show) {
-  #   show(mbsem_results)
-  # }
+  bma_results <- .clean_up_stan_fit(
+    stan_fit = stan_fit, data_list = data_list, priors = priors
+  )
+  if (show) {
+    show(bma_results)
+  }
 
-  # return(mbsem_results)
-  # return(NULL)
-  return(stan_fit)
+  return(bma_results)
 }

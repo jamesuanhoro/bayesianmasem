@@ -58,6 +58,10 @@ If FALSE: estimate all cross-loadings using generalized}
 random-effects, and dependent-samples MASEM respectively.
 The "dep" argument is experimental, see details below.}
 
+\item{orthogonal}{(LOGICAL)
+If TRUE: constrain all factors orthogonal (overrides model syntax);
+If FALSE: according to model syntax.}
+
 \item{simple_struc}{(LOGICAL) Only relevant for CFAs.
 If TRUE: analyze correlation matrices;
 If FALSE: analyze covariance matrices.}
@@ -103,14 +107,13 @@ This feature is experimental, see details below.}
 CmdStan and CmdStanR need to be installed on the device.}
 }
 \value{
-An object of ...
+An object of \code{\link{bmasem-class}}
 }
 \description{
-A function to fit fixed- or
-random-effects Bayesian meta-analytic CFAs
-with minor factors assumed \insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.
-Builds off work by \insertCite{wu_quantifying_2015;textual}{bayesianmasem}.
-Does not yet accomodate moderators, and covariance matrices must be complete.
+A function to fit fixed-, random-effects, and clustered
+Bayesian meta-analytic CFAs with minor factors assumed.
+Does not yet accomodate moderators,
+and correlation matrices must be complete.
 This will change in the near future.
 }
 \details{

@@ -61,7 +61,7 @@ g_map <- function(r_vec) {
 #' of log(correlation matrix).
 #' @export
 get_avar_mat <- function(r_mat, n, acov_mat = NULL) {
-  r_mat <- cov2cor(r_mat)
+  r_mat <- stats::cov2cor(r_mat)
   if (is.null(acov_mat)) {
     omega_r <- get_asy_cov(r_mat) / n
   } else {
@@ -176,6 +176,32 @@ get_asy_cov <- function(r_mat) {
         r_s[, 2] * r_s[, 4] * r_s[, 6] + r_s[, 3] * r_s[, 5] * r_s[, 6]
     )
   return(ret)
+}
+
+#' Type hash function
+#' @description A function that swaps type from string to integer
+#' and vice-versa
+#' @param elaborate (LOGICAL) If TRUE, print full names, otherwise
+#' print abbreviations
+#' @inheritParams .converter_helper
+#' @returns If search_term is integer, returns string and vice-versa
+#' @keywords internal
+.type_hash <- function(search_term = NULL, elaborate = FALSE) {
+  list_types <- c(
+    "fe" = 1,
+    "re" = 2,
+    "dep" = 3
+  )
+  if (isTRUE(elaborate)) {
+    # Only use when feeding integers
+    list_types <- c(
+      "Fixed-effects" = 1,
+      "Random-effects" = 2,
+      "Dependent-samples" = 3
+    )
+  }
+  converted_value <- .converter_helper(search_term, list_types)
+  return(converted_value)
 }
 
 #' Method hash function
@@ -310,4 +336,262 @@ get_asy_cov <- function(r_mat) {
   }
 
   return(stan_fit)
+}
+
+#' Check user input function
+#' @description A function that checks user input for adequacy
+#' and fails on inadequate input.
+#' @param type string for type of check
+#' @param object_1 Object to check
+#' @param object_2 Object to check
+#' @param object_3 Object to check
+#' @param object_4 Object to check
+#' @returns NULL
+#' @keywords internal
+.user_input_check <- function(
+    type,
+    object_1 = NULL,
+    object_2 = NULL,
+    object_3 = NULL,
+    object_4 = NULL) {
+  if (type == "model" && is.null(object_1)) {
+    stop("Model cannot be null")
+  }
+
+  if (type == "priors") {
+    if (!inherits(object_1, "bmasempriors")) {
+      stop("See ?new_bmasempriors for how to set up priors.")
+    }
+  }
+
+  if (type == "method") {
+    accepted_methods <- .method_hash()
+    accepted_methods <- accepted_methods[
+      which(!grepl("WB|WW", accepted_methods))
+    ]
+    if (!tolower(object_1) %in% tolower(accepted_methods)) {
+      err_msg <- paste0(
+        "method must be one of the following: ",
+        paste0("\"", accepted_methods, "\"", collapse = ", ")
+      )
+      stop(err_msg)
+    }
+  }
+
+  if (type == "data") {
+    if (
+      (is.null(object_1) || is.null(object_2)) &&
+        (is.null(object_3) || is.null(object_4))
+    ) {
+      stop(paste0(
+        "User must provide either:\n\t",
+        "(i) a dataset and group variable or\n\t",
+        "(ii) sample covariance matrices and sample sizes"
+      ))
+    }
+  }
+
+  if (type == "type") {
+    accepted_types <- .type_hash()
+    err_msg <- paste0(
+      "type must be one of the following: ",
+      paste0(
+        "\"", accepted_types, "\"",
+        collapse = ", "
+      )
+    )
+    if (is.null(object_1)) stop(err_msg)
+    if (!tolower(object_1) %in% accepted_types) stop(err_msg)
+  }
+
+  if (type == "cluster") {
+    accepted_types <- .type_hash()
+    if (object_1 == "dep") {
+      if (is.null(object_2)) {
+        stop("supply cluster information when type = \"dep\"")
+      }
+    }
+  }
+
+  if (type == "target") {
+    err_msg <- paste0(
+      "type must be either: \"rstan\" or \"cmdstan\""
+    )
+    if (is.null(object_1)) stop(err_msg)
+    if (!object_1 %in% c("rstan", "cmdstan")) stop(err_msg)
+    if (object_1 == "cmdstan") {
+      # CmdStan path must be set
+      tryCatch(cmdstanr::cmdstan_path(),
+        error = function(e) {
+          stop(paste0(
+            "Error: CmdStan path has not been set yet.", " ",
+            "See ?cmdstanr::set_cmdstan_path()."
+          ))
+        }
+      )
+    }
+  }
+
+  return(NULL)
+}
+
+#' Posterior summary helper function
+#' @description A function that slightly modifies the default summary function
+#' in posterior package.
+#' @param stan_fit Fitted Stan object
+#' @param variable Variable(s) to search for in Stan
+#' @param interval Confidence interval to select
+#' @param major If TRUE, add some preamble for printing the major
+#' parameters table.
+#' @returns Summary of posterior draws
+#' @keywords internal
+.bmasem_post_sum <- function(stan_fit, variable, interval = .9, major = FALSE) {
+  draws <- posterior::subset_draws(
+    posterior::as_draws(stan_fit),
+    variable = variable
+  )
+
+  lo_lim <- (1.0 - interval) / 2.0
+  up_lim <- 1.0 - lo_lim # nolint
+  result <- as.data.frame(posterior::summarise_draws(
+    draws, "mean", "median", "sd", "mad",
+    ~ quantile(.x, probs = c(lo_lim, up_lim), na.rm = TRUE),
+    posterior::default_convergence_measures()
+  ))
+
+  if (isTRUE(major)) {
+    result <- cbind(
+      variable = result$variable,
+      group = "", from = "", op = "", to = "",
+      result[, -1]
+    )
+  }
+
+  return(result)
+}
+
+#' Create major parameters helper function
+#' @description A function that creates the table of major parameters
+#' @param stan_fit Fitted Stan object
+#' @param data_list Data list object passed to Stan
+#' @param interval Confidence interval to select
+#' @returns Summary of posterior draws
+#' @keywords internal
+.create_major_params <- function(stan_fit, data_list, interval = .9) {
+  indicator_labels <- rownames(data_list$loading_pattern)
+  factor_labels <- colnames(data_list$loading_pattern)
+
+  rmsea_params <- c("rmsea_mn", "rmsea_be", "rmsea_wi", "prop_be")
+  rmsea_names <- c(
+    paste0("RMSEA (", c("Overall", "Between", "Within"), ")"),
+    "% dispersion between"
+  )
+  params <- c("rms_src", rmsea_params)
+  from_list <- c("RMSE", rmsea_names)
+
+  phi_idxs <- which(lower.tri(data_list$corr_mask), arr.ind = TRUE)
+  if (nrow(phi_idxs) > 0) {
+    phi_idxs <- paste0("phi_mat[", apply(
+      phi_idxs, 1, paste0,
+      collapse = ","
+    ), "]")
+    params <- c(params, phi_idxs)
+  }
+
+  load_idxs <- paste0("Load_mat[", apply(which(
+    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1),
+    arr.ind = TRUE
+  ), 1, paste0, collapse = ","), "]")
+  params <- c(params, load_idxs)
+
+  if (data_list$Nce > 0) {
+    params <- c(params, "res_cor")
+  }
+
+  major_parameters <- .bmasem_post_sum(
+    stan_fit = stan_fit, variable = params, interval = interval, major = TRUE
+  )
+
+  major_parameters <- .modify_major_params(
+    major_parameters,
+    which(major_parameters$variable %in% c("rms_src")),
+    group = "Goodness of fit",
+    from = from_list[1]
+  )
+
+  idxs <- which(major_parameters$variable %in% rmsea_params)
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Dispersion between and within clusters", op = "",
+    from = rmsea_names
+  )
+
+  idxs <- which(grepl("Load\\_mat", major_parameters$variable))
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Factor loadings", op = "=~",
+    from = factor_labels[as.integer(
+      gsub("Load_mat\\[\\d+,|\\]", "", major_parameters[idxs, ]$variable)
+    )],
+    to = indicator_labels[as.integer(
+      gsub("Load_mat\\[|,\\d+\\]", "", major_parameters[idxs, ]$variable)
+    )]
+  )
+
+  idxs <- which(grepl("res\\_cor", major_parameters$variable))
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Error correlations", op = "~~",
+    from = indicator_labels[data_list$error_mat[, 1]],
+    to = indicator_labels[data_list$error_mat[, 2]]
+  )
+
+  idxs <- which(grepl("phi\\_mat", major_parameters$variable))
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Inter-factor correlations", op = "~~",
+    from = factor_labels[as.integer(
+      gsub("phi_mat\\[\\d+,|\\]", "", major_parameters[idxs, ]$variable)
+    )],
+    to = factor_labels[as.integer(
+      gsub("phi_mat\\[|,\\d+\\]", "", major_parameters[idxs, ]$variable)
+    )]
+  )
+
+  major_parameters$ess_bulk <- round(major_parameters$ess_bulk, 1)
+  major_parameters$ess_tail <- round(major_parameters$ess_tail, 1)
+
+  major_parameters <- major_parameters[, -1]
+
+  return(major_parameters)
+}
+
+#' Modify major parameters table helper function
+#' @description A function that adds user friendly descriptions to the
+#' major parameters table
+#' @param major_parameters Major paramters table
+#' @param idxs Relevant rows indexes
+#' @param group Parameter group
+#' @param op lavaan style operator
+#' @param from Variable from
+#' @param to Variable to
+#' @returns Updated major parameters table
+#' @keywords internal
+.modify_major_params <- function(
+    major_parameters,
+    idxs,
+    group = "",
+    op = "",
+    from = "",
+    to = "") {
+  result <- major_parameters
+
+  if (length(idxs) > 0) {
+    result[idxs, ]$group <- group
+    result[idxs, ]$op <- op
+    result[idxs, ]$from <- from
+    result[idxs, ]$to <- to
+  }
+
+  return(result)
 }
