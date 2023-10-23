@@ -1,19 +1,22 @@
 Package: bayesianmasem
-Title: What the Package Does (One Line, Title Case)
+Title: Bayesian meta-analytic structural equation modeling with a focus on latent variable models
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("James O.", "Uanhoro", , "James.Uanhoro@unt.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4843-927X"))
 Description: What the package does (one paragraph).
-License: `use_gpl3_license()`
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Biarch: true
 Depends: 
-    R (>= 3.4.0)
+    R (>= 4.1.0)
 Imports: 
+    bayesplot,
+    lavaan,
     methods,
+    posterior,
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
     rstan (>= 2.18.1),
