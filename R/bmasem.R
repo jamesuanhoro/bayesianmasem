@@ -156,15 +156,15 @@ bmasem <- function(
     lav_fit <- lavaan::cfa(
       model,
       data = data, group = group, std.lv = TRUE,
-      likelihood = "wishart",
-      do.fit = FALSE, se = "none", test = "none", orthogonal = orthogonal
+      likelihood = "wishart", ceq.simple = TRUE,
+      do.fit = FALSE, orthogonal = orthogonal
     )
   } else {
     lav_fit <- lavaan::cfa(
       model,
       sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
-      likelihood = "wishart",
-      do.fit = FALSE, se = "none", test = "none", orthogonal = orthogonal
+      likelihood = "wishart", ceq.simple = TRUE,
+      do.fit = FALSE, orthogonal = orthogonal
     )
   }
 

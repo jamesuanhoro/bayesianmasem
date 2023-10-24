@@ -68,7 +68,7 @@
   # Sample size
   data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
 
-  # Loading pattern, 0s and 1s (fixme)
+  # Loading pattern
   data_list$loading_pattern <- param_structure$lambda
   # Number of factors
   data_list$Nf <- ncol(data_list$loading_pattern)
@@ -80,6 +80,7 @@
   data_list$load_se <- matrix(
     priors@sl_par, data_list$Ni, data_list$Nf
   )
+  # TODO: Use lavaanify to check which loadings need fixing
   data_list$loading_fixed <- matrix(
     -999, data_list$Ni, data_list$Nf
   )
