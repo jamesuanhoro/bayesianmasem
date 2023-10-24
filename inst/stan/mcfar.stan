@@ -358,11 +358,9 @@ generated quantities {
     for (i in 1:Ng) {
       real m_val;
       vector[Nisqd2_vec] tmp_loc = r_vec;
-      matrix[Nisqd2_vec, Nisqd2_vec] tmp_cov;
+      matrix[Nisqd2_vec, Nisqd2_vec] tmp_cov = r_obs_vec_cov[i];
 
-      if (type == 1) {
-        tmp_cov = r_obs_vec_cov[i];
-      } else if (type >= 2) {
+      if (type >= 2) {
         m_val = exp(ln_v_int_wi[1] + X[i, ] * ln_v_beta_wi);
         tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
         if (type == 3) {
