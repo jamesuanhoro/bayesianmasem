@@ -168,6 +168,11 @@ bmasem <- function(
     )
   }
 
+  par_table <- lavaan::lavaanify(
+    model,
+    ceq.simple = TRUE, std.lv = TRUE
+  )
+
   # Obtain data list for Stan
   data_list <- .create_data_list_meta(
     lavaan_object = lav_fit,
@@ -176,7 +181,8 @@ bmasem <- function(
     simple_struc = simple_struc,
     priors = priors,
     cluster = cluster,
-    correlation = correlation
+    correlation = correlation,
+    partab = par_table
   )
 
   message("User input fully processed :)\n Now to modeling.")

@@ -11,7 +11,8 @@
   simple_struc = TRUE,
   priors = NULL,
   cluster = NULL,
-  correlation = TRUE
+  correlation = TRUE,
+  partab = NULL
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ This feature is experimental, see details below.}
 \item{correlation}{(LOGICAL)
 If TRUE (default): assume simple structure;
 If FALSE: estimate all cross-loadings using generalized}
+
+\item{partab}{lavaan parameter table output with ceq.simple & std.lv = TRUE}
 }
 \value{
 Data list object used in fitting Stan model

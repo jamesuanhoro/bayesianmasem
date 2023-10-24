@@ -1,6 +1,7 @@
 #' Stan data helper function
 #' @description A function that creates data list object passed to Stan
 #' @param lavaan_object lavaan fit object of corresponding model
+#' @param partab lavaan parameter table output with ceq.simple & std.lv = TRUE
 #' @inheritParams bmasem
 #' @returns Data list object used in fitting Stan model
 #' @keywords internal
@@ -11,7 +12,8 @@
     simple_struc = TRUE,
     priors = NULL,
     cluster = NULL,
-    correlation = TRUE) {
+    correlation = TRUE,
+    partab = NULL) {
   data_list <- list()
 
   # Get number of groups
@@ -80,10 +82,20 @@
   data_list$load_se <- matrix(
     priors@sl_par, data_list$Ni, data_list$Nf
   )
-  # TODO: Use lavaanify to check which loadings need fixing
-  data_list$loading_fixed <- matrix(
-    -999, data_list$Ni, data_list$Nf
-  )
+  # get fixed loadings
+  data_list$loading_fixed <- matrix(-999, data_list$Ni, data_list$Nf)
+  fix_load <- partab[partab$op == "=~" & partab$free == 0, ]
+  fix_col_ids <- unname(sapply(
+    fix_load$lhs, function(x) which(x == colnames(param_structure$lambda))
+  ))
+  fix_row_ids <- unname(sapply(
+    fix_load$rhs, function(x) which(x == rownames(param_structure$lambda))
+  ))
+  for (i in seq_len(length(fix_col_ids))) {
+    data_list$loading_fixed[
+      fix_row_ids[i], fix_col_ids[i]
+    ] <- fix_load$ustart[i]
+  }
 
   # Is this an SEM or a CFA?
   psi_mat <- param_structure$psi

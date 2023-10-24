@@ -276,6 +276,9 @@ model {
   }
 }
 generated quantities {
+  real D_rep = 0.0;
+  real D_obs = 0.0;
+  real<lower = 0, upper = 1> ppp;
   real<lower = 0> rms_src = 0.0;  // RMSE of residuals
   matrix[Ni, Nf] Load_mat = rep_matrix(0, Ni, Nf);
   matrix[Nf, Nf] phi_mat = multiply_lower_tri_self_transpose(phi_mat_chol) .* corr_mask;
@@ -299,6 +302,7 @@ generated quantities {
   {
     matrix[Ni, Ni] Omega;
     vector[Nisqd2_vec] r_vec;
+    vector[Nisqd2_vec] r_vec_sim;
 
     {
       matrix[Ni, Ni] lamb_phi_lamb;
@@ -353,24 +357,24 @@ generated quantities {
 
     for (i in 1:Ng) {
       real m_val;
+      vector[Nisqd2_vec] tmp_loc = r_vec;
+      matrix[Nisqd2_vec, Nisqd2_vec] tmp_cov;
 
       if (type == 1) {
-        log_lik[i] = multi_normal_cholesky_lpdf(
-          r_obs_vec[i] | r_vec, L_vec_cov[i]
-        );
+        tmp_cov = r_obs_vec_cov[i];
       } else if (type >= 2) {
         m_val = exp(ln_v_int_wi[1] + X[i, ] * ln_v_beta_wi);
-        if (type == 2) {
-          log_lik[i] = multi_normal_lpdf(
-            r_obs_vec[i] | r_vec, add_diag(r_obs_vec_cov[i], square(m_val))
-          );
-        } else if (type == 3) {
-          log_lik[i] = multi_normal_lpdf(
-            r_obs_vec[i] | r_vec + g_clus[, C_ID[i]], add_diag(r_obs_vec_cov[i], square(m_val))
-          );
+        tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
+        if (type == 3) {
+          tmp_loc = r_vec + g_clus[, C_ID[i]];
         }
       }
+      log_lik[i] = multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
+      r_vec_sim = multi_normal_rng(tmp_loc, tmp_cov);
+      D_obs += -2.0 * multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
+      D_rep += -2.0 * multi_normal_lpdf(r_vec_sim | tmp_loc, tmp_cov);
     }
+    ppp = D_rep > D_obs ? 1.0 : 0.0;
   }
 
   if (type == 2) {

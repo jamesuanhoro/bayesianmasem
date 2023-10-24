@@ -486,8 +486,8 @@ get_asy_cov <- function(r_mat) {
     paste0("RMSEA (", c("Overall", "Between", "Within"), ")"),
     "% dispersion between"
   )
-  params <- c("rms_src", rmsea_params)
-  from_list <- c("RMSE", rmsea_names)
+  params <- c("ppp", "rms_src", rmsea_params)
+  from_list <- c("PPP", "RMSE", rmsea_names)
 
   phi_idxs <- which(lower.tri(data_list$corr_mask), arr.ind = TRUE)
   if (nrow(phi_idxs) > 0) {
@@ -499,7 +499,8 @@ get_asy_cov <- function(r_mat) {
   }
 
   load_idxs <- paste0("Load_mat[", apply(which(
-    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1),
+    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) |
+      data_list$loading_fixed != -999,
     arr.ind = TRUE
   ), 1, paste0, collapse = ","), "]")
   params <- c(params, load_idxs)
@@ -514,9 +515,9 @@ get_asy_cov <- function(r_mat) {
 
   major_parameters <- .modify_major_params(
     major_parameters,
-    which(major_parameters$variable %in% c("rms_src")),
+    which(major_parameters$variable %in% c("ppp", "rms_src")),
     group = "Goodness of fit",
-    from = from_list[1]
+    from = from_list[1:2]
   )
 
   idxs <- which(major_parameters$variable %in% rmsea_params)

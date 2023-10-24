@@ -52,16 +52,19 @@ pp_summary <- function(
     table_to_print <- table_to_print[, c(1:5, 7, 9:10, 11:12)]
   }
 
+  # Only show PPP mean
+  table_to_print[1, 6:ncol(table_to_print)] <- NA_real_
+
   if (object@data_list$method == 100) {
     # Remove RMSE index
-    table_to_print[1, 5:ncol(table_to_print)] <- NA_real_
+    table_to_print[2, 5:ncol(table_to_print)] <- NA_real_
   }
 
   if (object@data_list$type == 1) {
     # Remove all RMSEAs
-    table_to_print[2:5, 5:ncol(table_to_print)] <- NA_real_
+    table_to_print[3:6, 5:ncol(table_to_print)] <- NA_real_
   } else if (object@data_list$type == 2) {
-    table_to_print[3:5, 5:ncol(table_to_print)] <- NA_real_
+    table_to_print[4:6, 5:ncol(table_to_print)] <- NA_real_
   }
 
   type_str <- paste0(
@@ -82,7 +85,7 @@ pp_summary <- function(
 
   gof_row <- which(result$from == "Goodness of fit")
   disp_row <- which(result$from == "Dispersion between and within clusters")
-  gof_disp_rows <- c(gof_row + 1, disp_row + 1:4)
+  gof_disp_rows <- c(gof_row + 1:2, disp_row + 1:4)
 
   for (row_id in gof_disp_rows) {
     result <- huxtable::merge_cells(result, row_id, 1:3)
