@@ -116,7 +116,7 @@ new_bmasempriors <- function(
 #' residual covariances.
 #' @slot data_list Data used to fit the model.
 #' @slot priors Priors used to fit the model.
-#' @slot stan_fit Fitted RStan or CmdStan model.
+#' @slot stan_fit Fitted CmdStan model.
 #' @slot version Package version used to fit model.
 #'
 #' @name bmasem-class

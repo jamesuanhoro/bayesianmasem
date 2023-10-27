@@ -19,7 +19,7 @@ residual covariances.}
 
 \item{\code{priors}}{Priors used to fit the model.}
 
-\item{\code{stan_fit}}{Fitted RStan or CmdStan model.}
+\item{\code{stan_fit}}{Fitted CmdStan model.}
 
 \item{\code{version}}{Package version used to fit model.}
 }}
