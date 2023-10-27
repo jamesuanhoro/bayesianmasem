@@ -471,6 +471,75 @@ get_asy_cov <- function(r_mat) {
   return(result)
 }
 
+#' Create parameter list for plotting
+#' @param data_list Data list object passed to Stan
+#' @returns Name of varying model parameters
+#' @keywords internal
+.get_param_list <- function(data_list) {
+  param_structure <- data_list$loading_pattern
+  fac_names <- colnames(param_structure)
+  ind_names <- rownames(param_structure)
+
+  rms_params <- c()
+  if (data_list$method < 90) {
+    rms_params <- c("RMSE" = "rms_src")
+  }
+
+  rmsea_params <- c()
+  if (data_list$type >= 2) {
+    rmsea_params <- c("overall RMSEA" = "rmsea_mn")
+  }
+  if (data_list$type == 3) {
+    rmsea_params <- c(
+      rmsea_params,
+      "between RMSEA" = "rmsea_be",
+      "within RMSEA" = "rmsea_wi", "% between" = "prop_be"
+    )
+  }
+  params <- c(rms_params, rmsea_params)
+
+  phi_idxs <- which(
+    lower.tri(data_list$corr_mask) & data_list$corr_mask == 1,
+    arr.ind = TRUE
+  )
+  if (nrow(phi_idxs) > 0) {
+    phi_params <- paste0("phi_mat[", apply(
+      phi_idxs, 1, paste0,
+      collapse = ","
+    ), "]")
+    names(phi_params) <- apply(phi_idxs, 1, function(x) {
+        paste0(fac_names[x[1]], "~~", fac_names[x[2]])
+    })
+    params <- c(params, phi_params)
+  }
+
+  load_idxs <- which(
+    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) &
+      data_list$loading_fixed == -999,
+    arr.ind = TRUE
+  )
+  if (nrow(load_idxs) > 0) {
+    load_params <- paste0(
+      "Load_mat[", apply(load_idxs, 1, paste0, collapse = ","), "]"
+    )
+    names(load_params) <- apply(load_idxs, 1, function(x) {
+      paste0(fac_names[x[2]], "=~", ind_names[x[1]])
+    })
+    params <- c(params, load_params)
+  }
+
+  if (data_list$Nce > 0) {
+    rc_idxs <- data_list$error_mat
+    rc_params <- paste0("res_cor[", seq_len(data_list$Nce), "]")
+    names(rc_params) <- apply(rc_idxs, 1, function(x) {
+      paste0(ind_names[x[1]], "~~", ind_names[x[2]])
+    })
+    params <- c(params, rc_params)
+  }
+
+  return(params)
+}
+
 #' Create major parameters helper function
 #' @description A function that creates the table of major parameters
 #' @param stan_fit Fitted Stan object
@@ -528,7 +597,7 @@ get_asy_cov <- function(r_mat) {
     from = rmsea_names
   )
 
-  idxs <- which(grepl("Load\\_mat", major_parameters$variable))
+  idxs <- grep("Load\\_mat", major_parameters$variable)
   major_parameters <- .modify_major_params(
     major_parameters, idxs,
     group = "Factor loadings", op = "=~",
@@ -540,7 +609,7 @@ get_asy_cov <- function(r_mat) {
     )]
   )
 
-  idxs <- which(grepl("res\\_cor", major_parameters$variable))
+  idxs <- grep("res\\_cor", major_parameters$variable)
   major_parameters <- .modify_major_params(
     major_parameters, idxs,
     group = "Error correlations", op = "~~",
@@ -548,7 +617,7 @@ get_asy_cov <- function(r_mat) {
     to = indicator_labels[data_list$error_mat[, 2]]
   )
 
-  idxs <- which(grepl("phi\\_mat", major_parameters$variable))
+  idxs <- grep("phi\\_mat", major_parameters$variable)
   major_parameters <- .modify_major_params(
     major_parameters, idxs,
     group = "Inter-factor correlations", op = "~~",

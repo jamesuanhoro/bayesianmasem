@@ -4,7 +4,7 @@
 \alias{.init_fx}
 \title{Initial values for Stan fitter}
 \usage{
-.init_fx(dl)
+.init_fx(data_list)
 }
 \arguments{
 \item{data_list}{A data list object}
