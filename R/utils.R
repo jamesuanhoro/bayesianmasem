@@ -309,8 +309,8 @@ get_asy_cov <- function(r_mat) {
   } else if (target == "cmdstan") {
     message(paste0(
       "Compiling Stan code ...\n",
-      "This takes a while the first time you run a CFA ",
-      "and the first time you run an SEM"
+      "Compiling only takes a while the first time you use ",
+      "CmdStan afer installing bayesianmasem."
     ))
 
     mcfar <- cmdstanr::cmdstan_model(

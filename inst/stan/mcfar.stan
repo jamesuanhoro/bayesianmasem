@@ -2,6 +2,14 @@
 // And each E follows some structured matrix
 // And that structured matrix is IW (see Wu & Browne)
 functions {
+  vector v_abs(vector x) {
+    int n = size(x);
+    vector[n] x_abs;
+    for (i in 1:n) {
+      x_abs[i] = abs(x[i]);
+    }
+    return(x_abs);
+  }
   int sign(real x) {
     if (x > 0)
       return 1;
@@ -12,7 +20,7 @@ functions {
     // generalized double Pareto
     // https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3903426/
     return(sum(
-      -log(2) - log(scale) - (alpha + 1.0) * log1p(abs(x) / (scale * alpha))
+      -log(2) - log(scale) - (alpha + 1.0) * log1p(v_abs(x) / (scale * alpha))
     ));
   }
   real eff(int p, real x) {
