@@ -252,15 +252,16 @@ get_asy_cov <- function(r_mat) {
 #' @param data_list A data list object
 #' @returns A function with initial values
 #' @keywords internal
-.init_fx <- function(dl) {
+.init_fx <- function(data_list) {
   function() {
     list(
-      resids = rep(0, (dl$method < 90) * ncol(dl$r_obs_vec)),
+      resids = rep(0, (data_list$method < 90) * ncol(data_list$r_obs_vec)),
       loadings_complex = rep(
         0,
-        dl$complex_struc * (
-          prod(dim(dl$loading_pattern)) - max(dl$loading_pattern) -
-            sum(dl$loading_fixed != -999)
+        data_list$complex_struc * (
+          prod(dim(data_list$loading_pattern)) -
+            sum(data_list$loading_pattern != 0) -
+            sum(data_list$loading_fixed != -999)
         )
       )
     )
