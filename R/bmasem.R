@@ -180,9 +180,24 @@ bmasem <- function(
 
   message("User input fully processed :)\n Now to modeling.")
 
-  stan_fit <- .target_fitter(
-    data_list, seed, warmup, sampling, refresh,
-    adapt_delta, max_treedepth, chains, ncores, show_messages
+  mcfar <- instantiate::stan_package_model(
+    name = "mcfar", package = "bayesianmasem"
+  )
+
+  message("Fitting Stan model ...")
+
+  stan_fit <- mcfar$sample(
+    data = data_list,
+    seed = seed,
+    iter_warmup = warmup,
+    iter_sampling = sampling,
+    refresh = refresh,
+    init = .init_fx(data_list),
+    adapt_delta = adapt_delta,
+    max_treedepth = max_treedepth,
+    chains = chains,
+    parallel_chains = ncores,
+    show_messages = show_messages
   )
 
   bma_results <- .clean_up_stan_fit(

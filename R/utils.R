@@ -268,49 +268,6 @@ get_asy_cov <- function(r_mat) {
   }
 }
 
-#' target fitter function
-#' @description A function that takes user input and fits the
-#' Stan model.
-#' @param data_list Data list object passed to Stan
-#' @inheritParams bmasem
-#' @returns Fitted Stan model
-#' @keywords internal
-.target_fitter <- function(
-    data_list,
-    seed,
-    warmup,
-    sampling,
-    refresh,
-    adapt_delta,
-    max_treedepth,
-    chains,
-    ncores,
-    show_messages) {
-  init_resid <- .init_fx(data_list)
-
-  mcfar <- instantiate::stan_package_model(
-    name = "mcfar", package = "bayesianmasem"
-  )
-
-  message("Fitting Stan model ...")
-
-  stan_fit <- mcfar$sample(
-    data = data_list,
-    seed = seed,
-    iter_warmup = warmup,
-    iter_sampling = sampling,
-    refresh = refresh,
-    init = init_resid,
-    adapt_delta = adapt_delta,
-    max_treedepth = max_treedepth,
-    chains = chains,
-    parallel_chains = ncores,
-    show_messages = show_messages
-  )
-
-  return(stan_fit)
-}
-
 #' Check user input function
 #' @description A function that checks user input for adequacy
 #' and fails on inadequate input.
