@@ -19,9 +19,6 @@
 )
 }
 \arguments{
-\item{target}{(character) One of "rstan" or "cmdstan". If "cmdstan",
-CmdStan and CmdStanR need to be installed on the device.}
-
 \item{data_list}{Data list object passed to Stan}
 
 \item{seed}{(positive integer) seed, set to obtain replicable results.}

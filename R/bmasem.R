@@ -55,8 +55,6 @@
 #' show table of results. As an example, use FALSE for simulation studies.
 #' @param show_messages (Logical) If TRUE, show messages from Stan sampler,
 #' if FALSE, hide messages.
-#' @param target (character) One of "rstan" or "cmdstan". If "cmdstan",
-#' CmdStan and CmdStanR need to be installed on the device.
 #' @returns An object of \code{\link{bmasem-class}}
 #' @details
 #' CFAs assume standardized factors.
@@ -77,8 +75,7 @@
 #' - \code{none}: if intending to ignore the influence of minor factors.
 #'
 #' When \code{type = "dep"}, the user must supply the cluster IDs, see cluster
-#' parameter documentation above. However, this feature is experimental and only
-#' available when \code{target = "cmdstan"}.
+#' parameter documentation above. However, this feature is experimental.
 #' Additionally, the cluster inputs are not validated.
 #' @examples
 #' \dontrun{
@@ -124,8 +121,7 @@ bmasem <- function(
     priors = new_bmasempriors(),
     show = TRUE,
     show_messages = TRUE,
-    cluster = NULL,
-    target = "rstan") {
+    cluster = NULL) {
   message("Processing user input ...")
 
   # Model cannot be NULL
@@ -144,9 +140,6 @@ bmasem <- function(
 
   # Must provide either data and group or sample_cov and sample_nobs
   .user_input_check("data", data, group, sample_cov, sample_nobs)
-
-  # target must be valid
-  .user_input_check("target", target)
 
   # check for cluster when type = "dep"
   .user_input_check("cluster", type, cluster)
@@ -188,7 +181,7 @@ bmasem <- function(
   message("User input fully processed :)\n Now to modeling.")
 
   stan_fit <- .target_fitter(
-    target, data_list, seed, warmup, sampling, refresh,
+    data_list, seed, warmup, sampling, refresh,
     adapt_delta, max_treedepth, chains, ncores, show_messages
   )
 

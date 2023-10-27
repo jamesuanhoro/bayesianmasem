@@ -289,52 +289,25 @@ get_asy_cov <- function(r_mat) {
     show_messages) {
   init_resid <- .init_fx(data_list)
 
-  if (target == "rstan") {
-    suppressWarnings(stan_fit <- rstan::sampling(
-      stanmodels$mcfar,
-      data = data_list,
-      chains = chains,
-      cores = ncores,
-      seed = seed,
-      warmup = warmup,
-      iter = warmup + sampling,
-      refresh = refresh,
-      init = init_resid,
-      control = list(
-        adapt_delta = adapt_delta,
-        max_treedepth = max_treedepth
-      ),
-      show_messages = show_messages
-    ))
-    message(rstan::check_hmc_diagnostics(stan_fit))
-  } else if (target == "cmdstan") {
-    message(paste0(
-      "Compiling Stan code ...\n",
-      "Compiling only takes a while the first time you use ",
-      "CmdStan afer installing bayesianmasem."
-    ))
+  mcfar <- instantiate::stan_package_model(
+    name = "mcfar", package = "bayesianmasem"
+  )
 
-    mcfar <- cmdstanr::cmdstan_model(
-      system.file("cmdstan/mcfar.stan", package = "bayesianmasem"),
-      stanc_options = list("O1")
-    )
+  message("Fitting Stan model ...")
 
-    message("Fitting Stan model ...")
-
-    stan_fit <- mcfar$sample(
-      data = data_list,
-      seed = seed,
-      iter_warmup = warmup,
-      iter_sampling = sampling,
-      refresh = refresh,
-      init = init_resid,
-      adapt_delta = adapt_delta,
-      max_treedepth = max_treedepth,
-      chains = chains,
-      parallel_chains = ncores,
-      show_messages = show_messages
-    )
-  }
+  stan_fit <- mcfar$sample(
+    data = data_list,
+    seed = seed,
+    iter_warmup = warmup,
+    iter_sampling = sampling,
+    refresh = refresh,
+    init = init_resid,
+    adapt_delta = adapt_delta,
+    max_treedepth = max_treedepth,
+    chains = chains,
+    parallel_chains = ncores,
+    show_messages = show_messages
+  )
 
   return(stan_fit)
 }
@@ -411,25 +384,6 @@ get_asy_cov <- function(r_mat) {
       if (is.null(object_2)) {
         stop("supply cluster information when type = \"dep\"")
       }
-    }
-  }
-
-  if (type == "target") {
-    err_msg <- paste0(
-      "type must be either: \"rstan\" or \"cmdstan\""
-    )
-    if (is.null(object_1)) stop(err_msg)
-    if (!object_1 %in% c("rstan", "cmdstan")) stop(err_msg)
-    if (object_1 == "cmdstan") {
-      # CmdStan path must be set
-      tryCatch(cmdstanr::cmdstan_path(),
-        error = function(e) {
-          stop(paste0(
-            "Error: CmdStan path has not been set yet.", " ",
-            "See ?cmdstanr::set_cmdstan_path()."
-          ))
-        }
-      )
     }
   }
 

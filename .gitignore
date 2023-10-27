@@ -56,5 +56,7 @@ src/
 trash.R
 
 # CmdStan files
-inst/cmdstan/*
-!inst/cmdstan/*.stan
+inst/stan/**
+!inst/stan/**/*.*
+inst/stan/**/*.exe
+inst/stan/**/*.EXE

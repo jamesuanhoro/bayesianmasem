@@ -26,8 +26,7 @@ bmasem(
   priors = new_bmasempriors(),
   show = TRUE,
   show_messages = TRUE,
-  cluster = NULL,
-  target = "rstan"
+  cluster = NULL
 )
 }
 \arguments{
@@ -102,9 +101,6 @@ Asssume there are five groups, the first three belong to cluster 1
 and the last two belong to cluster 2,
 then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 This feature is experimental, see details below.}
-
-\item{target}{(character) One of "rstan" or "cmdstan". If "cmdstan",
-CmdStan and CmdStanR need to be installed on the device.}
 }
 \value{
 An object of \code{\link{bmasem-class}}
@@ -136,8 +132,7 @@ with minimal shrinking for larger residual covariances
 }
 
 When \code{type = "dep"}, the user must supply the cluster IDs, see cluster
-parameter documentation above. However, this feature is experimental and only
-available when \code{target = "cmdstan"}.
+parameter documentation above. However, this feature is experimental.
 Additionally, the cluster inputs are not validated.
 }
 \examples{
