@@ -276,7 +276,6 @@ get_asy_cov <- function(r_mat) {
 #' @returns Fitted Stan model
 #' @keywords internal
 .target_fitter <- function(
-    target,
     data_list,
     seed,
     warmup,
