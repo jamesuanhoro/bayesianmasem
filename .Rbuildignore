@@ -10,3 +10,5 @@
 ^docs$
 ^pkgdown$
 ^vignettes$
+^\.vscode$
+^README_files$

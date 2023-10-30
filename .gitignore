@@ -60,3 +60,7 @@ inst/stan/**
 !inst/stan/**/*.*
 inst/stan/**/*.exe
 inst/stan/**/*.EXE
+
+# VSCode files
+.vscode/
+README_files/
