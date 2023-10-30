@@ -1,13 +1,14 @@
 
 # bayesianmasem
 
-![GitHub last commit
-(branch)](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem/main)
 ![GitHub Workflow Status (with
-event)](https://img.shields.io/github/actions/workflow/status/jamesuanhoro/bayesianmasem/r.yml)
+event)](https://img.shields.io/github/actions/workflow/status/jamesuanhoro/bayesianmasem/check-standard.yaml?label=R-CMD-check)
+![Codecov](https://img.shields.io/codecov/c/github/jamesuanhoro/bayesianmasem)
 ![GitHub](https://img.shields.io/github/license/jamesuanhoro/bayesianmasem)
 ![GitHub R package version (subdirectory of
 monorepo)](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
+![GitHub last commit
+(branch)](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem/main)
 
 #### Table of Contents
 
@@ -90,7 +91,7 @@ method factor has 0 loading on other items.
 
 We can fit a random-effects model to the input correlation matrices and
 provide sample size information. The `Norton13` data come from the
-[metaSEM](https://cran.r-project.org/package=metaSEM) package (Cheung
+[metaSEM package](https://cran.r-project.org/package=metaSEM) (Cheung
 2015):
 
 ``` r

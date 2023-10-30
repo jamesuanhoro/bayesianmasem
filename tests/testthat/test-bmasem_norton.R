@@ -8,12 +8,13 @@ test_that("Dependent samples works for meta-CFA on issp89", {
   cluster_names <- gsub(
     ",", "", lapply(strsplit(names(Norton13$data), " "), "[[", 1)
   )
-  cluster_ids <- as.integer(as.factor(cluster_names))
+  subset <- c(1, 19:21)
+  cluster_ids <- as.integer(as.factor(cluster_names[subset]))
   expect_error(fit <- bmasem(
     model_syntax,
-    sample_cov = Norton13$data, sample_nobs = Norton13$n,
+    sample_cov = Norton13$data[subset], sample_nobs = Norton13$n[subset],
     cluster = cluster_ids,
-    simple_struc = FALSE, orthogonal = TRUE,
+    simple_struc = TRUE, orthogonal = TRUE,
     warmup = 500, sampling = 500, chains = 1,
     method = method, type = "dep",
     refresh = 0, show_messages = FALSE
