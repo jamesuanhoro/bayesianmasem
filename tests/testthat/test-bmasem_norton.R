@@ -1,4 +1,4 @@
-test_that("Dependent samples works for meta-CFA on issp89", {
+test_that("Dependent samples works for meta-CFA on Norton13", {
   method <- sample(.method_hash(), 1)
   model_syntax <- paste0(
     "distress =~ ", paste0("x", 1:14, collapse = " + "), "\n",
