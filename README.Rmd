@@ -5,10 +5,6 @@ bibliography: inst/REFERENCES.bib
 
 # bayesianmasem
 
-```{r include=FALSE}
-# devtools::load_all()
-```
-
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem/main)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/jamesuanhoro/bayesianmasem/r.yml)
 ![GitHub](https://img.shields.io/github/license/jamesuanhoro/bayesianmasem)
