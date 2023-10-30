@@ -17,8 +17,8 @@
 #' @param sample_nobs (vector of positive integer) Number of observations
 #' for each study.
 #' @param correlation (LOGICAL)
-#' If TRUE (default): assume simple structure;
-#' If FALSE: estimate all cross-loadings using generalized
+#' If TRUE (default): analyze correlation matrices;
+#' If FALSE: analyze covariance matrices - not yet available as an option.
 #' @param method (character) One of "normal", "lasso", "logistic",
 #' "GDP", or "none". See details below.
 #' @param type (character) One of "fe", "re", or "dep" for fixed-effects,
@@ -26,10 +26,10 @@
 #' The "dep" argument is experimental, see details below.
 #' @param orthogonal (LOGICAL)
 #' If TRUE: constrain all factors orthogonal (overrides model syntax);
-#' If FALSE: according to model syntax.
+#' If FALSE (default): according to model syntax.
 #' @param simple_struc (LOGICAL) Only relevant for CFAs.
-#' If TRUE: analyze correlation matrices;
-#' If FALSE: analyze covariance matrices.
+#' If TRUE (default): assume simple structure;
+#' If FALSE: estimate all cross-loadings using generalized
 #' @param cluster An optional integer vector identifying the cluster each group
 #' belongs to.
 #' Asssume there are five groups, the first three belong to cluster 1

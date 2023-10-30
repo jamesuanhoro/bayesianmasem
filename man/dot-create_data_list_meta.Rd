@@ -26,8 +26,8 @@ random-effects, and dependent-samples MASEM respectively.
 The "dep" argument is experimental, see details below.}
 
 \item{simple_struc}{(LOGICAL) Only relevant for CFAs.
-If TRUE: analyze correlation matrices;
-If FALSE: analyze covariance matrices.}
+If TRUE (default): assume simple structure;
+If FALSE: estimate all cross-loadings using generalized}
 
 \item{priors}{An object of \code{\link{bmasempriors-class}}.
 See \code{\link{new_bmasempriors}} for more information.}
@@ -40,8 +40,8 @@ then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 This feature is experimental, see details below.}
 
 \item{correlation}{(LOGICAL)
-If TRUE (default): assume simple structure;
-If FALSE: estimate all cross-loadings using generalized}
+If TRUE (default): analyze correlation matrices;
+If FALSE: analyze covariance matrices - not yet available as an option.}
 
 \item{partab}{lavaan parameter table output with ceq.simple & std.lv = TRUE}
 }

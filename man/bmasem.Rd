@@ -47,8 +47,8 @@ For now, assumes there are no missing elements in the covariance matrices.}
 for each study.}
 
 \item{correlation}{(LOGICAL)
-If TRUE (default): assume simple structure;
-If FALSE: estimate all cross-loadings using generalized}
+If TRUE (default): analyze correlation matrices;
+If FALSE: analyze covariance matrices - not yet available as an option.}
 
 \item{method}{(character) One of "normal", "lasso", "logistic",
 "GDP", or "none". See details below.}
@@ -59,11 +59,11 @@ The "dep" argument is experimental, see details below.}
 
 \item{orthogonal}{(LOGICAL)
 If TRUE: constrain all factors orthogonal (overrides model syntax);
-If FALSE: according to model syntax.}
+If FALSE (default): according to model syntax.}
 
 \item{simple_struc}{(LOGICAL) Only relevant for CFAs.
-If TRUE: analyze correlation matrices;
-If FALSE: analyze covariance matrices.}
+If TRUE (default): assume simple structure;
+If FALSE: estimate all cross-loadings using generalized}
 
 \item{seed}{(positive integer) seed, set to obtain replicable results.}
 

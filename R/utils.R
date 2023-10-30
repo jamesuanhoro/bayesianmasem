@@ -429,7 +429,7 @@ get_asy_cov <- function(r_mat) {
       collapse = ","
     ), "]")
     names(phi_params) <- apply(phi_idxs, 1, function(x) {
-        paste0(fac_names[x[1]], "~~", fac_names[x[2]])
+      paste0(fac_names[x[1]], "~~", fac_names[x[2]])
     })
     params <- c(params, phi_params)
   }
