@@ -29,9 +29,9 @@ Norton13
 \description{
 The data set includes 28 studies on 14 items measuring the Hospital Anxiety
 and Depression Scale (HADS) Reported by
-\insertCite{norton_hospital_2013;textual}{minorbsem}, with data and
+\insertCite{norton_hospital_2013;textual}{bayesianmasem}, with data and
 documentation copied over from the metaSEM package
-\insertCite{Cheung-metaSEM}{minorbsem}.
+\insertCite{Cheung-metaSEM}{bayesianmasem}.
 }
 \references{
 \insertAllCited{}

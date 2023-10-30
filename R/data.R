@@ -2,9 +2,9 @@
 #'
 #' The data set includes 28 studies on 14 items measuring the Hospital Anxiety
 #' and Depression Scale (HADS) Reported by
-#' \insertCite{norton_hospital_2013;textual}{minorbsem}, with data and
+#' \insertCite{norton_hospital_2013;textual}{bayesianmasem}, with data and
 #' documentation copied over from the metaSEM package
-#' \insertCite{Cheung-metaSEM}{minorbsem}.
+#' \insertCite{Cheung-metaSEM}{bayesianmasem}.
 #'
 #' @format ## `Norton13`
 #' A list of data with the following structure:
@@ -25,9 +25,9 @@
 #' Another dataset from the metaSEM package.
 #'
 #' The data set includes 11 studies on 9 items measuring work-related attitudes
-#' \insertCite{noauthor_international_1992}{minorbsem}.
+#' \insertCite{noauthor_international_1992}{bayesianmasem}.
 #' Data and documentation copied over from the metaSEM package
-#' \insertCite{Cheung-metaSEM}{minorbsem}.
+#' \insertCite{Cheung-metaSEM}{bayesianmasem}.
 #'
 #' @format ## `issp89`
 #' A list of data with the following structure:
