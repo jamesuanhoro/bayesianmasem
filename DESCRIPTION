@@ -4,7 +4,9 @@ Version: 0.0.0.9000
 Authors@R: 
     person("James O.", "Uanhoro", , "James.Uanhoro@unt.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4843-927X"))
-Description: What the package does (one paragraph).
+Description: This is a package for Bayesian meta-analytic
+    structural equation models (MASEMs), specifically confirmatory factor models.
+    The package fits fixed-, random- and dependent-samples MASEMs.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

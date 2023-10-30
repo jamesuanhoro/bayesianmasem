@@ -21,16 +21,15 @@ monorepo)](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
 
 This is a package for Bayesian meta-analytic structural equation models
 (MASEM, Cheung and Chan 2009), specifically meta-analysis of
-confirmatory factor models. The input data are ideally multiple
-correlation matrices.
+confirmatory factor models. The package fits fixed-, random- and
+dependent-samples MASEMs.
 
 ## Features
 
 Features of `bayesianmasem` include:
 
 - Uses lavaan-style syntax for model specification
-- Fits well-known fixed-effects, random-effects and
-  **dependent-samples** MASEM
+- Fits fixed-effects, random-effects and **dependent-samples** MASEM
 - Allows fixing loadings to known values or constraining loadings equal
 - Estimates minor factor influences (Uanhoro 2023), i.e. full residual
   correlation matrix reflecting misspecification in the true shared
