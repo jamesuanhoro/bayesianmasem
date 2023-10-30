@@ -91,7 +91,8 @@ method factor has 0 loading on other items.
 
 We can fit a random-effects model to the input correlation matrices and
 provide sample size information. The `Norton13` data come from the
-metaSEM package (Cheung 2015):
+[metaSEM](https://cran.r-project.org/package=metaSEM) package (Cheung
+2015):
 
 ``` r
 fit_ad <- bmasem(
