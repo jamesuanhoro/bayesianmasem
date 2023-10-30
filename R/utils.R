@@ -217,9 +217,6 @@ get_asy_cov <- function(r_mat) {
     "lasso" = 2,
     "logistic" = 3,
     "GDP" = 4,
-    "WB" = 90,
-    "WB-cond" = 91,
-    "WW" = 92,
     "none" = 100
   )
   converted_value <- .converter_helper(search_term, list_methods)
@@ -266,6 +263,56 @@ get_asy_cov <- function(r_mat) {
   }
 }
 
+#' mini-check for estimation method
+#' @description mini-check for estimation method
+#' @inheritParams bmasem
+#' @returns NULL
+#' @keywords internal
+.check_bm_method <- function(method) {
+  accepted_methods <- .method_hash()
+  err_msg <- paste0(
+    "method must be one of the following: ",
+    paste0("\"", accepted_methods, "\"", collapse = ", ")
+  )
+  if (!tolower(method) %in% tolower(accepted_methods)) stop(err_msg)
+}
+
+#' mini-check for data inputs
+#' @description mini-check for data inputs
+#' @inheritParams bmasem
+#' @returns NULL
+#' @keywords internal
+.check_bm_data <- function(data, group, sample_cov, sample_nobs) {
+  if (
+    (is.null(data) || is.null(group)) &&
+      (is.null(sample_cov) || is.null(sample_nobs))
+  ) {
+    stop(paste0(
+      "User must provide either:\n\t",
+      "(i) a dataset and group variable or\n\t",
+      "(ii) sample covariance matrices and sample sizes"
+    ))
+  }
+}
+
+#' mini-check for type
+#' @description mini-check for type
+#' @inheritParams bmasem
+#' @returns NULL
+#' @keywords internal
+.check_bm_type <- function(type) {
+  accepted_types <- .type_hash()
+  err_msg <- paste0(
+    "type must be one of the following: ",
+    paste0(
+      "\"", accepted_types, "\"",
+      collapse = ", "
+    )
+  )
+  if (is.null(type)) stop(err_msg)
+  if (!tolower(type) %in% accepted_types) stop(err_msg)
+}
+
 #' Check user input function
 #' @description A function that checks user input for adequacy
 #' and fails on inadequate input.
@@ -282,63 +329,29 @@ get_asy_cov <- function(r_mat) {
     object_2 = NULL,
     object_3 = NULL,
     object_4 = NULL) {
-  if (type == "model" && is.null(object_1)) {
-    stop("Model cannot be null")
+  if (type == "model") {
+    stopifnot("Model cannot be null" = !is.null(object_1))
   }
 
   if (type == "priors") {
-    if (!inherits(object_1, "bmasempriors")) {
-      stop("See ?new_bmasempriors for how to set up priors.")
-    }
+    stopifnot(
+      "See ?new_bmasempriors for how to set up priors." =
+        inherits(object_1, "bmasempriors")
+    )
   }
 
-  if (type == "method") {
-    accepted_methods <- .method_hash()
-    accepted_methods <- accepted_methods[
-      which(!grepl("WB|WW", accepted_methods))
-    ]
-    if (!tolower(object_1) %in% tolower(accepted_methods)) {
-      err_msg <- paste0(
-        "method must be one of the following: ",
-        paste0("\"", accepted_methods, "\"", collapse = ", ")
-      )
-      stop(err_msg)
-    }
-  }
+  if (type == "method") .check_bm_method(object_1)
 
   if (type == "data") {
-    if (
-      (is.null(object_1) || is.null(object_2)) &&
-        (is.null(object_3) || is.null(object_4))
-    ) {
-      stop(paste0(
-        "User must provide either:\n\t",
-        "(i) a dataset and group variable or\n\t",
-        "(ii) sample covariance matrices and sample sizes"
-      ))
-    }
+    .check_bm_data(object_1, object_2, object_3, object_4)
   }
 
-  if (type == "type") {
-    accepted_types <- .type_hash()
-    err_msg <- paste0(
-      "type must be one of the following: ",
-      paste0(
-        "\"", accepted_types, "\"",
-        collapse = ", "
-      )
+  if (type == "type") .check_bm_type(object_1)
+
+  if (type == "cluster" && object_1 == "dep") {
+    stopifnot(
+      "supply cluster information when type = \"dep\"" = !is.null(object_2)
     )
-    if (is.null(object_1)) stop(err_msg)
-    if (!tolower(object_1) %in% accepted_types) stop(err_msg)
-  }
-
-  if (type == "cluster") {
-    accepted_types <- .type_hash()
-    if (object_1 == "dep") {
-      if (is.null(object_2)) {
-        stop("supply cluster information when type = \"dep\"")
-      }
-    }
   }
 
   return(NULL)
