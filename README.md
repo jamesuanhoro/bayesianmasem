@@ -1,14 +1,28 @@
 
 # bayesianmasem
 
-![GitHub Workflow Status (with
-event)](https://img.shields.io/github/actions/workflow/status/jamesuanhoro/bayesianmasem/check-standard.yaml?label=R-CMD-check)
-![Codecov](https://img.shields.io/codecov/c/github/jamesuanhoro/bayesianmasem)
+<!-- ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/jamesuanhoro/bayesianmasem/check-standard.yaml?label=R-CMD-check) -->
+<!-- ![Codecov](https://img.shields.io/codecov/c/github/jamesuanhoro/bayesianmasem) -->
+<!-- ![GitHub](https://img.shields.io/github/license/jamesuanhoro/bayesianmasem) -->
+<!-- ![GitHub R package version (subdirectory of monorepo)](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem) -->
+<!-- ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem/main) -->
+
+[![Project Status: Active The project has reached a stable, usable state
+and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub](https://img.shields.io/github/license/jamesuanhoro/bayesianmasem)
-![GitHub R package version (subdirectory of
-monorepo)](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
-![GitHub last commit
-(branch)](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem/main)
+[![Codecov test
+coverage](https://codecov.io/gh/jamesuanhoro/bayesianmasem/branch/master/graph/badge.svg)](https://app.codecov.io/gh/jamesuanhoro/bayesianmasem?branch=master)
+[![minimal R
+version](https://img.shields.io/badge/R%3E%3D-4.1.0-6666ff.svg)](https://cran.r-project.org/)
+![GitHub R package
+version](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/bayesianmasem)](https://cran.r-project.org/package=bayesianmasem)
+![GitHub last
+commit](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem)
+[![R-CMD-check](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml)
+[![bayesianmasem status
+badge](https://jamesuanhoro.r-universe.dev/badges/bayesianmasem)](https://jamesuanhoro.r-universe.dev)
 
 #### Table of Contents
 

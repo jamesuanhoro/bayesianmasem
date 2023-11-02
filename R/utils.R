@@ -28,6 +28,18 @@
   return(version)
 }
 
+#' Get R minimum function
+#' @returns R version minimum as string
+#' @keywords internal
+.minimum_r_version <- function() {
+  r_version_info <- read.dcf(
+    system.file("DESCRIPTION", package = "bayesianmasem"),
+    fields = "Depends"
+  )[1]
+  r_version <- trimws(gsub("R \\(>=|\\)", "", r_version_info))
+  return(r_version)
+}
+
 #' Log matrix function using eigendecomposition
 #' @param r_mat (matrix) Correlation matrix
 #' @returns Logarithm of the correlation matrix
