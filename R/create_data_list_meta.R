@@ -140,19 +140,21 @@
 
   # Check for correlated error terms
   # Number of correlated errors
-  data_list$error_mat <- matrix(byrow = TRUE, ncol = 2, nrow = 0)
-  theta_mat <- param_structure$theta
-  sum_off_diag_theta <- sum(theta_mat[lower.tri(theta_mat)])
-  if (sum_off_diag_theta > 0) {
-    # Get which elements in theta are non-zero
-    data_list$error_mat <- which(theta_mat != 0, arr.ind = TRUE)
-    # Eliminate diagonal elements
+  data_list$error_mat <- matrix(nrow = 0, ncol = 2)
+  theta_corr_mat <- param_structure$theta
+  diag(theta_corr_mat) <- 0
+  theta_zeroes <- theta_corr_mat != 0
+  if (sum(theta_zeroes) > 0) {
+    theta_corr_mat[theta_zeroes] <-
+      theta_corr_mat[theta_zeroes] - min(theta_corr_mat[theta_zeroes]) + 1
+    data_list$error_mat <- which(theta_zeroes, arr.ind = TRUE)
     data_list$error_mat <- data_list$error_mat[
-      data_list$error_mat[, 1] != data_list$error_mat[, 2],
+      data_list$error_mat[, 1] > data_list$error_mat[, 2],
+      ,
+      drop = FALSE
     ]
-    # Eliminate duplicate rows
-    data_list$error_mat <- unique(t(apply(data_list$error_mat, 1, sort)))
   }
+  data_list$error_pattern <- theta_corr_mat
   data_list$Nce <- nrow(data_list$error_mat)
 
   # For now, no moderators

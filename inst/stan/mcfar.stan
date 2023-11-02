@@ -58,7 +58,7 @@ data {
   array[Ng] matrix[(Ni * (Ni - 1)) %/% 2, (Ni * (Ni - 1)) %/% 2] r_obs_vec_cov;  // covariance matrices
   int<lower = 0> Nf; // N_factors
   int<lower = 0> Nce; // N_correlated errors
-  array[Nce, 2] int error_mat; // cor error matrix
+  array[Ni, Ni] int error_pattern; // cor error matrix
   array[Ni, Nf] int loading_pattern;  // loading pattern
   array[Ni, Nf] real loading_fixed;  // loading pattern
   array[Nf] int markers; // markers
@@ -93,6 +93,7 @@ transformed data {
   int N_type_wi = 1;
   int N_type_be = 1;
   array[Ng] matrix[Nisqd2_vec, Nisqd2_vec] L_vec_cov;
+  int<lower = 0> Nce_uniq = 0; // N_correlated errors unique
 
   for (i in 1:Ng) {
     L_vec_cov[i] = cholesky_decompose(r_obs_vec_cov[i]);
@@ -125,6 +126,14 @@ transformed data {
   if (complex_struc == 1) {
     N_complex = Ni * Nf - Nl - Nl_fixed;
   }
+
+  for (j in 1:(Ni - 1)) {
+    for (i in (j + 1):Ni) {
+      if (error_pattern[i, j] > Nce_uniq) {
+        Nce_uniq = error_pattern[i, j];
+      }
+    }
+  }
 }
 parameters {
   vector<lower = 0.0, upper = 1.0>[N_rms] rms_src_p;
@@ -132,7 +141,7 @@ parameters {
   vector[Nisqd2] resids;  // residual vector
   vector<lower = -1.0, upper = 1.0>[Nl_uniq] loadings;  // loadings
   cholesky_factor_corr[Nf] phi_mat_chol;
-  vector<lower = 0, upper = 1>[Nce] res_cor_01;  // correlated errors on 01
+  vector<lower = 0, upper = 1>[Nce_uniq] res_cor_01;  // correlated errors on 01
   vector<lower = -1.0, upper = 1.0>[N_complex] loadings_complex;
   vector<lower = 0, upper = 1.0>[complex_struc] sigma_loadings_complex;
   vector<lower = 2.0>[complex_struc] gdp_loadings_complex;
@@ -195,7 +204,7 @@ model {
     {
       vector[Ni] res_var;
       matrix[Nf, Nf] phi_mat = multiply_lower_tri_self_transpose(phi_mat_chol) .* corr_mask;
-      vector[Nce] res_cor = res_cor_01 * 2 - 1;
+      vector[Nce_uniq] res_cor_u = res_cor_01 * 2 - 1;
       matrix[Ni, Nf] Load_mat = rep_matrix(0, Ni, Nf);
       matrix[Ni, Ni] lamb_phi_lamb;
       matrix[Ni, Nce] loading_par_exp = rep_matrix(0, Ni, Nce);
@@ -223,11 +232,22 @@ model {
 
       res_var = 1.0 - diagonal(lamb_phi_lamb);
 
-      for (i in 1:Nce) {
-        loading_par_exp[error_mat[i, 1], i] = sqrt(
-          abs(res_cor[i]) * res_var[error_mat[i, 1]]);
-        loading_par_exp[error_mat[i, 2], i] = sign(res_cor[i]) * sqrt(
-          abs(res_cor[i]) * res_var[error_mat[i, 2]]);
+      {
+        int pos_err = 0;
+        for (j in 1:(Ni - 1)) {
+          for (i in (j + 1):Ni) {
+            if (error_pattern[i, j] != 0) {
+              pos_err += 1;
+              loading_par_exp[i, pos_err] = sqrt(
+                abs(res_cor_u[error_pattern[i, j]]) * res_var[i]
+              );
+              loading_par_exp[j, pos_err] =
+                sign(res_cor_u[error_pattern[i, j]]) * sqrt(
+                  abs(res_cor_u[error_pattern[i, j]]) * res_var[j]
+                );
+            }
+          }
+        }
       }
 
       loading_par_exp_2 = tcrossprod(loading_par_exp);
@@ -284,8 +304,7 @@ generated quantities {
   matrix[Nf, Nf] phi_mat = multiply_lower_tri_self_transpose(phi_mat_chol) .* corr_mask;
   vector[Ni] res_sds;
   vector[Ni] res_var;
-  vector[Nce] res_cor = res_cor_01 * 2 - 1;
-  vector[Nce] res_cov;
+  vector[Nce] res_cor;
   matrix[Ni, Ni] Resid = rep_matrix(0.0, Ni, Ni);
   real v_mn = 0.0;
   real rmsea_mn = sqrt(v_mn);
@@ -305,6 +324,7 @@ generated quantities {
     vector[Nisqd2_vec] r_vec_sim;
 
     {
+      vector[Nce_uniq] res_cor_u = res_cor_01 * 2 - 1;
       matrix[Ni, Ni] lamb_phi_lamb;
       matrix[Ni, Nce] loading_par_exp = rep_matrix(0, Ni, Nce);
       matrix[Ni, Ni] loading_par_exp_2;
@@ -330,11 +350,23 @@ generated quantities {
 
       res_var = 1.0 - diagonal(lamb_phi_lamb);
 
-      for (i in 1:Nce) {
-        loading_par_exp[error_mat[i, 1], i] = sqrt(
-          abs(res_cor[i]) * res_var[error_mat[i, 1]]);
-        loading_par_exp[error_mat[i, 2], i] = sign(res_cor[i]) * sqrt(
-          abs(res_cor[i]) * res_var[error_mat[i, 2]]);
+      {
+        int pos_err = 0;
+        for (j in 1:(Ni - 1)) {
+          for (i in (j + 1):Ni) {
+            if (error_pattern[i, j] != 0) {
+              pos_err += 1;
+              res_cor[pos_err] = res_cor_u[error_pattern[i, j]];
+              loading_par_exp[i, pos_err] = sqrt(
+                abs(res_cor_u[error_pattern[i, j]]) * res_var[i]
+              );
+              loading_par_exp[j, pos_err] =
+                sign(res_cor_u[error_pattern[i, j]]) * sqrt(
+                  abs(res_cor_u[error_pattern[i, j]]) * res_var[j]
+                );
+            }
+          }
+        }
       }
 
       loading_par_exp_2 = tcrossprod(loading_par_exp);
@@ -413,18 +445,6 @@ generated quantities {
       Load_mat[, j] *= -1.0;
       phi_mat[, j] *= -1.0;
       phi_mat[j, ] *= -1.0;
-      for (i in Load_mat[, j]) {
-        if (i != 0) {
-          for (k in 1:Nce) {
-            if (i == error_mat[k, 1]) res_cor[k] *= -1.0;
-            if (i == error_mat[k, 2]) res_cor[k] *= -1.0;
-          }
-        }
-      }
     }
-  }
-
-  for (i in 1:Nce) {
-    res_cov[i] = res_cor[i] * prod(res_sds[error_mat[i, ]]);
   }
 }
