@@ -132,8 +132,7 @@
       theta_corr_mat[theta_zeroes] - min(theta_corr_mat[theta_zeroes]) + 1
     data_list$error_mat <- which(theta_zeroes, arr.ind = TRUE)
     data_list$error_mat <- data_list$error_mat[
-      data_list$error_mat[, 1] > data_list$error_mat[, 2],
-      ,
+      data_list$error_mat[, 1] > data_list$error_mat[, 2], ,
       drop = FALSE
     ]
   }
