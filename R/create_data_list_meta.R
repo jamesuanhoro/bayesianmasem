@@ -99,7 +99,6 @@
 
   # Is this an SEM or a CFA?
   psi_mat <- param_structure$psi
-  sum_off_diag_psi <- sum(psi_mat[lower.tri(psi_mat)])
   if (is.null(param_structure$beta)) {
     # This is a CFA
     data_list$sem_indicator <- 0
@@ -111,22 +110,6 @@
       t(data_list$corr_mask)[upper.tri(data_list$corr_mask)]
   } else {
     stop("Only CFAs are implemented right now.")
-    # This is an SEM
-    data_list$sem_indicator <- 1
-    # Factor correlation matrix
-    data_list$F_corr_mat <- matrix(byrow = TRUE, ncol = 2, nrow = 0)
-    if (sum_off_diag_psi > 0) {
-      # Get which elements in theta are non-zero
-      data_list$F_corr_mat <- which(psi_mat != 0, arr.ind = TRUE)
-      # Eliminate diagonal elements
-      data_list$F_corr_mat <- data_list$F_corr_mat[
-        data_list$F_corr_mat[, 1] != data_list$F_corr_mat[, 2],
-      ]
-      # Eliminate duplicate rows
-      data_list$F_corr_mat <- unique(t(apply(data_list$F_corr_mat, 1, sort)))
-    }
-    data_list$Nf_corr <- nrow(data_list$F_corr_mat)
-    data_list$coef_pattern <- (param_structure$beta > 0) * 1
   }
 
   # Marker variables per factor
