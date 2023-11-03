@@ -8,6 +8,7 @@ new_bmasempriors(
   lkj_shape = 2,
   ml_par = 0,
   sl_par = 0.5,
+  rs_par = 1,
   rc_par = 2,
   mr_par = log(0.8),
   sr_par = 0.7,
@@ -23,6 +24,9 @@ interfactor correlation matrix in confirmatory factor models.}
 
 \item{sl_par}{(positive real) The scale parameter
 of the normal prior on loadings.}
+
+\item{rs_par}{(positive real) The scale parameter
+of the Student-t(3,0,) prior on residual standard deviations.}
 
 \item{rc_par}{(positive real) The shape parameter of the Beta(rc_par, rc_par)
 prior on the residual error correlations.}

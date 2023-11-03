@@ -180,13 +180,18 @@ bmasem <- function(
 
   message("User input fully processed :)\n Now to modeling.")
 
-  cfa_cor <- instantiate::stan_package_model(
+  cfa_model <- instantiate::stan_package_model(
     name = "cfa_cor", package = "bayesianmasem"
   )
+  if (isFALSE(correlation)) {
+    cfa_model <- instantiate::stan_package_model(
+      name = "cfa_cov", package = "bayesianmasem"
+    )
+  }
 
   message("Fitting Stan model ...")
 
-  stan_fit <- cfa_cor$sample(
+  stan_fit <- cfa_model$sample(
     data = data_list,
     seed = seed,
     iter_warmup = warmup,

@@ -12,6 +12,8 @@ methods::setClassUnion(
 #' @slot ml_par (real) The location parameter of the normal prior on loadings.
 #' @slot sl_par (positive real) The scale parameter
 #' of the normal prior on loadings.
+#' @slot rs_par (positive real) The scale parameter
+#' of the Student-t(3,0,) prior on residual standard deviations.
 #' @slot rc_par (positive real) The shape parameter of the Beta(rc_par, rc_par)
 #' prior on the residual error correlations.
 #' @slot mr_par (real) The location parameter of the normal prior
@@ -32,6 +34,7 @@ methods::setClass(
     lkj_shape = "numeric",
     ml_par = "numeric",
     sl_par = "numeric",
+    rs_par = "numeric",
     rc_par = "numeric",
     mr_par = "numeric",
     sr_par = "numeric",
@@ -42,6 +45,7 @@ methods::setClass(
     lkj_shape = 2.0,
     ml_par = 0.0,
     sl_par = 0.5,
+    rs_par = 1.0,
     rc_par = 2.0,
     mr_par = log(0.8),
     sr_par = 0.7,
@@ -58,6 +62,8 @@ methods::setClass(
 #' @param ml_par (real) The location parameter of the normal prior on loadings.
 #' @param sl_par (positive real) The scale parameter
 #' of the normal prior on loadings.
+#' @param rs_par (positive real) The scale parameter
+#' of the Student-t(3,0,) prior on residual standard deviations.
 #' @param rc_par (positive real) The shape parameter of the Beta(rc_par, rc_par)
 #' prior on the residual error correlations.
 #' @param mr_par (real) The location parameter of the normal prior
@@ -89,6 +95,7 @@ new_bmasempriors <- function(
     lkj_shape = 2.0,
     ml_par = 0.0,
     sl_par = 0.5,
+    rs_par = 1.0,
     rc_par = 2.0,
     mr_par = log(0.8),
     sr_par = 0.7,
@@ -100,6 +107,7 @@ new_bmasempriors <- function(
     lkj_shape = lkj_shape,
     ml_par = ml_par,
     sl_par = sl_par,
+    rs_par = rs_par,
     rc_par = rc_par,
     mr_par = mr_par,
     sr_par = sr_par,

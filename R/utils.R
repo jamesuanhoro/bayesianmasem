@@ -264,7 +264,9 @@ get_asy_cov <- function(r_mat) {
 .init_fx <- function(data_list) {
   function() {
     list(
-      resids = rep(0, (data_list$method < 90) * ncol(data_list$r_obs_vec)),
+      resids = rep(
+        0, (data_list$method < 90) * data_list$Ni * (data_list$Ni - 1) %/% 2
+      ),
       loadings_complex = rep(
         0,
         data_list$complex_struc * sum(

@@ -82,7 +82,7 @@ data {
 transformed data {
   real sqrt_two = sqrt(2.0);
   real pi_sqrt_three = pi() / sqrt(3.0);
-  int<lower = 0> Nl_uniq = 1;  // N_non-zero loadings unique
+  int<lower = 0> Nl_uniq = 0;  // N_non-zero loadings unique
   int<lower = 0> Nl = 0;  // N_non-zero loadings
   int<lower = 0> Nl_fixed = 0;  // N_non-zero loadings unique
   int Nisqd2 = (Ni * (Ni - 1)) %/% 2;
@@ -350,6 +350,8 @@ generated quantities {
 
       res_var = 1.0 - diagonal(lamb_phi_lamb);
 
+      res_sds = sqrt(res_var);
+
       {
         int pos_err = 0;
         for (j in 1:(Ni - 1)) {
@@ -437,8 +439,6 @@ generated quantities {
       }
     }
   }
-
-  res_sds = sqrt(res_var);
 
   for (j in 1:Nf) {
     if (Load_mat[markers[j], j] < 0) {

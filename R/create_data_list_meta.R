@@ -51,24 +51,60 @@
   # Shape parameter for LKJ of interfactor corr
   data_list$shape_phi_c <- priors@lkj_shape
   data_list$rm_par <- priors@rm_par # sigma(tau) parameter
+  data_list$rs_par <- priors@rs_par # sigma(res-sd) parameter
   data_list$rc_par <- priors@rc_par # residual corr parameter
   data_list$rm_i_l_par <- priors@mr_par # meta-reg location(intercept)
   data_list$rm_i_s_par <- priors@sr_par # meta-reg scale(intercept)
   data_list$rm_b_s_par <- priors@br_par # meta-reg scale(beta)
 
+  # Sample size
+  data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
   # Sample cov
   data_list$S <- lapply(lavaan::lavInspect(
     lavaan_object, "SampStat"
   ), "[[", "cov")
-  if (isTRUE(correlation)) {
-    data_list$S <- lapply(data_list$S, stats::cov2cor)
-  } else {
-    stop("Only correlation analysis methods are implemented right now.")
-  }
   # Number of items
   data_list$Ni <- nrow(data_list$S[[1]])
-  # Sample size
-  data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
+  # Fail on missing data
+  if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
+    stop("All correlation/covariance matrices must have complete data")
+  }
+
+  if (isTRUE(correlation)) {
+    data_list$S <- lapply(data_list$S, stats::cov2cor)
+    data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
+      vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
+      g_map(vec)
+    }))
+    ni_sq <- ncol(data_list$r_obs_vec)
+    data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
+    for (i in seq_len(data_list$Ng)) {
+      data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
+        data_list$S[[i]], data_list$Np[i]
+      )
+    }
+  } else {
+    theta_var_diag <- diag(param_structure$theta)
+    data_list$res_var_pattern <- theta_var_diag
+    theta_zeroes <- theta_var_diag != 0
+    if (sum(theta_zeroes) > 0) {
+      theta_var_diag[theta_zeroes] <-
+        theta_var_diag[theta_zeroes] - min(theta_var_diag[theta_zeroes]) + 1
+      data_list$res_var_pattern <- theta_var_diag
+    }
+    data_list$res_var_fixed <- array(999, data_list$Ni)
+    ind_names <- rownames(param_structure$theta)
+    fix_rv <- partab[
+      partab$op == "~~" & partab$free == 0 &
+        partab$lhs %in% ind_names & partab$lhs == partab$rhs,
+    ]
+    fix_ind_ids <- unname(sapply(
+      fix_rv$lhs, function(x) which(x == ind_names)
+    ))
+    for (i in seq_len(length(fix_ind_ids))) {
+      data_list$res_var_fixed[fix_ind_ids[i]] <- fix_rv$ustart[i]
+    }
+  }
 
   # Loading pattern
   data_list$loading_pattern <- param_structure$lambda
@@ -144,23 +180,6 @@
   data_list$X <- matrix(nrow = data_list$Ng, ncol = data_list$p)
   data_list$p_c <- 0
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
-
-  # Fail on missing data
-  if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
-    stop("All correlation matrices must have complete data")
-  } else {
-    data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
-      vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
-      g_map(vec)
-    }))
-    ni_sq <- ncol(data_list$r_obs_vec)
-    data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
-    for (i in seq_len(data_list$Ng)) {
-      data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
-        data_list$S[[i]], data_list$Np[i]
-      )
-    }
-  }
 
   return(data_list)
 }
