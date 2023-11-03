@@ -4,7 +4,7 @@
 ^README\.Rmd$
 ^trash\.R$
 ^\.github$
-^cmdstan/mcfar$
+^cmdstan/cfa_cor$
 ^src$
 ^\.github$
 ^_pkgdown\.yml$
