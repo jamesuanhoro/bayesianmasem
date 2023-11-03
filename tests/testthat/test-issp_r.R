@@ -3,7 +3,7 @@ test_that("Corr: Random method works for meta-CFA on issp89", {
   method <- sample(.method_hash(), 1)
   model_syntax <- "# latent variable definitions
     F1 =~ JP1 + JP2 + JP3
-    F2 =~ JN1 + JN2 + JN4 + JN4
+    F2 =~ JN1 + JN2 + JN3 + JN4
     F3 =~ TD1 + TD2
     JN4 ~~ JP2"
 
