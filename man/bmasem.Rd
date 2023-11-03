@@ -48,7 +48,7 @@ for each study.}
 
 \item{correlation}{(LOGICAL)
 If TRUE (default): analyze correlation matrices;
-If FALSE: analyze covariance matrices - not yet available as an option.}
+If FALSE: analyze covariance matrices.}
 
 \item{method}{(character) One of "normal", "lasso", "logistic",
 "GDP", or "none". See details below.}

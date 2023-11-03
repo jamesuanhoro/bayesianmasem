@@ -472,6 +472,13 @@ get_asy_cov <- function(r_mat) {
     params <- c(params, rc_params)
   }
 
+  if (sum(data_list$res_var_pattern) > 0) {
+    rv_idxs <- which(data_list$res_var_pattern != 0)
+    rv_params <- paste0("res_var[", rv_idxs, "]")
+    names(rv_params) <- paste0(ind_names[rv_idxs], "~~", ind_names[rv_idxs])
+    params <- c(params, rv_params)
+  }
+
   return(params)
 }
 
@@ -512,6 +519,10 @@ get_asy_cov <- function(r_mat) {
 
   if (data_list$Nce > 0) {
     params <- c(params, "res_cor")
+  }
+
+  if (data_list$correlation == 0) {
+    params <- c(params, "res_var")
   }
 
   major_parameters <- .bmasem_post_sum(
@@ -561,6 +572,18 @@ get_asy_cov <- function(r_mat) {
     )],
     to = factor_labels[as.integer(
       gsub("phi_mat\\[|,\\d+\\]", "", major_parameters[idxs, ]$variable)
+    )]
+  )
+
+  idxs <- grep("res\\_var", major_parameters$variable)
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Residual variances", op = "~~",
+    from = indicator_labels[as.integer(
+      gsub("res_var\\[|\\]", "", major_parameters[idxs, ]$variable)
+    )],
+    to = indicator_labels[as.integer(
+      gsub("res_var\\[|\\]", "", major_parameters[idxs, ]$variable)
     )]
   )
 

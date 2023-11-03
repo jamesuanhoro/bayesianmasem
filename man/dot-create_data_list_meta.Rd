@@ -41,7 +41,7 @@ This feature is experimental, see details below.}
 
 \item{correlation}{(LOGICAL)
 If TRUE (default): analyze correlation matrices;
-If FALSE: analyze covariance matrices - not yet available as an option.}
+If FALSE: analyze covariance matrices.}
 
 \item{partab}{lavaan parameter table output with ceq.simple & std.lv = TRUE}
 }

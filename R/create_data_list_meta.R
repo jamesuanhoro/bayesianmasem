@@ -71,6 +71,7 @@
   }
 
   if (isTRUE(correlation)) {
+    data_list$correlation <- 1
     data_list$S <- lapply(data_list$S, stats::cov2cor)
     data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
       vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
@@ -84,6 +85,7 @@
       )
     }
   } else {
+    data_list$correlation <- 0
     theta_var_diag <- diag(param_structure$theta)
     data_list$res_var_pattern <- theta_var_diag
     theta_zeroes <- theta_var_diag != 0
