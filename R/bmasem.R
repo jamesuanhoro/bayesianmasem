@@ -18,7 +18,7 @@
 #' for each study.
 #' @param correlation (LOGICAL)
 #' If TRUE (default): analyze correlation matrices;
-#' If FALSE: analyze covariance matrices - not yet available as an option.
+#' If FALSE: analyze covariance matrices.
 #' @param method (character) One of "normal", "lasso", "logistic",
 #' "GDP", or "none". See details below.
 #' @param type (character) One of "fe", "re", or "dep" for fixed-effects,
