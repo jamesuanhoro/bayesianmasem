@@ -43,3 +43,7 @@ bmasem_test_pp_shared <- function(
     )
   }
 }
+
+test_warm <- 500
+test_samp <- 500
+test_chns <- 1

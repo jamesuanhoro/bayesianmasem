@@ -92,12 +92,6 @@ transformed data {
 
   for (i in 1:Ni) {
     for (j in 1:Nf) {
-      if (loading_pattern[i, j] == 1) Nl += 1;
-    }
-  }
-
-  for (i in 1:Ni) {
-    for (j in 1:Nf) {
       if (loading_pattern[i, j] != 0) {
         Nl += 1;
         if (loading_pattern[i, j] > Nl_uniq) Nl_uniq = loading_pattern[i, j];
