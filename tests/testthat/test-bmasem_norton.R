@@ -1,5 +1,4 @@
 test_that("Corr: Dependent samples works for meta-CFA on Norton13", {
-  skip_if_not_installed("cmdstanr")
   method <- sample(.method_hash(), 1)
   model_syntax <- paste0(
     "distress =~ ", paste0("x", 1:14, collapse = " + "), "\n",
@@ -39,7 +38,6 @@ test_that("Corr: Dependent samples works for meta-CFA on Norton13", {
 })
 
 test_that("Cov: Dependent samples works for meta-CFA on Norton13", {
-  skip_if_not_installed("cmdstanr")
   method <- sample(.method_hash(), 1)
   model_syntax <- paste0(
     "distress =~ ", paste0("x", 1:14, collapse = " + "), "\n",
