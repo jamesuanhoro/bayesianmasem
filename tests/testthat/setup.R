@@ -15,7 +15,7 @@ bmasem_test_trace <- function(fit) {
 }
 
 bmasem_test_pp_shared <- function(
-    print_out, method, simple = TRUE, error = FALSE) {
+    print_out, method, simple = TRUE, error = FALSE, corr = TRUE) {
   testthat::expect_true(grepl(method, print_out, ignore.case = TRUE))
   testthat::expect_true(grepl("Goodness of fit", print_out, ignore.case = TRUE))
   testthat::expect_true(grepl("PPP", print_out, ignore.case = TRUE))
@@ -35,6 +35,11 @@ bmasem_test_pp_shared <- function(
   if (isTRUE(error)) {
     testthat::expect_true(
       grepl("Error correlations", print_out, ignore.case = TRUE)
+    )
+  }
+  if (isFALSE(corr)) {
+    testthat::expect_true(
+      grepl("Residual variances", print_out, ignore.case = TRUE)
     )
   }
 }
