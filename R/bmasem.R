@@ -17,8 +17,11 @@
 #' @param sample_nobs (vector of positive integer) Number of observations
 #' for each study.
 #' @param correlation (LOGICAL)
-#' If TRUE (default): analyze correlation matrices;
-#' If FALSE: analyze covariance matrices.
+#' If TRUE (default): analyze correlation matrices based on logarithm
+#' of a matrix transformation
+#' \insertCite{archakov_new_2021}{bayesianmasem};
+#' If FALSE: analyze covariance matrices methods in
+#' \insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.
 #' @param method (character) One of "normal", "lasso", "logistic",
 #' "GDP", or "none". See details below.
 #' @param type (character) One of "fe", "re", or "dep" for fixed-effects,

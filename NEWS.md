@@ -1,5 +1,6 @@
-# bayesianmasem (development version)
+# bayesianmasem 0.0.2
 
+* Added covariance matrix analysis methods
 * Added parameter equality constraints for residual correlations
 
 # bayesianmasem 0.0.1
