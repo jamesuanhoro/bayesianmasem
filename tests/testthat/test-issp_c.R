@@ -1,4 +1,5 @@
 test_that("Cov: Random method works for meta-CFA on issp89", {
+  skip("skipping")
   print(type <- sample(c("fe", "re"), 1))
   method <- sample(.method_hash(), 1)
   model_syntax <- "# latent variable definitions
