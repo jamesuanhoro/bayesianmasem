@@ -8,7 +8,7 @@ test_that("Corr: Dependent samples works for meta-CFA on Norton13", {
   cluster_names <- gsub(
     ",", "", lapply(strsplit(names(Norton13$data), " "), "[[", 1)
   )
-  subset <- c(1, 19:21)
+  subset <- c(1, 19:23)
   cluster_ids <- as.integer(as.factor(cluster_names[subset]))
   expect_error(fit <- bmasem(
     model_syntax,
