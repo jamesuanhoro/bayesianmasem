@@ -10,6 +10,15 @@ test_that("Corr: Dependent samples works for meta-CFA on Norton13", {
   )
   subset <- c(1, 19:21)
   cluster_ids <- as.integer(as.factor(cluster_names[subset]))
+  fit <- bmasem(
+    model_syntax,
+    sample_cov = Norton13$data[subset], sample_nobs = Norton13$n[subset],
+    cluster = cluster_ids,
+    simple_struc = TRUE, orthogonal = TRUE,
+    warmup = test_warm, sampling = test_samp, chains = test_chns,
+    method = method, type = "dep",
+    refresh = 0, show_messages = TRUE
+  )
   expect_error(fit <- bmasem(
     model_syntax,
     sample_cov = Norton13$data[subset], sample_nobs = Norton13$n[subset],
