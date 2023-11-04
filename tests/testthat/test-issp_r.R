@@ -1,10 +1,9 @@
-test_that("Random method works for meta-CFA on issp89", {
-  skip_if_not_installed("cmdstanr")
+test_that("Corr: Random method works for meta-CFA on issp89", {
   print(type <- sample(c("fe", "re"), 1))
   method <- sample(.method_hash(), 1)
   model_syntax <- "# latent variable definitions
     F1 =~ JP1 + JP2 + JP3
-    F2 =~ JN1 + JN2 + JN4 + JN4
+    F2 =~ JN1 + JN2 + JN3 + JN4
     F3 =~ TD1 + TD2
     JN4 ~~ JP2"
 
@@ -13,7 +12,7 @@ test_that("Random method works for meta-CFA on issp89", {
     sample_cov = issp89$data[1:3], sample_nobs = issp89$n[1:3],
     orthogonal = sample(c(TRUE, FALSE), 1),
     simple_struc = sample(c(TRUE, FALSE), 1),
-    warmup = 500, sampling = 500, chains = 1,
+    warmup = test_warm, sampling = test_samp, chains = test_chns,
     method = method, type = type,
     refresh = 0, show_messages = FALSE
   ), NA)

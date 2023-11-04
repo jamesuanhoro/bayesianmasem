@@ -18,6 +18,9 @@ interfactor correlation matrix in confirmatory factor models.}
 \item{\code{sl_par}}{(positive real) The scale parameter
 of the normal prior on loadings.}
 
+\item{\code{rs_par}}{(positive real) The scale parameter
+of the Student-t(3,0,) prior on residual standard deviations.}
+
 \item{\code{rc_par}}{(positive real) The shape parameter of the Beta(rc_par, rc_par)
 prior on the residual error correlations.}
 

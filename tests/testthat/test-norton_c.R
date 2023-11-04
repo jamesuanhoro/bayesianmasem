@@ -1,5 +1,4 @@
-test_that("Dependent samples works for meta-CFA on Norton13", {
-  skip_if_not_installed("cmdstanr")
+test_that("Cov: Dependent samples works for meta-CFA on Norton13", {
   method <- sample(.method_hash(), 1)
   model_syntax <- paste0(
     "distress =~ ", paste0("x", 1:14, collapse = " + "), "\n",
@@ -16,9 +15,9 @@ test_that("Dependent samples works for meta-CFA on Norton13", {
     sample_cov = Norton13$data[subset], sample_nobs = Norton13$n[subset],
     cluster = cluster_ids,
     simple_struc = TRUE, orthogonal = TRUE,
-    warmup = 500, sampling = 500, chains = 1,
+    warmup = test_warm, sampling = test_samp, chains = test_chns,
     method = method, type = "dep",
-    refresh = 0, show_messages = FALSE
+    refresh = 0, show_messages = FALSE, correlation = FALSE
   ), NA)
   expect_true(all(slotNames(fit) %in% c(
     "major_parameters", "minor_factor_matrix", "data_list",
@@ -30,10 +29,10 @@ test_that("Dependent samples works for meta-CFA on Norton13", {
     print_out <- capture_output(pp_summary(fit), width = 300),
     NA
   )
-  bmasem_test_pp_shared(print_out, method)
+  bmasem_test_pp_shared(print_out, method, corr = FALSE)
   expect_error(
     print_out <- capture_output(pp_summary(fit, simple = FALSE), width = 300),
     NA
   )
-  bmasem_test_pp_shared(print_out, method, FALSE)
+  bmasem_test_pp_shared(print_out, method, FALSE, corr = FALSE)
 })

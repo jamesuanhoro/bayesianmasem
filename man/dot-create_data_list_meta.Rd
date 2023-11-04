@@ -40,8 +40,11 @@ then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 This feature is experimental, see details below.}
 
 \item{correlation}{(LOGICAL)
-If TRUE (default): analyze correlation matrices;
-If FALSE: analyze covariance matrices - not yet available as an option.}
+If TRUE (default): analyze correlation matrices based on logarithm
+of a matrix transformation
+\insertCite{archakov_new_2021}{bayesianmasem};
+If FALSE: analyze covariance matrices methods in
+\insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.}
 
 \item{partab}{lavaan parameter table output with ceq.simple & std.lv = TRUE}
 }

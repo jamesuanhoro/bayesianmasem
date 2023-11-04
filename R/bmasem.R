@@ -17,8 +17,11 @@
 #' @param sample_nobs (vector of positive integer) Number of observations
 #' for each study.
 #' @param correlation (LOGICAL)
-#' If TRUE (default): analyze correlation matrices;
-#' If FALSE: analyze covariance matrices - not yet available as an option.
+#' If TRUE (default): analyze correlation matrices based on logarithm
+#' of a matrix transformation
+#' \insertCite{archakov_new_2021}{bayesianmasem};
+#' If FALSE: analyze covariance matrices methods in
+#' \insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.
 #' @param method (character) One of "normal", "lasso", "logistic",
 #' "GDP", or "none". See details below.
 #' @param type (character) One of "fe", "re", or "dep" for fixed-effects,
@@ -180,13 +183,18 @@ bmasem <- function(
 
   message("User input fully processed :)\n Now to modeling.")
 
-  mcfar <- instantiate::stan_package_model(
-    name = "mcfar", package = "bayesianmasem"
+  cfa_model <- instantiate::stan_package_model(
+    name = "cfa_cor", package = "bayesianmasem"
   )
+  if (isFALSE(correlation)) {
+    cfa_model <- instantiate::stan_package_model(
+      name = "cfa_cov", package = "bayesianmasem"
+    )
+  }
 
   message("Fitting Stan model ...")
 
-  stan_fit <- mcfar$sample(
+  stan_fit <- cfa_model$sample(
     data = data_list,
     seed = seed,
     iter_warmup = warmup,
