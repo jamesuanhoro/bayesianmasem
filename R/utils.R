@@ -264,10 +264,14 @@ get_asy_cov <- function(r_mat) {
 .init_fx <- function(data_list) {
   function() {
     list(
-      resids = rep(
+      rms_src_p = array(.025, (data_list$method != 100) * 1),
+      ln_v_int_wi = array(data_list$rm_i_l_par, (data_list$type >= 2) * 1),
+      ln_v_beta_wi = array(0, data_list$p),
+      ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1),
+      resids = array(
         0, (data_list$method < 90) * data_list$Ni * (data_list$Ni - 1) %/% 2
       ),
-      loadings_complex = rep(
+      loadings_complex = array(
         0,
         data_list$complex_struc * sum(
           data_list$loading_pattern == 0 & data_list$loading_fixed == -999
