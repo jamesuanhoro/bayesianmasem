@@ -17,7 +17,7 @@ test_that("Corr: Dependent samples works for meta-CFA on Norton13", {
     simple_struc = TRUE, orthogonal = TRUE,
     warmup = test_warm, sampling = test_samp, chains = test_chns,
     method = method, type = "dep",
-    refresh = 0, show_messages = FALSE
+    refresh = 0, show_messages = TRUE
   ), NA)
   expect_true(all(slotNames(fit) %in% c(
     "major_parameters", "minor_factor_matrix", "data_list",
