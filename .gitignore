@@ -53,7 +53,7 @@ rsconnect/
 src/
 
 # Other files
-trash.R
+trash*
 
 # CmdStan files
 inst/stan/**

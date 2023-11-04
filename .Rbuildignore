@@ -3,8 +3,10 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^trash\.R$
+^trash\.txt$
 ^\.github$
 ^cmdstan/cfa_cor$
+^cmdstan/cfa_cov$
 ^src$
 ^\.github$
 ^_pkgdown\.yml$
