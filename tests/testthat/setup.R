@@ -47,3 +47,24 @@ bmasem_test_pp_shared <- function(
 test_warm <- 300
 test_samp <- 300
 test_chns <- 1
+
+method <- sample(.method_hash(), 1)
+model_syntax <- paste0(
+  "distress =~ ", paste0("x", 1:14, collapse = " + "), "\n",
+  "anxiety =~ ", paste0("x", seq(1, 14, 2), collapse = " + "), "\n",
+  "depression =~ ", paste0("x", seq(2, 14, 2), collapse = " + ")
+)
+cluster_names <- gsub(
+  ",", "", lapply(strsplit(names(Norton13$data), " "), "[[", 1)
+)
+subset <- c(1, 19:21)
+cluster_ids <- as.integer(as.factor(cluster_names[subset]))
+fit <- bmasem(
+  model_syntax,
+  sample_cov = Norton13$data[subset], sample_nobs = Norton13$n[subset],
+  cluster = cluster_ids,
+  simple_struc = TRUE, orthogonal = TRUE,
+  warmup = test_warm, sampling = test_samp, chains = test_chns,
+  method = method, type = "dep",
+  refresh = 0, show_messages = TRUE
+)
