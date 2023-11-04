@@ -269,7 +269,7 @@ get_asy_cov <- function(r_mat) {
       ln_v_beta_wi = array(0, data_list$p),
       ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1),
       resids = array(
-        0, (data_list$method < 90) * data_list$Ni * (data_list$Ni - 1) %/% 2
+        0, (data_list$method < 90) * (data_list$Ni^2 - data_list$Ni) %/% 2
       ),
       loadings_complex = array(
         0,
