@@ -1,0 +1,12 @@
+url: https://jamesuanhoro.github.io/bayesianmasem/
+template:
+  bootstrap: 5
+repo:
+  url:
+    home: https://github.com/jamesuanhoro/bayesianmasem/
+home:
+  links:
+  - text: Report a bug
+    href: https://github.com/jamesuanhoro/bayesianmasem/issues/
+  - text: Ask a question / Make a suggestion
+    href: mailto:James.Uanhoro@unt.edu

@@ -64,3 +64,4 @@ inst/stan/**/*.EXE
 # VSCode files
 .vscode/
 README_files/
+docs
