@@ -110,6 +110,7 @@ generated quantities {
   real D_rep = 0.0;
   real D_obs = 0.0;
   real<lower = 0, upper = 1> ppp;
+  vector[Nisqd2] r_vec = matrix_log_vech(multiply_lower_tri_self_transpose(r_chol));
   matrix[Ni, Ni] r_mat = multiply_lower_tri_self_transpose(r_chol);
   real v_mn = 0.0;
   real rmsea_mn = sqrt(v_mn);
@@ -121,7 +122,6 @@ generated quantities {
   vector[Ng] log_lik;
 
   {
-    vector[Nisqd2] r_vec = matrix_log_vech(r_mat);
     vector[Nisqd2] r_vec_sim;
 
     for (i in 1:Ng) {
