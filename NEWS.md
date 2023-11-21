@@ -1,6 +1,10 @@
+# bayesianmasem 0.1.1
+
+* Pooled object can also be analyzed using bayesianmasem package with `bmasem_stage_2()` function
+
 # bayesianmasem 0.1.0
 
-* Now allows for pooling correlation matrices, pooled matrix can be analyzed in a different software
+* Now allows for pooling correlation matrices `bmasem_stage_1()` function, pooled matrix can be analyzed in a different software
 
 # bayesianmasem 0.0.2
 
