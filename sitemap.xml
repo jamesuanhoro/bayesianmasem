@@ -31,7 +31,10 @@
     <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_plot.html</loc>
   </url>
   <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_pool.html</loc>
+    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.html</loc>
+  </url>
+  <url>
+    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.html</loc>
   </url>
   <url>
     <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasempriors-class.html</loc>
@@ -59,6 +62,9 @@
   </url>
   <url>
     <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_meta.html</loc>
+  </url>
+  <url>
+    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_pooled.html</loc>
   </url>
   <url>
     <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_major_params.html</loc>
