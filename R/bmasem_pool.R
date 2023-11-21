@@ -128,7 +128,7 @@ bmasem_pool <- function(
   )
   r_mat_draws <- posterior::as_draws_matrix(pool_fit$draws("r_mat"))
   r_mat <- matrix(colMeans(r_mat_draws), nrow = data_list$Ni)
-  r_mat_cov <- cov(r_mat_draws[, which(lower.tri(r_mat))])
+  r_mat_cov <- stats::cov(r_mat_draws[, which(lower.tri(r_mat))])
   colnames(r_mat) <- rownames(r_mat) <- var_names
   result <- list(
     fit_indices = fit_indices,
