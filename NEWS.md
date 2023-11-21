@@ -1,3 +1,7 @@
+# bayesianmasem 0.1.2
+
+* Fixed bug in `bmasem_stage_2()` function. The `acov_mat` is now correctly ordered based on lavaan object
+
 # bayesianmasem 0.1.1
 
 * Pooled object can also be analyzed using bayesianmasem package with `bmasem_stage_2()` function
