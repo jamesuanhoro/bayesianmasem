@@ -135,7 +135,7 @@ bmasem_pool <- function(
     r_mat = r_mat,
     r_mat_cov = r_mat_cov,
     data_list = data_list,
-    stanfit = pool_fit
+    stan_fit = pool_fit
   )
 
   return(result)
