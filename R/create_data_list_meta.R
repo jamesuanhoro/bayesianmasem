@@ -19,10 +19,10 @@
   # Get number of groups
   data_list$Ng <- lavaan::lavInspect(lavaan_object, "ngroups")
 
-  if (data_list$Ng < 2) {
-    stop(paste0(
-      "Only one group found. ",
-      "Meta-analysis requires multiple samples."
+  if (data_list$Ng == 1 && type != "fe") {
+    type <- "fe"
+    warning(paste0(
+      "Automatically set to fixed-effects as there is only one group."
     ))
   }
 

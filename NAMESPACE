@@ -2,7 +2,8 @@
 
 export(bmasem)
 export(bmasem_plot)
-export(bmasem_pool)
+export(bmasem_stage_1)
+export(bmasem_stage_2)
 export(g_inv_map)
 export(g_map)
 export(get_asy_cov)
