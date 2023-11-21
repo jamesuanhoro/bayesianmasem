@@ -1,6 +1,6 @@
 Package: bayesianmasem
 Title: Bayesian meta-analytic structural equation modeling with a focus on latent variable models
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: 
     person("James O.", "Uanhoro", , "James.Uanhoro@unt.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-4843-927X"))

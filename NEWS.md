@@ -1,3 +1,7 @@
+# bayesianmasem 0.1.0
+
+* Now allows for pooling correlation matrices, pooled matrix can be analyzed in a different software
+
 # bayesianmasem 0.0.2
 
 * Added covariance matrix analysis methods
