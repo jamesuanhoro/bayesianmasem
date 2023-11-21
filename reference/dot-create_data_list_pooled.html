@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">bayesianmasem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,8 @@
 <span>  simple_struc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  priors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  partab <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  acov_mat <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  acov_mat <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  old_names <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -91,6 +92,11 @@ See <code><a href="new_bmasempriors.html">new_bmasempriors</a></code> for more i
 <dd><p>(Optional) The asymptotic variance matrix of
 lower triangular half (column-order) of the correlation matrix
 to be used for correlation structure analysis.</p></dd>
+
+
+<dt>old_names</dt>
+<dd><p>(Optional) Variable name order of original
+correlation matrix, used to reorder acov_mat.</p></dd>
 
 </dl></div>
     <div class="section level2">
