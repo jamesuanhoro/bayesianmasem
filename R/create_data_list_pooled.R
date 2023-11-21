@@ -5,6 +5,8 @@
 #' @param acov_mat (Optional) The asymptotic variance matrix of
 #' lower triangular half (column-order) of the correlation matrix
 #' to be used for correlation structure analysis.
+#' @param old_names (Optional) Variable name order of original
+#' correlation matrix, used to reorder acov_mat.
 #' @inheritParams bmasem
 #' @returns Data list object used in fitting Stan model
 #' @keywords internal
@@ -14,7 +16,8 @@
     simple_struc = TRUE,
     priors = NULL,
     partab = NULL,
-    acov_mat = NULL) {
+    acov_mat = NULL,
+    old_names = NULL) {
   data_list <- list()
 
   # Get number of groups
@@ -57,8 +60,14 @@
   ni_sq <- length(r_vec)
   data_list$r_obs_vec <- array(g_map(r_vec), dim = c(1, ni_sq))
   data_list$r_obs_vec_cov <- array(dim = c(1, ni_sq, ni_sq))
+  tmp_acov <- acov_mat
+  if (!isTRUE(all.equal(old_names, rownames(param_structure$lambda)))) {
+    tmp_acov <- .fix_acov(
+      acov_mat, old_names, rownames(param_structure$lambda)
+    )
+  }
   data_list$r_obs_vec_cov[1, , ] <- get_avar_mat(
-    data_list$S, data_list$Np[1], acov_mat
+    data_list$S, data_list$Np[1], tmp_acov
   )
   data_list$S <- NULL
 

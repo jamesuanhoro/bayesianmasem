@@ -95,7 +95,8 @@ bmasem_stage_2 <- function(
     simple_struc = simple_struc,
     priors = priors,
     partab = par_table,
-    acov_mat = pool_fit$r_mat_cov
+    acov_mat = pool_fit$r_mat_cov,
+    old_names = rownames(pool_fit$r_mat)
   )
 
   message("User input fully processed :)\n Now to modeling.")

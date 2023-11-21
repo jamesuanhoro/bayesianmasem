@@ -10,7 +10,8 @@
   simple_struc = TRUE,
   priors = NULL,
   partab = NULL,
-  acov_mat = NULL
+  acov_mat = NULL,
+  old_names = NULL
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ See \code{\link{new_bmasempriors}} for more information.}
 \item{acov_mat}{(Optional) The asymptotic variance matrix of
 lower triangular half (column-order) of the correlation matrix
 to be used for correlation structure analysis.}
+
+\item{old_names}{(Optional) Variable name order of original
+correlation matrix, used to reorder acov_mat.}
 }
 \value{
 Data list object used in fitting Stan model
