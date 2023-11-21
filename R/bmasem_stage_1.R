@@ -13,7 +13,7 @@
 #' Additionally, the cluster inputs are not validated.
 #' @examples
 #' \dontrun{
-#' pool_fit <- bmasem_pool(
+#' pool_fit <- bmasem_stage_1(
 #'   sample_cov = issp89$data, sample_nobs = issp89$n
 #' )
 #' pool_fit$r_mat
@@ -21,7 +21,7 @@
 #' }
 #' @references \insertAllCited{}
 #' @export
-bmasem_pool <- function(
+bmasem_stage_1 <- function(
     sample_cov = NULL,
     sample_nobs = NULL,
     type = "re",
