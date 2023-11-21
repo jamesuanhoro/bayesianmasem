@@ -76,8 +76,8 @@ bmasem_stage_2 <- function(
   # Run lavaan fit
   lav_fit <- lavaan::cfa(
     model,
-    sample.cov = list(pool_fit$r_mat, pool_fit$r_mat),
-    sample.nobs = pool_fit$data_list$Np[1:2],
+    sample.cov = pool_fit$r_mat,
+    sample.nobs = sum(pool_fit$data_list$Np),
     std.lv = TRUE,
     likelihood = "wishart", ceq.simple = TRUE,
     do.fit = FALSE, orthogonal = orthogonal
@@ -89,28 +89,14 @@ bmasem_stage_2 <- function(
   )
 
   # Obtain data list for Stan
-  data_list <- .create_data_list_meta(
+  data_list <- .create_data_list_pooled(
     lavaan_object = lav_fit,
     method = method,
-    type = "fe",
     simple_struc = simple_struc,
     priors = priors,
-    cluster = cluster,
-    correlation = TRUE,
-    partab = par_table
+    partab = par_table,
+    acov_mat = pool_fit$r_mat_cov
   )
-  r_vec_draws <- posterior::as_draws_matrix(pool_fit$stan_fit$draws("r_vec"))
-  data_list$Ng <- 1
-  data_list$Np <- array(sum(pool_fit$data_list$Np))
-  nisqd2 <- (data_list$Ni * (data_list$Ni - 1)) %/% 2
-  data_list$S <- array(dim = c(1, data_list$Ni, data_list$Ni))
-  data_list$S[1, , ] <- pool_fit$r_mat
-  data_list$r_obs_vec <- array(dim = c(1, nisqd2))
-  data_list$r_obs_vec[1, ] <- colMeans(r_vec_draws)
-  data_list$r_obs_vec_cov <- array(dim = c(1, nisqd2, nisqd2))
-  data_list$r_obs_vec_cov[1, , ] <- stats::cov(r_vec_draws)
-  data_list$X <- array(dim = c(1, 0))
-  data_list$C_ID <- array(0)
 
   message("User input fully processed :)\n Now to modeling.")
 
