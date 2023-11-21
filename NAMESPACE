@@ -2,6 +2,7 @@
 
 export(bmasem)
 export(bmasem_plot)
+export(bmasem_pool)
 export(g_inv_map)
 export(g_map)
 export(get_asy_cov)
@@ -14,3 +15,4 @@ exportClasses(bmasempriors)
 import(methods)
 importFrom(instantiate,stan_package_model)
 importFrom(methods,show)
+importFrom(stats,cov)
