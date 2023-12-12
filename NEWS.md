@@ -1,3 +1,7 @@
+# bayesianmasem 0.1.3
+
+* Ensure asymptotic variance of log-correlation matrix is symmetric
+
 # bayesianmasem 0.1.2
 
 * Fixed bug in `bmasem_stage_2()` function. The `acov_mat` is now correctly ordered based on lavaan object
