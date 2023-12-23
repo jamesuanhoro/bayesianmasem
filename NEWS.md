@@ -1,3 +1,7 @@
+# bayesianmasem (development version)
+
+* Export model-implied matrix
+
 # bayesianmasem 0.1.3
 
 * Ensure asymptotic variance of log-correlation matrix is symmetric
