@@ -315,11 +315,11 @@ generated quantities {
   vector[p] rmsea_beta_wi;
   real prop_be = 0.0;
   vector[Ng] log_lik;
+  matrix[Ni, Ni] Omega;
 
   if (method != 100) rms_src = rms_src_p[1];
 
   {
-    matrix[Ni, Ni] Omega;
     vector[Nisqd2_vec] r_vec;
     vector[Nisqd2_vec] r_vec_sim;
 
