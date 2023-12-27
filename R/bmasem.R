@@ -33,6 +33,9 @@
 #' @param simple_struc (LOGICAL) Only relevant for CFAs.
 #' If TRUE (default): assume simple structure;
 #' If FALSE: estimate all cross-loadings using generalized
+#' @param x_mat (data.frame)
+#' Meta-analytic predictors. Each row contains the data for a group and
+#' each column is a variable. Column names should be labelled.
 #' @param cluster An optional integer vector identifying the cluster each group
 #' belongs to.
 #' Asssume there are five groups, the first three belong to cluster 1
@@ -113,6 +116,7 @@ bmasem <- function(
     type = "re",
     orthogonal = FALSE,
     simple_struc = TRUE,
+    x_mat = NULL,
     seed = 12345,
     warmup = 1000,
     sampling = 1000,
@@ -178,7 +182,8 @@ bmasem <- function(
     priors = priors,
     cluster = cluster,
     correlation = correlation,
-    partab = par_table
+    partab = par_table,
+    x_mat = x_mat
   )
 
   message("User input fully processed :)\n Now to modeling.")

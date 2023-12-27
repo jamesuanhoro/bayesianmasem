@@ -1,3 +1,8 @@
+# bayesianmasem 0.2.0
+
+* Added meta-analytic SEM predictor matrix
+* Export model-implied matrix
+
 # bayesianmasem 0.1.3
 
 * Ensure asymptotic variance of log-correlation matrix is symmetric
