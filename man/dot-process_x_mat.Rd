@@ -4,7 +4,7 @@
 \alias{.process_x_mat}
 \title{A function to process the meta-analytic SEM predictor matrix}
 \usage{
-.process_x_mat(x_mat, n_groups)
+.process_x_mat(x_mat = NULL, n_groups)
 }
 \arguments{
 \item{x_mat}{(data.frame)

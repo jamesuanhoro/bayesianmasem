@@ -690,7 +690,7 @@ get_asy_cov <- function(r_mat) {
     # detect non-varying columns
     var_variances <- unname(apply(result_mat, 2, var))
     var_zero <- sapply(var_variances, function(x) isTRUE(all.equal(x, 0)))
-    result_mat <- result_mat[, !var_zero]
+    result_mat <- result_mat[, !var_zero, drop = FALSE]
     stopifnot(
       "Number of rows of x_mat must equal number of groups" =
       nrow(x_mat) == n_groups
