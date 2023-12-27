@@ -1,5 +1,6 @@
-# bayesianmasem (development version)
+# bayesianmasem 0.2.0
 
+* Added meta-analytic SEM predictor matrix
 * Export model-implied matrix
 
 # bayesianmasem 0.1.3
