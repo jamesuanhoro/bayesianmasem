@@ -15,6 +15,7 @@ bmasem(
   type = "re",
   orthogonal = FALSE,
   simple_struc = TRUE,
+  x_mat = NULL,
   seed = 12345,
   warmup = 1000,
   sampling = 1000,
@@ -67,6 +68,10 @@ If FALSE (default): according to model syntax.}
 \item{simple_struc}{(LOGICAL) Only relevant for CFAs.
 If TRUE (default): assume simple structure;
 If FALSE: estimate all cross-loadings using generalized}
+
+\item{x_mat}{(data.frame)
+Meta-analytic predictors. Each row contains the data for a group and
+each column is a variable. Column names should be labelled.}
 
 \item{seed}{(positive integer) seed, set to obtain replicable results.}
 

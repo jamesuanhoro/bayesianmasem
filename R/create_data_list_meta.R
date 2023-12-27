@@ -13,7 +13,8 @@
     priors = NULL,
     cluster = NULL,
     correlation = TRUE,
-    partab = NULL) {
+    partab = NULL,
+    x_mat = NULL) {
   data_list <- list()
 
   # Get number of groups
@@ -178,8 +179,8 @@
   data_list$Nce <- nrow(data_list$error_mat)
 
   # For now, no moderators
-  data_list$p <- 0
-  data_list$X <- matrix(nrow = data_list$Ng, ncol = data_list$p)
+  data_list$X <- .process_x_mat(x_mat, data_list$Ng)
+  data_list$p <- ncol(data_list$X)
   data_list$p_c <- 0
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
 

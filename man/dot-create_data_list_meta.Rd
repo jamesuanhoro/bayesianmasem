@@ -12,7 +12,8 @@
   priors = NULL,
   cluster = NULL,
   correlation = TRUE,
-  partab = NULL
+  partab = NULL,
+  x_mat = NULL
 )
 }
 \arguments{
@@ -47,6 +48,10 @@ If FALSE: analyze covariance matrices methods in
 \insertCite{uanhoro_hierarchical_2022}{bayesianmasem}.}
 
 \item{partab}{lavaan parameter table output with ceq.simple & std.lv = TRUE}
+
+\item{x_mat}{(data.frame)
+Meta-analytic predictors. Each row contains the data for a group and
+each column is a variable. Column names should be labelled.}
 }
 \value{
 Data list object used in fitting Stan model

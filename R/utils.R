@@ -437,6 +437,12 @@ get_asy_cov <- function(r_mat) {
       "within RMSEA" = "rmsea_wi", "% between" = "prop_be"
     )
   }
+  if (data_list$p > 0) {
+    rmsea_beta_params <- paste0("rmsea_beta_wi[", seq_len(data_list$p), "]")
+    names(rmsea_beta_params) <- paste0("beta(", colnames(data_list$X), ")")
+    rmsea_params <- c(rmsea_params, rmsea_beta_params)
+  }
+
   params <- c(rms_params, rmsea_params)
 
   phi_idxs <- which(
@@ -504,6 +510,13 @@ get_asy_cov <- function(r_mat) {
     paste0("RMSEA (", c("Overall", "Between", "Within"), ")"),
     "% dispersion between"
   )
+  if (data_list$p > 0) {
+    rmsea_params <- c(
+      rmsea_params, paste0("rmsea_beta_wi[", seq_len(data_list$p), "]")
+    )
+    rmsea_beta_names <- paste0("beta(", colnames(data_list$X), ")")
+    rmsea_names <- c(rmsea_names, rmsea_beta_names)
+  }
   params <- c("ppp", "rms_src", rmsea_params)
   from_list <- c("PPP", "RMSE", rmsea_names)
 
@@ -661,4 +674,27 @@ get_asy_cov <- function(r_mat) {
   new_order_3 <- order(apply(curr_ind_3, 1, min), apply(curr_ind_3, 1, max))
   curr_order_3 <- curr_order_2[new_order_3]
   return(acov_mat[curr_order_3, curr_order_3])
+}
+
+#' A function to process the meta-analytic SEM predictor matrix
+#' @description A function to process the meta-analytic SEM predictor matrix
+#' @param n_groups Number of groups
+#' @inheritParams bmasem
+#' @returns Returns numeric matrix of predictor variables
+#' @keywords internal
+.process_x_mat <- function(x_mat = NULL, n_groups) {
+  if (is.null(x_mat)) {
+    result_mat <- matrix(nrow = n_groups, ncol = 0)
+  } else {
+    result_mat <- na.omit(x_mat)
+    # detect non-varying columns
+    var_variances <- unname(apply(result_mat, 2, var))
+    var_zero <- sapply(var_variances, function(x) isTRUE(all.equal(x, 0)))
+    result_mat <- result_mat[, !var_zero]
+    stopifnot(
+      "Number of rows of x_mat must equal number of groups" =
+      nrow(x_mat) == n_groups
+    )
+  }
+  return(result_mat)
 }
