@@ -4,7 +4,7 @@
 \alias{.process_x_mat}
 \title{A function to process the meta-analytic SEM predictor matrix}
 \usage{
-.process_x_mat(x_mat = NULL, n_groups)
+.process_x_mat(x_mat = NULL, n_groups, type)
 }
 \arguments{
 \item{x_mat}{(data.frame)
@@ -12,6 +12,8 @@ Meta-analytic predictors. Each row contains the data for a group and
 each column is a variable. Column names should be labelled.}
 
 \item{n_groups}{Number of groups}
+
+\item{type}{Type of meta-analysis}
 }
 \value{
 Returns numeric matrix of predictor variables

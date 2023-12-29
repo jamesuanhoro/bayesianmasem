@@ -679,11 +679,12 @@ get_asy_cov <- function(r_mat) {
 #' A function to process the meta-analytic SEM predictor matrix
 #' @description A function to process the meta-analytic SEM predictor matrix
 #' @param n_groups Number of groups
+#' @param type Type of meta-analysis
 #' @inheritParams bmasem
 #' @returns Returns numeric matrix of predictor variables
 #' @keywords internal
-.process_x_mat <- function(x_mat = NULL, n_groups) {
-  if (is.null(x_mat)) {
+.process_x_mat <- function(x_mat = NULL, n_groups, type) {
+  if (is.null(x_mat) || type == 1) {
     result_mat <- matrix(nrow = n_groups, ncol = 0)
   } else {
     result_mat <- na.omit(x_mat)

@@ -1,3 +1,7 @@
+# bayesianmasem (development version)
+
+* If fixed-effects, then set no moderators
+
 # bayesianmasem 0.2.0
 
 * Added meta-analytic SEM predictor matrix
