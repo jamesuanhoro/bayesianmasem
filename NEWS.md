@@ -1,6 +1,7 @@
 # bayesianmasem (development version)
 
 * If fixed-effects, then set no moderators
+* Removed equality test on real numbers in Stan
 
 # bayesianmasem 0.2.0
 
