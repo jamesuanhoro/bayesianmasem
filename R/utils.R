@@ -687,9 +687,9 @@ get_asy_cov <- function(r_mat) {
   if (is.null(x_mat) || type == 1) {
     result_mat <- matrix(nrow = n_groups, ncol = 0)
   } else {
-    result_mat <- na.omit(x_mat)
+    result_mat <- stats::na.omit(x_mat)
     # detect non-varying columns
-    var_variances <- unname(apply(result_mat, 2, var))
+    var_variances <- unname(apply(result_mat, 2, stats::var))
     var_zero <- sapply(var_variances, function(x) isTRUE(all.equal(x, 0)))
     result_mat <- result_mat[, !var_zero, drop = FALSE]
     stopifnot(
