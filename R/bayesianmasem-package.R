@@ -9,5 +9,5 @@
 #' @aliases bayesianmasem
 #' @import methods
 #' @importFrom instantiate stan_package_model
-#' @importFrom stats cov
+#' @importFrom stats cov var na.omit
 NULL
