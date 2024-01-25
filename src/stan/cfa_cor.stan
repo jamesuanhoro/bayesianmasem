@@ -293,7 +293,7 @@ model {
               r_obs_vec[i] | c_clus[i] + g_clus[, C_ID[i]], L_vec_cov[i]
             );
           }
-        } else (marginal_re == 0) {
+        } else if (marginal_re == 0) {
           if (type == 2) {
             target += multi_normal_cholesky_lupdf(
               r_obs_vec[i] | r_vec,
