@@ -92,7 +92,7 @@ bmasem_stage_1 <- function(
   var_names <- rownames(data_list$loading_pattern)
   data_list <- data_list[c(
     "Ng", "Np", "Ni", "r_obs_vec", "r_obs_vec_cov", "rm_i_l_par", "rm_i_s_par",
-    "Nc", "C_ID", "type", "condtional_re"
+    "Nc", "C_ID", "type", "conditional_re"
   )]
 
   message("User input fully processed :)\n Now to modeling.")
