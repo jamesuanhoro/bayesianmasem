@@ -12,7 +12,7 @@ and returns a fitted SEM."><!-- mathjax --><script src="https://cdnjs.cloudflare
     
     <a class="navbar-brand me-2" href="../index.html">bayesianmasem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,8 +70,7 @@ and returns a fitted SEM.</p>
 <span>  ncores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  priors <span class="op">=</span> <span class="fu"><a href="new_bmasempriors.html">new_bmasempriors</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  show <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  show_messages <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  show_messages <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -152,15 +151,6 @@ show table of results. As an example, use FALSE for simulation studies.</p></dd>
 <dt>show_messages</dt>
 <dd><p>(Logical) If TRUE, show messages from Stan sampler,
 if FALSE, hide messages.</p></dd>
-
-
-<dt>cluster</dt>
-<dd><p>An optional integer vector identifying the cluster each group
-belongs to.
-Asssume there are five groups, the first three belong to cluster 1
-and the last two belong to cluster 2,
-then the argument would be: <code>cluster = c(1, 1, 1, 2, 2)</code>.
-This feature is experimental, see details below.</p></dd>
 
 </dl></div>
     <div class="section level2">
