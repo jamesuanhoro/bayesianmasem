@@ -148,7 +148,7 @@ generated quantities {
         m_val = exp(ln_v_int_wi[1]);
         tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
         if (type == 3) {
-          tmp_cov = add_diag(tmp_cov, square(exp(ln_v_int_be[1])));
+          tmp_loc = r_vec + g_clus[, C_ID[i]];
         }
       }
       log_lik[i] = multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
