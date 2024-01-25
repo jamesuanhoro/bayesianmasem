@@ -49,7 +49,7 @@ data {
   int<lower = 0> Nc;  // number of clusters
   array[Ng] int<lower = 0, upper = Nc> C_ID;  // cluster ID
   int<lower = 1, upper = 3> type; // which type
-  int<lower = 0, upper = 1> marginal_re;
+  int<lower = 0, upper = 1> conditional_re;
 }
 transformed data {
   int Nisqd2 = (Ni * (Ni - 1)) %/% 2;
@@ -68,7 +68,7 @@ parameters {
   cholesky_factor_corr[Ni] r_chol;
   vector[N_type_wi] ln_v_int_wi;
   vector[N_type_be] ln_v_int_be;
-  array[Ng * N_type_wi * marginal_re] vector[Nisqd2] c_clus;
+  array[Ng * N_type_wi * conditional_re] vector[Nisqd2] c_clus;
   matrix[Nisqd2, Nc] g_clus;
 }
 model {
@@ -93,7 +93,7 @@ model {
         );
       } else if (type >= 2) {
         m_val = exp(ln_v_int_wi[1]);
-        if (marginal_re == 1) {
+        if (conditional_re == 1) {
           c_clus[i] ~ normal(r_vec, m_val);
           if (type == 2) {
             target += multi_normal_cholesky_lupdf(
@@ -104,7 +104,7 @@ model {
               r_obs_vec[i] | c_clus[i] + g_clus[, C_ID[i]], L_vec_cov[i]
             );
           }
-        } else if (marginal_re == 0) {
+        } else if (conditional_re == 0) {
           if (type == 2) {
             target += multi_normal_cholesky_lupdf(
               r_obs_vec[i] | r_vec,

@@ -42,7 +42,7 @@
 #' and the last two belong to cluster 2,
 #' then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 #' This feature is experimental, see details below.
-#' @param marginal_re (LOGICAL)
+#' @param conditional_re (LOGICAL)
 #' Only relevant for analysis of correlation structures.
 #' If TRUE, sample levels of the study-level random effect;
 #' If FALSE, don't.
@@ -133,7 +133,7 @@ bmasem <- function(
     show = TRUE,
     show_messages = TRUE,
     cluster = NULL,
-    marginal_re = TRUE) {
+    conditional_re = TRUE) {
   message("Processing user input ...")
 
   # Model cannot be NULL
@@ -189,7 +189,7 @@ bmasem <- function(
     correlation = correlation,
     partab = par_table,
     x_mat = x_mat,
-    marginal_re = marginal_re
+    conditional_re = conditional_re
   )
 
   message("User input fully processed :)\n Now to modeling.")

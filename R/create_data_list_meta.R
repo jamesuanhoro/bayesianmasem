@@ -15,7 +15,7 @@
     correlation = TRUE,
     partab = NULL,
     x_mat = NULL,
-    marginal_re = TRUE) {
+    conditional_re = TRUE) {
   data_list <- list()
 
   # Get number of groups
@@ -185,7 +185,7 @@
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
   data_list$p_c <- ncol(data_list$X_c)
 
-  data_list$marginal_re <- as.integer(isTRUE(marginal_re))
+  data_list$conditional_re <- as.integer(isTRUE(conditional_re))
 
   return(data_list)
 }

@@ -37,7 +37,7 @@ bmasem_stage_1 <- function(
     show = TRUE,
     show_messages = TRUE,
     cluster = NULL,
-    marginal_re = TRUE) {
+    conditional_re = TRUE) {
   message("Processing user input ...")
 
   # Priors must be class bmasempriors
@@ -87,7 +87,7 @@ bmasem_stage_1 <- function(
     cluster = cluster,
     correlation = TRUE,
     partab = par_table,
-    marginal_re = marginal_re
+    conditional_re = conditional_re
   )
   var_names <- rownames(data_list$loading_pattern)
   data_list <- data_list[c(
