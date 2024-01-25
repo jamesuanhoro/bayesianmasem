@@ -78,6 +78,7 @@ data {
   int<lower = 1, upper = 3> type; // which type
   matrix[Ni, Nf] load_est;
   matrix[Ni, Nf] load_se;
+  int<lower = 0, upper = 1> marginal_re;
 }
 transformed data {
   real sqrt_two = sqrt(2.0);
@@ -148,7 +149,7 @@ parameters {
   vector[N_type_wi] ln_v_int_wi;
   vector[p] ln_v_beta_wi;
   vector[N_type_be] ln_v_int_be;
-  array[Ng * N_type_wi] vector[Nisqd2_vec] c_clus;
+  array[Ng * N_type_wi * marginal_re] vector[Nisqd2_vec] c_clus;
   matrix[Nisqd2_vec, Nc] g_clus;
 }
 transformed parameters {
@@ -281,15 +282,29 @@ model {
         );
       } else if (type >= 2) {
         m_val = exp(ln_v_int_wi[1] + X[i, ] * ln_v_beta_wi);
-        c_clus[i] ~ normal(r_vec, m_val);
-        if (type == 2) {
-          target += multi_normal_cholesky_lupdf(
-            r_obs_vec[i] | c_clus[i], L_vec_cov[i]
-          );
-        } else if (type == 3) {
-          target += multi_normal_cholesky_lupdf(
-            r_obs_vec[i] | c_clus[i] + g_clus[, C_ID[i]], L_vec_cov[i]
-          );
+        if (marginal_re == 1) {
+          c_clus[i] ~ normal(r_vec, m_val);
+          if (type == 2) {
+            target += multi_normal_cholesky_lupdf(
+              r_obs_vec[i] | c_clus[i], L_vec_cov[i]
+            );
+          } else if (type == 3) {
+            target += multi_normal_cholesky_lupdf(
+              r_obs_vec[i] | c_clus[i] + g_clus[, C_ID[i]], L_vec_cov[i]
+            );
+          }
+        } else (marginal_re == 0) {
+          if (type == 2) {
+            target += multi_normal_cholesky_lupdf(
+              r_obs_vec[i] | r_vec,
+              cholesky_decompose(add_diag(r_obs_vec_cov[i], square(m_val)))
+            );
+          } else if (type == 3) {
+            target += multi_normal_cholesky_lupdf(
+              r_obs_vec[i] | r_vec + g_clus[, C_ID[i]],
+              cholesky_decompose(add_diag(r_obs_vec_cov[i], square(m_val)))
+            );
+          }
         }
       }
     }
@@ -398,7 +413,7 @@ generated quantities {
         m_val = exp(ln_v_int_wi[1] + X[i, ] * ln_v_beta_wi);
         tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
         if (type == 3) {
-          tmp_loc = r_vec + g_clus[, C_ID[i]];
+          tmp_cov = add_diag(tmp_cov, square(exp(ln_v_int_be[1])));
         }
       }
       log_lik[i] = multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
