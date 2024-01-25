@@ -1,3 +1,7 @@
+# bayesianmasem 0.2.2
+
+* Added option to marginalize the random-effects in `type = "RE"` models (longer runtime, larger ESS and ultimately more efficient)
+
 # bayesianmasem 0.2.1
 
 * If fixed-effects, then set no moderators

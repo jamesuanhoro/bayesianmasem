@@ -5,8 +5,6 @@
 ^trash\.R$
 ^trash\.txt$
 ^\.github$
-^src$
-^\.github$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$

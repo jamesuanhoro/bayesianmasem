@@ -20,8 +20,7 @@ bmasem_stage_2(
   ncores = max(parallel::detectCores() - 2, 1),
   priors = new_bmasempriors(),
   show = TRUE,
-  show_messages = TRUE,
-  cluster = NULL
+  show_messages = TRUE
 )
 }
 \arguments{
@@ -69,13 +68,6 @@ show table of results. As an example, use FALSE for simulation studies.}
 
 \item{show_messages}{(Logical) If TRUE, show messages from Stan sampler,
 if FALSE, hide messages.}
-
-\item{cluster}{An optional integer vector identifying the cluster each group
-belongs to.
-Asssume there are five groups, the first three belong to cluster 1
-and the last two belong to cluster 2,
-then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
-This feature is experimental, see details below.}
 }
 \value{
 An object of \code{\link{bmasem-class}}

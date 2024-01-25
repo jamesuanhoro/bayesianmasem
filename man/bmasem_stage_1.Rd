@@ -19,7 +19,8 @@ bmasem_stage_1(
   priors = new_bmasempriors(),
   show = TRUE,
   show_messages = TRUE,
-  cluster = NULL
+  cluster = NULL,
+  conditional_re = TRUE
 )
 }
 \arguments{
@@ -71,6 +72,11 @@ Asssume there are five groups, the first three belong to cluster 1
 and the last two belong to cluster 2,
 then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 This feature is experimental, see details below.}
+
+\item{conditional_re}{(LOGICAL)
+Only relevant for analysis of correlation structures.
+If TRUE, sample levels of the study-level random effect;
+If FALSE, don't.}
 }
 \value{
 A list containing fit indices, pooled correlation matrix,

@@ -60,8 +60,7 @@ bmasem_stage_2 <- function(
     ncores = max(parallel::detectCores() - 2, 1),
     priors = new_bmasempriors(),
     show = TRUE,
-    show_messages = TRUE,
-    cluster = NULL) {
+    show_messages = TRUE) {
   message("Processing user input ...")
 
   # Model cannot be NULL

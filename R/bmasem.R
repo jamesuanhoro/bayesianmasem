@@ -42,6 +42,10 @@
 #' and the last two belong to cluster 2,
 #' then the argument would be: \code{cluster = c(1, 1, 1, 2, 2)}.
 #' This feature is experimental, see details below.
+#' @param conditional_re (LOGICAL)
+#' Only relevant for analysis of correlation structures.
+#' If TRUE, sample levels of the study-level random effect;
+#' If FALSE, don't.
 #' @param seed (positive integer) seed, set to obtain replicable results.
 #' @param warmup (positive integer) The number of warmup iterations to run per
 #' chain.
@@ -128,7 +132,8 @@ bmasem <- function(
     priors = new_bmasempriors(),
     show = TRUE,
     show_messages = TRUE,
-    cluster = NULL) {
+    cluster = NULL,
+    conditional_re = TRUE) {
   message("Processing user input ...")
 
   # Model cannot be NULL
@@ -183,7 +188,8 @@ bmasem <- function(
     cluster = cluster,
     correlation = correlation,
     partab = par_table,
-    x_mat = x_mat
+    x_mat = x_mat,
+    conditional_re = conditional_re
   )
 
   message("User input fully processed :)\n Now to modeling.")

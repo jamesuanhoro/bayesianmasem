@@ -146,5 +146,7 @@
   data_list$p_c <- 0
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
 
+  data_list$conditional_re <- 0
+
   return(data_list)
 }

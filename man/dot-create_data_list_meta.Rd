@@ -13,7 +13,8 @@
   cluster = NULL,
   correlation = TRUE,
   partab = NULL,
-  x_mat = NULL
+  x_mat = NULL,
+  conditional_re = TRUE
 )
 }
 \arguments{
@@ -52,6 +53,11 @@ If FALSE: analyze covariance matrices methods in
 \item{x_mat}{(data.frame)
 Meta-analytic predictors. Each row contains the data for a group and
 each column is a variable. Column names should be labelled.}
+
+\item{conditional_re}{(LOGICAL)
+Only relevant for analysis of correlation structures.
+If TRUE, sample levels of the study-level random effect;
+If FALSE, don't.}
 }
 \value{
 Data list object used in fitting Stan model
