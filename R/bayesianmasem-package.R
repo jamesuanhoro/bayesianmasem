@@ -4,9 +4,8 @@
 #' structural equation models (MASEMs), specifically confirmatory factor models.
 #' The package fits fixed-, random- and dependent-samples MASEMs.
 #'
-#' @docType package
-#' @name bayesianmasem-package
-#' @aliases bayesianmasem
+#' @name bayesianmasem
+#' @aliases bayesianmasem-package
 #' @import methods
 #' @importFrom instantiate stan_package_model
 #' @importFrom stats cov var na.omit
