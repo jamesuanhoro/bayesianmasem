@@ -1,3 +1,7 @@
+# bayesianmasem 0.2.3
+
+* The stage 1 analysis in `bmasem_stage_1()` now additionally returns a pooled partial correlation matrix for network analysis.
+
 # bayesianmasem 0.2.2
 
 * Added option to marginalize the random-effects in `type = "RE"` models (longer runtime, larger ESS and ultimately more efficient)
