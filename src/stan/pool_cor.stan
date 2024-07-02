@@ -2,6 +2,13 @@
 // And each E follows some structured matrix
 // And that structured matrix is IW (see Wu & Browne)
 functions {
+  matrix cov2cor (matrix C_mat) {
+    int p = dims(C_mat)[1];
+    vector[p] S_i = 1 ./ sqrt(diagonal(C_mat));
+    matrix[p, p] R_mat = quad_form_diag(C_mat, S_i);
+    for (i in 1:p) R_mat[i, i] = 1;
+    return R_mat;
+  }
   int sign(real x) {
     if (x > 0)
       return 1;
@@ -65,20 +72,20 @@ transformed data {
   if (type < 3) N_type_be = 0;
 }
 parameters {
-  cholesky_factor_corr[Ni] r_chol;
+  cholesky_factor_corr[Ni] p_chol;
   vector[N_type_wi] ln_v_int_wi;
   vector[N_type_be] ln_v_int_be;
   array[Ng * N_type_wi * conditional_re] vector[Nisqd2] c_clus;
   matrix[Nisqd2, Nc] g_clus;
 }
 model {
-  r_chol ~ lkj_corr_cholesky(1.0);
+  p_chol ~ lkj_corr_cholesky(1.0);
 
   ln_v_int_wi ~ normal(rm_i_l_par, rm_i_s_par);
   ln_v_int_be ~ normal(rm_i_l_par, rm_i_s_par);
 
   {
-    vector[Nisqd2] r_vec = matrix_log_vech(multiply_lower_tri_self_transpose(r_chol));
+    vector[Nisqd2] r_vec = matrix_log_vech(cov2cor(chol2inv(p_chol)));
 
     if (type == 3) {
       to_vector(g_clus) ~ normal(0, exp(ln_v_int_be[1]));
@@ -125,7 +132,8 @@ generated quantities {
   real D_rep = 0.0;
   real D_obs = 0.0;
   real<lower = 0, upper = 1> ppp;
-  matrix[Ni, Ni] r_mat = multiply_lower_tri_self_transpose(r_chol);
+  matrix[Ni, Ni] p_mat = -1 * multiply_lower_tri_self_transpose(p_chol);
+  matrix[Ni, Ni] r_mat = cov2cor(chol2inv(p_chol));
   vector[Nisqd2] r_vec = matrix_log_vech(r_mat);
   real v_mn = 0.0;
   real rmsea_mn = sqrt(v_mn);
@@ -135,6 +143,8 @@ generated quantities {
   real rmsea_be = sqrt(v_be);
   real prop_be = 0.0;
   vector[Ng] log_lik;
+
+  for (i in 1:Ni) p_mat[i, i] = 1.0;
 
   {
     vector[Nisqd2] r_vec_sim;

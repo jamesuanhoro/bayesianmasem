@@ -79,9 +79,10 @@ If TRUE, sample levels of the study-level random effect;
 If FALSE, don't.}
 }
 \value{
-A list containing fit indices, pooled correlation matrix,
-asymptotic covariance matrix, Stan object and
-data_list used to fit Stan object
+A list containing fit indices, pooled correlation matrix and
+its asymptotic covariance matrix, pooled partial correlation matrix and
+its asymptotic covariance matrix, Stan object and data_list used to fit
+Stan object.
 }
 \description{
 A function to pool correlation matrices
@@ -98,8 +99,12 @@ Additionally, the cluster inputs are not validated.
 pool_fit <- bmasem_stage_1(
   sample_cov = issp89$data, sample_nobs = issp89$n
 )
+# Pooled correlation matrix
 pool_fit$r_mat
 pool_fit$r_mat_cov
+Pooled partial correlation matrix
+pool_fit$p_mat
+pool_fit$p_mat_cov
 }
 }
 \references{

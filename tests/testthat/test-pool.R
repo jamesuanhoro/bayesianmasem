@@ -7,7 +7,8 @@ test_that("Random type works for pooling on issp89", {
     type = type, refresh = 0, show_messages = FALSE
   ), NA)
   expect_true(all(names(stage_1) %in% c(
-    "fit_indices", "r_mat", "r_mat_cov", "data_list", "stan_fit"
+    "fit_indices", "r_mat", "r_mat_cov", "p_mat", "p_mat_cov",
+    "data_list", "stan_fit"
   )))
 
   method <- sample(.method_hash(), 1)
@@ -58,7 +59,8 @@ test_that("Dependent-samples works for pooling on Norton13", {
     type = "dep", refresh = 0, show_messages = FALSE
   ), NA)
   expect_true(all(names(stage_1) %in% c(
-    "fit_indices", "r_mat", "r_mat_cov", "data_list", "stan_fit"
+    "fit_indices", "r_mat", "r_mat_cov", "p_mat", "p_mat_cov",
+    "data_list", "stan_fit"
   )))
 
   method <- sample(.method_hash(), 1)

@@ -4,9 +4,10 @@
 #' permitting fixed-, random-effects, and clustered-samples pooling.
 #' Correlation matrices must be complete. This will change in the near future.
 #' @inheritParams bmasem
-#' @returns A list containing fit indices, pooled correlation matrix,
-#' asymptotic covariance matrix, Stan object and
-#' data_list used to fit Stan object
+#' @returns A list containing fit indices, pooled correlation matrix and
+#' its asymptotic covariance matrix, pooled partial correlation matrix and
+#' its asymptotic covariance matrix, Stan object and data_list used to fit
+#' Stan object.
 #' @details
 #' When \code{type = "dep"}, the user must supply the cluster IDs, see cluster
 #' parameter documentation above. However, this feature is experimental.
@@ -16,8 +17,12 @@
 #' pool_fit <- bmasem_stage_1(
 #'   sample_cov = issp89$data, sample_nobs = issp89$n
 #' )
+#' # Pooled correlation matrix
 #' pool_fit$r_mat
 #' pool_fit$r_mat_cov
+#' Pooled partial correlation matrix
+#' pool_fit$p_mat
+#' pool_fit$p_mat_cov
 #' }
 #' @references \insertAllCited{}
 #' @export
@@ -131,11 +136,16 @@ bmasem_stage_1 <- function(
   r_mat_draws <- posterior::as_draws_matrix(pool_fit$draws("r_mat"))
   r_mat <- matrix(colMeans(r_mat_draws), nrow = data_list$Ni)
   r_mat_cov <- stats::cov(r_mat_draws[, which(lower.tri(r_mat))])
-  colnames(r_mat) <- rownames(r_mat) <- var_names
+  p_mat_draws <- posterior::as_draws_matrix(pool_fit$draws("p_mat"))
+  p_mat <- matrix(colMeans(p_mat_draws), nrow = data_list$Ni)
+  p_mat_cov <- stats::cov(p_mat_draws[, which(lower.tri(p_mat))])
+  dimnames(p_mat) <- dimnames(r_mat) <- list(var_names, var_names)
   result <- list(
     fit_indices = fit_indices,
     r_mat = r_mat,
     r_mat_cov = r_mat_cov,
+    p_mat = p_mat,
+    p_mat_cov = p_mat_cov,
     data_list = data_list,
     stan_fit = pool_fit
   )
