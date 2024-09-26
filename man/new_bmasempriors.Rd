@@ -10,7 +10,7 @@ new_bmasempriors(
   sl_par = 0.5,
   rs_par = 1,
   rc_par = 2,
-  mr_par = log(0.8),
+  mr_par = log(0.08),
   sr_par = 0.7,
   br_par = 0.5,
   rm_par = 0.15
