@@ -1,3 +1,7 @@
+# bayesianmasem 0.2.4
+
+* Fixed default prior for location on log-RMSEA
+
 # bayesianmasem 0.2.3
 
 * The stage 1 analysis in `bmasem_stage_1()` now additionally returns a pooled partial correlation matrix for network analysis.
