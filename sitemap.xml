@@ -1,135 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/404.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/Norton13.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bayesianmasem.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem-class.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasempriors-class.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-bayesianmasem_version.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-bmasem_post_sum.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_data.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_method.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_type.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-clean_up_stan_fit.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-converter_helper.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_meta.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_pooled.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_major_params.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-fix_acov.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-four_idx_solver.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-get_param_list.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-init_fx.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-method_hash.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-minimum_r_version.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-modify_major_params.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-omega_computer.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-onAttach.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-process_x_mat.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-type_hash.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-user_input_check.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/g_inv_map.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/g_map.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/get_asy_cov.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/get_avar_mat.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/issp89.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/log_m.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/new_bmasempriors.html</loc>
-  </url>
-  <url>
-    <loc>https://jamesuanhoro.github.io/bayesianmasem/reference/pp_summary.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/404.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/LICENSE.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/authors.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/index.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/news/index.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/Norton13.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bayesianmasem.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem-class.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_plot.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/bmasempriors-class.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-bayesianmasem_version.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-bmasem_post_sum.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_data.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_method.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-check_bm_type.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-clean_up_stan_fit.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-converter_helper.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_meta.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_data_list_pooled.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-create_major_params.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-fix_acov.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-four_idx_solver.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-get_param_list.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-init_fx.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-method_hash.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-minimum_r_version.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-modify_major_params.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-omega_computer.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-onAttach.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-process_x_mat.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-type_hash.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/dot-user_input_check.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/g_inv_map.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/g_map.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/get_asy_cov.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/get_avar_mat.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/index.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/issp89.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/log_m.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/new_bmasempriors.html</loc></url>
+<url><loc>https://jamesuanhoro.github.io/bayesianmasem/reference/pp_summary.html</loc></url>
 </urlset>
+
