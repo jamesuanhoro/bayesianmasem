@@ -15,8 +15,6 @@ version](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
 ![GitHub last
 commit](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem)
 [![R-CMD-check](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml)
-[![bayesianmasem status
-badge](https://jamesuanhoro.r-universe.dev/badges/bayesianmasem)](https://jamesuanhoro.r-universe.dev)
 
 #### Table of Contents
 
@@ -119,7 +117,8 @@ are documented: `?bmasem`.
 
 ## Citations
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-Cheung-metaSEM" class="csl-entry">
 
