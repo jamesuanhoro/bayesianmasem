@@ -17,7 +17,6 @@ devtools::load_all()
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/bayesianmasem)](https://cran.r-project.org/package=bayesianmasem)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem)
 [![R-CMD-check](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/jamesuanhoro/bayesianmasem/actions/workflows/check-standard.yaml)
-[![bayesianmasem status badge](https://jamesuanhoro.r-universe.dev/badges/bayesianmasem)](https://jamesuanhoro.r-universe.dev)
 
 #### Table of Contents
 
