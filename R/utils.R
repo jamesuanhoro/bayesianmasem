@@ -21,11 +21,10 @@
 #' @returns Package version as string
 #' @keywords internal
 .bayesianmasem_version <- function() {
-  version <- read.dcf(
+  read.dcf(
     system.file("DESCRIPTION", package = "bayesianmasem"),
     fields = "Version"
   )[1]
-  return(version)
 }
 
 #' Get R minimum function
@@ -36,8 +35,7 @@
     system.file("DESCRIPTION", package = "bayesianmasem"),
     fields = "Depends"
   )[1]
-  r_version <- trimws(gsub("R \\(>=|\\)", "", r_version_info))
-  return(r_version)
+  trimws(gsub("R \\(>=|\\)", "", r_version_info))
 }
 
 #' Log matrix function using eigendecomposition
@@ -46,7 +44,7 @@
 #' @export
 log_m <- function(r_mat) {
   eig <- eigen(r_mat, symmetric = TRUE)
-  return(eig$vectors %*% diag(log(eig$values)) %*% t(eig$vectors))
+  eig$vectors %*% diag(log(eig$values)) %*% t(eig$vectors)
 }
 
 #' Log matrix function using eigendecomposition
@@ -61,7 +59,7 @@ g_map <- function(r_vec) {
   diag(r_mat) <- 1
   r_log_mat <- log_m(r_mat)
   r_log_vec <- r_log_mat[lower.tri(r_log_mat, diag = FALSE)]
-  return(r_log_vec)
+  r_log_vec
 }
 
 #' Asymptotic variance matrix of lower half vector of log(correlation matrix)
@@ -139,7 +137,7 @@ get_asy_cov <- function(r_mat) {
   ltri_idxs <- which(lower.tri(r_mat), arr.ind = TRUE)
   p_ast <- nrow(ltri_idxs)
   omega <- .omega_computer(r_mat, p_ast, ltri_idxs)
-  return(omega)
+  omega
 }
 
 #' Asymptotic variance matrix of lower half vector of correlation matrix
@@ -162,7 +160,7 @@ get_asy_cov <- function(r_mat) {
     omega[col, sub_idx] <- res_vec
     omega[sub_idx, col] <- res_vec
   }
-  return(omega)
+  omega
 }
 
 #' An internal solver for omega
@@ -183,13 +181,13 @@ get_asy_cov <- function(r_mat) {
   r_s[, 4] <- r_mat[(k - 1) * p + j]
   r_s[, 5] <- r_mat[(l - 1) * p + j]
   r_s[, 6] <- r_mat[(l - 1) * p + k]
-  ret <- .5 * r_s[, 1] * r_s[, 6] *
-    (r_s[, 2]^2 + r_s[, 3]^2 + r_s[, 4]^2 + r_s[, 5]^2) +
-    r_s[, 2] * r_s[, 5] + r_s[, 3] * r_s[, 4] - (
-      r_s[, 1] * r_s[, 2] * r_s[, 3] + r_s[, 1] * r_s[, 4] * r_s[, 5] +
-        r_s[, 2] * r_s[, 4] * r_s[, 6] + r_s[, 3] * r_s[, 5] * r_s[, 6]
-    )
-  return(ret)
+  ret <- .5 * r_s[, 1] * r_s[, 6] * (
+    r_s[, 2]^2 + r_s[, 3]^2 + r_s[, 4]^2 + r_s[, 5]^2
+  ) + r_s[, 2] * r_s[, 5] + r_s[, 3] * r_s[, 4] - (
+    r_s[, 1] * r_s[, 2] * r_s[, 3] + r_s[, 1] * r_s[, 4] * r_s[, 5] +
+      r_s[, 2] * r_s[, 4] * r_s[, 6] + r_s[, 3] * r_s[, 5] * r_s[, 6]
+  )
+  ret
 }
 
 #' Type hash function
@@ -255,7 +253,7 @@ get_asy_cov <- function(r_mat) {
     converted_value <- as.integer(str_list[idx])
   }
 
-  return(converted_value)
+  converted_value
 }
 
 #' Initial values for Stan fitter
@@ -491,7 +489,7 @@ get_asy_cov <- function(r_mat) {
     params <- c(params, rv_params)
   }
 
-  return(params)
+  params
 }
 
 #' Create major parameters helper function
@@ -665,7 +663,7 @@ get_asy_cov <- function(r_mat) {
   new_locs <- sapply(old_names, function(x) {
     ret <- which(x == new_names)
     if (length(ret) == 0) ret <- NA
-    return(ret)
+    ret
   })
   curr_ind_3 <- matrix(nrow = nrow(curr_ind_2), ncol = ncol(curr_ind_2))
   for (i in seq_len(length(new_locs))) {
@@ -673,7 +671,7 @@ get_asy_cov <- function(r_mat) {
   }
   new_order_3 <- order(apply(curr_ind_3, 1, min), apply(curr_ind_3, 1, max))
   curr_order_3 <- curr_order_2[new_order_3]
-  return(acov_mat[curr_order_3, curr_order_3])
+  acov_mat[curr_order_3, curr_order_3]
 }
 
 #' A function to process the meta-analytic SEM predictor matrix
@@ -694,7 +692,7 @@ get_asy_cov <- function(r_mat) {
     result_mat <- result_mat[, !var_zero, drop = FALSE]
     stopifnot(
       "Number of rows of x_mat must equal number of groups" =
-      nrow(x_mat) == n_groups
+        nrow(x_mat) == n_groups
     )
   }
   return(result_mat)

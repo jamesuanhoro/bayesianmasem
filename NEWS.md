@@ -1,3 +1,7 @@
+# bayesianmasem (development version)
+
+* Trivial code cleanup
+
 # bayesianmasem 0.2.4
 
 * Fixed default prior for location on log-RMSEA
