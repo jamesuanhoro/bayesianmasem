@@ -391,13 +391,7 @@ get_asy_cov <- function(r_mat) {
     variable = variable
   )
 
-  lo_lim <- (1.0 - interval) / 2.0
-  up_lim <- 1.0 - lo_lim # nolint
-  result <- as.data.frame(posterior::summarise_draws(
-    draws, "mean", "median", "sd", "mad",
-    ~ quantile(.x, probs = c(lo_lim, up_lim), na.rm = TRUE),
-    posterior::default_convergence_measures()
-  ))
+  result <- .bmasem_post_sum_draws(draws, interval)
 
   if (isTRUE(major)) {
     result <- cbind(
@@ -407,6 +401,24 @@ get_asy_cov <- function(r_mat) {
     )
   }
 
+  return(result)
+}
+
+#' Posterior summary worker function
+#' @description A worker that slightly modifies the default summary function
+#' in posterior package.
+#' @param draws Posterior draws
+#' @param interval Confidence interval to select
+#' @returns Summary of posterior draws
+#' @keywords internal
+.bmasem_post_sum_draws <- function(draws, interval = .9) {
+  lo_lim <- (1.0 - interval) / 2.0
+  up_lim <- 1.0 - lo_lim # nolint
+  result <- as.data.frame(posterior::summarise_draws(
+    draws, "mean", "median", "sd", "mad",
+    ~ quantile(.x, probs = c(lo_lim, up_lim), na.rm = TRUE),
+    posterior::default_convergence_measures()
+  ))
   return(result)
 }
 

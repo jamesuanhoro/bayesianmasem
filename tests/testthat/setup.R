@@ -14,6 +14,22 @@ bmasem_test_trace <- function(fit) {
   testthat::expect_true(inherits(gg, "ggplot"))
 }
 
+bmasem_test_comp_rel <- function(fit) {
+  testthat::expect_error(
+    cr <- bmasem_composite_reliability(fit),
+    NA
+  )
+  testthat::expect_true(inherits(cr, "data.frame"))
+}
+
+bmasem_test_comp_rel_draws <- function(fit) {
+  testthat::expect_error(
+    cr <- bmasem_composite_reliability(fit, return_draws = TRUE),
+    NA
+  )
+  testthat::expect_true(inherits(cr, "draws_array"))
+}
+
 bmasem_test_pp_shared <- function(
     print_out, method, simple = TRUE, error = FALSE, corr = TRUE) {
   testthat::expect_true(grepl(method, print_out, ignore.case = TRUE))

@@ -1,4 +1,4 @@
-#' Pretty print model results
+#' Plot model results
 #'
 #' @description Plot model parameters
 #' @param object (bmasem) An object of \code{\link{bmasem-class}}
@@ -18,7 +18,7 @@
 #'   "anxiety =~ ", paste0("x", seq(1, 14, 2), collapse = " + "), "\n",
 #'   "depression =~ ", paste0("x", seq(2, 14, 2), collapse = " + ")
 #' )
-#' bmasem(
+#' fit <- bmasem(
 #'   model_syntax,
 #'   sample_cov = Norton13$data, sample_nobs = Norton13$n, orthogonal = TRUE
 #' )
