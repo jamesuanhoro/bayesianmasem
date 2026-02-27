@@ -2,7 +2,7 @@
 % Please edit documentation in R/bmasem_plot.R
 \name{bmasem_plot}
 \alias{bmasem_plot}
-\title{Pretty print model results}
+\title{Plot model results}
 \usage{
 bmasem_plot(object, type = "trace", subset = NULL, ...)
 }
@@ -33,7 +33,7 @@ model_syntax <- paste0(
   "anxiety =~ ", paste0("x", seq(1, 14, 2), collapse = " + "), "\n",
   "depression =~ ", paste0("x", seq(2, 14, 2), collapse = " + ")
 )
-bmasem(
+fit <- bmasem(
   model_syntax,
   sample_cov = Norton13$data, sample_nobs = Norton13$n, orthogonal = TRUE
 )

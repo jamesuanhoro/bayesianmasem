@@ -1,5 +1,6 @@
 # bayesianmasem (development version)
 
+* Added composite reliability calculation for each factor in `bmasem_composite_reliability()`.
 * Trivial code cleanup
 
 # bayesianmasem 0.2.4
