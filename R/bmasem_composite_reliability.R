@@ -17,19 +17,17 @@
 #' @details This metric is the ratio of common variance (CV) to
 #' total variance (TV) for each factor.
 #'
-#' - **Common Variance**: For factor \( f \), the common variance is:
-#'   \[
-#'   \mathrm{CV}_f =
-#'   \left(\sum_{i \in I_f} \lambda_{if}\right)^2 \phi_{ff},
-#'   \]
-#'   where \( I_f \) indexes the indicators of factor \( f \).
-#' - **Total Variance**: For factor \( f \), the total variance is:
-#'   \[
-#'   \mathrm{TV}_f =
-#'   \sum_{i \in I_f} \sum_{j \in I_f} \omega_{ij},
-#'   \]
-#'   where \( \Omega = = (\omega_{ij}) \) is the model-implied covariance
-#'   matrix of the observed indicators.
+#' - **Common Variance**: For factor \eqn{f}, the common variance is:
+#'   \deqn{
+#'   \mathrm{CV}_f = (\sum_{i \in I_f} \lambda_{if})^2 \phi_{ff},
+#'   }
+#'   where \eqn{I_f} indexes the indicators of factor \eqn{f}.
+#' - **Total Variance**: For factor \eqn{f}, the total variance is:
+#'   \deqn{
+#'   \mathrm{TV}_f = \sum_{i \in I_f} \sum_{j \in I_f} \omega_{ij},
+#'   }
+#'   where \eqn{\Omega = = (\omega_{ij})} is the model-implied covariance
+#'   matrix of the indicators.
 #' @examples
 #' \dontrun{
 #' model_syntax <- paste0(
