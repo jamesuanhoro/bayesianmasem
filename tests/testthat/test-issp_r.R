@@ -23,6 +23,7 @@ test_that("Corr: Random method works for meta-CFA on issp89", {
   bmasem_test_hist(fit)
   bmasem_test_trace(fit)
   bmasem_test_comp_rel(fit)
+  bmasem_test_comp_rel_draws(fit)
   expect_error(
     print_out <- capture_output(pp_summary(fit), width = 300),
     NA
