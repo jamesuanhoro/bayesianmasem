@@ -14,20 +14,31 @@ bmasem_test_trace <- function(fit) {
   testthat::expect_true(inherits(gg, "ggplot"))
 }
 
-bmasem_test_comp_rel <- function(fit) {
+bmasem_test_comp_rel <- function(fit, ret_draws = FALSE) {
   testthat::expect_error(
-    cr <- bmasem_composite_reliability(fit),
+    cr <- bmasem_composite_reliability(fit, return_draws = ret_draws),
     NA
   )
-  testthat::expect_true(inherits(cr, "data.frame"))
+  if (isTRUE(ret_draws)) {
+    testthat::expect_true(inherits(cr, "draws_array"))
+  } else {
+    testthat::expect_true(inherits(cr, "data.frame"))
+  }
 }
 
-bmasem_test_comp_rel_draws <- function(fit) {
-  testthat::expect_error(
-    cr <- bmasem_composite_reliability(fit, return_draws = TRUE),
-    NA
-  )
-  testthat::expect_true(inherits(cr, "draws_array"))
+bmasem_test_res_net <- function(fit, method) {
+  if (.method_hash(method) >= 90) {
+    testthat::expect_error(
+      bmasem_residual_network(fit),
+      "There are no residuals to plot when method == \"none\"."
+    )
+  } else {
+    testthat::expect_error(
+      b_res_net <- bmasem_residual_network(fit),
+      NA
+    )
+    testthat::expect_true(inherits(b_res_net, "draws_df"))
+  }
 }
 
 bmasem_test_pp_shared <- function(
