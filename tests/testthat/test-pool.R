@@ -32,7 +32,8 @@ test_that("Random type works for pooling on issp89", {
   bmasem_test_hist(stage_2)
   bmasem_test_trace(stage_2)
   bmasem_test_comp_rel(stage_2)
-  bmasem_test_comp_rel_draws(stage_2)
+  bmasem_test_comp_rel(stage_2, TRUE)
+  bmasem_test_res_net(stage_2, method)
   expect_error(
     print_out <- capture_output(pp_summary(stage_2), width = 300),
     NA
@@ -86,7 +87,8 @@ test_that("Dependent-samples works for pooling on Norton13", {
   bmasem_test_hist(stage_2)
   bmasem_test_trace(stage_2)
   bmasem_test_comp_rel(stage_2)
-  bmasem_test_comp_rel_draws(stage_2)
+  bmasem_test_comp_rel(stage_2, TRUE)
+  bmasem_test_res_net(stage_2, method)
   expect_error(
     print_out <- capture_output(pp_summary(stage_2), width = 300),
     NA

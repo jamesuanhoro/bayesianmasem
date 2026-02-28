@@ -1,7 +1,8 @@
 # bayesianmasem (development version)
 
 * Added composite reliability calculation for each factor in `bmasem_composite_reliability()`.
-* Trivial code cleanup
+* Added residual network (https://doi.org/10.1007/s11336-017-9557-x) in `bmasem_residual_network()`. This simply transforms the random error matrix into a partial correlation matrix.
+* Some code cleanup.
 
 # bayesianmasem 0.2.4
 

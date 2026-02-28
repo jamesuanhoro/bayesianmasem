@@ -3,6 +3,7 @@
 export(bmasem)
 export(bmasem_composite_reliability)
 export(bmasem_plot)
+export(bmasem_residual_network)
 export(bmasem_stage_1)
 export(bmasem_stage_2)
 export(g_inv_map)
