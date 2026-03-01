@@ -9,6 +9,9 @@
   [`bmasem_residual_network()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_residual_network.md).
   This simply transforms the random error matrix into a partial
   correlation matrix.
+- Whitening vectors to use univariate instead of multi-normal
+  likelihoods for correlation matrix inputs resulting in speedup for
+  larger matrices.
 - Some code cleanup.
 
 ## bayesianmasem 0.2.4

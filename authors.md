@@ -9,12 +9,12 @@
 
 Uanhoro J (2026). *bayesianmasem: Bayesian meta-analytic structural
 equation modeling with a focus on latent variable models*. R package
-version 0.2.4.9002, <https://jamesuanhoro.github.io/bayesianmasem/>.
+version 0.2.4.9003, <https://jamesuanhoro.github.io/bayesianmasem/>.
 
     @Manual{,
       title = {bayesianmasem: Bayesian meta-analytic structural equation modeling with a focus on latent variable models},
       author = {James O. Uanhoro},
       year = {2026},
-      note = {R package version 0.2.4.9002},
+      note = {R package version 0.2.4.9003},
       url = {https://jamesuanhoro.github.io/bayesianmasem/},
     }

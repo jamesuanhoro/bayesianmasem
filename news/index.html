@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bayesianmasem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,7 @@
 <h2 class="pkg-version" data-toc-text="development version" id="bayesianmasem-development-version">bayesianmasem (development version)<a class="anchor" aria-label="anchor" href="#bayesianmasem-development-version"></a></h2>
 <ul><li>Added composite reliability calculation for each factor in <code><a href="../reference/bmasem_composite_reliability.html">bmasem_composite_reliability()</a></code>.</li>
 <li>Added residual network (<a href="https://doi.org/10.1007/s11336-017-9557-x" class="external-link uri">https://doi.org/10.1007/s11336-017-9557-x</a>) in <code><a href="../reference/bmasem_residual_network.html">bmasem_residual_network()</a></code>. This simply transforms the random error matrix into a partial correlation matrix.</li>
+<li>Whitening vectors to use univariate instead of multi-normal likelihoods for correlation matrix inputs resulting in speedup for larger matrices.</li>
 <li>Some code cleanup.</li>
 </ul></div>
     <div class="section level2">
