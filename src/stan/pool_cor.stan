@@ -70,6 +70,13 @@ transformed data {
 
   if (type < 2) N_type_wi = 0;
   if (type < 3) N_type_be = 0;
+
+  array[Ng] vector[Nisqd2] r_obs_vec_white;
+  array[Ng] matrix[Nisqd2, Nisqd2] L_vec_cov_inv;
+  for (i in 1:Ng) {
+    L_vec_cov_inv[i] = inverse(L_vec_cov[i]);
+    r_obs_vec_white[i] = L_vec_cov_inv[i] * r_obs_vec[i];
+  }
 }
 parameters {
   cholesky_factor_corr[Ni] p_chol;
@@ -95,20 +102,16 @@ model {
       real m_val;
 
       if (type == 1) {
-        target += multi_normal_cholesky_lupdf(
-          r_obs_vec[i] | r_vec, L_vec_cov[i]
-        );
+        target += normal_lupdf(r_obs_vec_white[i] | L_vec_cov_inv[i] * r_vec, 1);
       } else if (type >= 2) {
         m_val = exp(ln_v_int_wi[1]);
         if (conditional_re == 1) {
           c_clus[i] ~ normal(r_vec, m_val);
           if (type == 2) {
-            target += multi_normal_cholesky_lupdf(
-              r_obs_vec[i] | c_clus[i], L_vec_cov[i]
-            );
+            target += normal_lupdf(r_obs_vec_white[i] | L_vec_cov_inv[i] * c_clus[i], 1);
           } else if (type == 3) {
-            target += multi_normal_cholesky_lupdf(
-              r_obs_vec[i] | c_clus[i] + g_clus[, C_ID[i]], L_vec_cov[i]
+            target += normal_lupdf(
+              r_obs_vec_white[i] | L_vec_cov_inv[i] * (c_clus[i] + g_clus[, C_ID[i]]), 1
             );
           }
         } else if (conditional_re == 0) {
