@@ -1,9 +1,8 @@
-# bayesianmasem 0.2.5
+# bayesianmasem (development version)
 
 * Added composite reliability calculation for each factor in `bmasem_composite_reliability()`.
 * Added residual network (https://doi.org/10.1007/s11336-017-9557-x) in `bmasem_residual_network()`. This simply transforms the random error matrix into a partial correlation matrix.
 * Whitening vectors to use univariate instead of multi-normal likelihoods for correlation matrix inputs resulting in speedup for larger matrices.
-* Can handle missing elements in correlation matrices
 * Some code cleanup
 
 # bayesianmasem 0.2.4

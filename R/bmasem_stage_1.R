@@ -70,10 +70,6 @@ bmasem_stage_1 <- function(
   )
 
   # Run lavaan fit
-  sample_cov <- lapply(sample_cov, \(x) {
-    suppressWarnings(x <- stats::cov2cor(x))
-    x
-  })
   lav_fit <- lavaan::cfa(
     model,
     sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
