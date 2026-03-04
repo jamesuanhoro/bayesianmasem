@@ -43,7 +43,8 @@ the data object.}
 \item{sample_cov}{(list of matrices) sample covariance or correlation
 matrices.
 The rownames and/or colnames must contain the observed variable names.
-For now, assumes there are no missing elements in the covariance matrices.}
+There may be missing elements in correlation matrices but not covariance
+matrices (for now).}
 
 \item{sample_nobs}{(vector of positive integer) Number of observations
 for each study.}
@@ -113,8 +114,11 @@ This feature is experimental, see details below.}
 
 \item{conditional_re}{(LOGICAL)
 Only relevant for analysis of correlation structures.
-If TRUE, sample levels of the study-level random effect;
-If FALSE, don't.}
+If TRUE, sample levels of the study-level random effect (usually faster);
+If FALSE, don't.
+If there are missing elements in any correlation matrix,
+the choice here is overriden and set to FALSE.
+Without this constraint, model estimation may not converge.}
 }
 \value{
 An object of \code{\link{bmasem-class}}

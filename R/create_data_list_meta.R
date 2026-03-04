@@ -67,25 +67,39 @@
   ), "[[", "cov")
   # Number of items
   data_list$Ni <- nrow(data_list$S[[1]])
-  # Fail on missing data
-  if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
-    stop("All correlation/covariance matrices must have complete data")
+  # Fail on missing data if covariance approach
+  if (
+    any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0))) &&
+      !isTRUE(correlation)
+  ) {
+    stop("All covariance matrices must have complete data")
   }
+
+  data_list$conditional_re <- as.integer(isTRUE(conditional_re))
 
   if (isTRUE(correlation)) {
     data_list$correlation <- 1
-    data_list$S <- lapply(data_list$S, stats::cov2cor)
-    data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
-      vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
-      g_map(vec)
-    }))
-    ni_sq <- ncol(data_list$r_obs_vec)
+    ni_sq <- (data_list$Ni * (data_list$Ni - 1)) %/% 2
+    data_list$r_obs_vec <- matrix(nrow = data_list$Ng, ncol = ni_sq)
     data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
+    any_missing <- FALSE
     for (i in seq_len(data_list$Ng)) {
-      data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
-        data_list$S[[i]], data_list$Np[i]
-      )
+      s <- data_list$S[[i]]
+      if (sum(is.na(s)) > 0) {
+        i_list <- .get_log_mat_missing(s, data_list$Np[i])
+        data_list$r_obs_vec[i, ] <- i_list$u_bar
+        data_list$r_obs_vec_cov[i, , ] <- i_list$u_var
+        any_missing <- TRUE
+      } else {
+        data_list$r_obs_vec[i, ] <- stats::cov2cor(
+          s
+        )[lower.tri(s, diag = FALSE)]
+        data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(s, data_list$Np[i])
+      }
     }
+    data_list$conditional_re <- ifelse(
+      isTRUE(any_missing), FALSE, data_list$conditional_re
+    )
   } else {
     data_list$correlation <- 0
     theta_var_diag <- diag(param_structure$theta)
@@ -184,8 +198,6 @@
   data_list$p <- ncol(data_list$X)
   data_list$X_c <- matrix(nrow = 0, ncol = 0)
   data_list$p_c <- ncol(data_list$X_c)
-
-  data_list$conditional_re <- as.integer(isTRUE(conditional_re))
 
   return(data_list)
 }

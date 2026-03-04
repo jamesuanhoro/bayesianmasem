@@ -20,6 +20,7 @@
 #' p_corr_mat
 #' qgraph::qgraph(p_corr_mat)
 #' }
+#' @references \insertAllCited{}
 #' @export
 bmasem_residual_network <- function(object) {
   stopifnot(inherits(object, "bmasem"))

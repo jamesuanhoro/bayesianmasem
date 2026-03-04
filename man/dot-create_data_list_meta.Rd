@@ -56,8 +56,11 @@ each column is a variable. Column names should be labelled.}
 
 \item{conditional_re}{(LOGICAL)
 Only relevant for analysis of correlation structures.
-If TRUE, sample levels of the study-level random effect;
-If FALSE, don't.}
+If TRUE, sample levels of the study-level random effect (usually faster);
+If FALSE, don't.
+If there are missing elements in any correlation matrix,
+the choice here is overriden and set to FALSE.
+Without this constraint, model estimation may not converge.}
 }
 \value{
 Data list object used in fitting Stan model
