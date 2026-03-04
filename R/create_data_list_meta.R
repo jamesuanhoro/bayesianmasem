@@ -74,7 +74,6 @@
 
   if (isTRUE(correlation)) {
     data_list$correlation <- 1
-    ni_sq <- (data_list$Ni * (data_list$Ni - 1)) %/% 2
     data_list$S <- lapply(data_list$S, stats::cov2cor)
     data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
       vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
