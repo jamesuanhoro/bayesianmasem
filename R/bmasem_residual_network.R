@@ -37,7 +37,7 @@ bmasem_residual_network <- function(object) {
   result <- t(apply(resids, 1, function(x) {
     mat <- matrix(x[seq_len(len)], p, p)
     diag(mat) <- 1
-    inv_mat <- -1 * stats::cov2cor(MASS::ginv(mat))
+    inv_mat <- -1 * stats::cov2cor(pracma::pinv(mat))
     diag(inv_mat) <- 1
     inv_vec <- c(as.numeric(inv_mat), x[(len + 1):(len + 3)])
     inv_vec
