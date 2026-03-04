@@ -84,16 +84,14 @@
     data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
     any_missing <- FALSE
     for (i in seq_len(data_list$Ng)) {
-      s <- data_list$S[[i]]
+      s <- stats::cov2cor(data_list$S[[i]])
       if (sum(is.na(s)) > 0) {
         i_list <- .get_log_mat_missing(s, data_list$Np[i])
         data_list$r_obs_vec[i, ] <- i_list$u_bar
         data_list$r_obs_vec_cov[i, , ] <- i_list$u_var
         any_missing <- TRUE
       } else {
-        data_list$r_obs_vec[i, ] <- stats::cov2cor(
-          s
-        )[lower.tri(s, diag = FALSE)]
+        data_list$r_obs_vec[i, ] <- g_map(s[lower.tri(s)])
         data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(s, data_list$Np[i])
       }
     }
