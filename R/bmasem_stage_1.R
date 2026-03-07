@@ -104,10 +104,8 @@ bmasem_stage_1 <- function(
   )
   var_names <- rownames(data_list$loading_pattern)
   data_list <- data_list[c(
-    "Ng", "Np", "Ni",
-    "r_mat_s", "r_mat_avg", "r_mat_avg_lchol",
-    "rm_i_l_par", "rm_i_s_par", "Nc", "C_ID", "type",
-    "conditional_re"
+    "Ng", "Np", "Ni", "r_mat_s", "rm_i_l_par", "rm_i_s_par",
+    "Nc", "C_ID", "type", "conditional_re"
   )]
 
   message("User input fully processed :)\n Now to modeling.")
@@ -127,8 +125,7 @@ bmasem_stage_1 <- function(
     init = function() {
       list(
         ln_v_int_wi = array(data_list$rm_i_l_par, (data_list$type >= 2) * 1),
-        ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1),
-        r_chol = data_list$r_mat_avg_lchol
+        ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1)
       )
     },
     adapt_delta = adapt_delta,

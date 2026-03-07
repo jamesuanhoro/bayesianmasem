@@ -90,13 +90,7 @@
     data_list$correlation <- 1
     data_list$S <- lapply(data_list$S, stats::cov2cor)
     if (isTRUE(pooling)) {
-      data_list$r_mat_s <- data_list$S
-      data_list$r_mat_avg <- apply(
-        simplify2array(data_list$r_mat_s), 1:2, mean,
-        na.rm = TRUE
-      )
-      data_list$r_mat_avg_lchol <- t(chol(data_list$r_mat_avg))
-      data_list$r_mat_s <- lapply(data_list$r_mat_s, \(x) {
+      data_list$r_mat_s <- lapply(data_list$S, \(x) {
         x[is.na(x)] <- 999
         x
       })
