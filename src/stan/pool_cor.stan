@@ -79,20 +79,20 @@ transformed data {
   }
 }
 parameters {
-  cholesky_factor_corr[Ni] p_chol;
+  cholesky_factor_corr[Ni] r_chol;
   vector[N_type_wi] ln_v_int_wi;
   vector[N_type_be] ln_v_int_be;
   array[Ng * N_type_wi * conditional_re] vector[Nisqd2] c_clus;
   matrix[Nisqd2, Nc] g_clus;
 }
 model {
-  p_chol ~ lkj_corr_cholesky(1.0);
+  r_chol ~ lkj_corr_cholesky(1.0);
 
   ln_v_int_wi ~ normal(rm_i_l_par, rm_i_s_par);
   ln_v_int_be ~ normal(rm_i_l_par, rm_i_s_par);
 
   {
-    vector[Nisqd2] r_vec = matrix_log_vech(cov2cor(chol2inv(p_chol)));
+    vector[Nisqd2] r_vec = matrix_log_vech(multiply_lower_tri_self_transpose(r_chol));
 
     if (type == 3) {
       to_vector(g_clus) ~ normal(0, exp(ln_v_int_be[1]));
@@ -135,9 +135,9 @@ generated quantities {
   real D_rep = 0.0;
   real D_obs = 0.0;
   real<lower = 0, upper = 1> ppp;
-  matrix[Ni, Ni] p_mat = -1 * multiply_lower_tri_self_transpose(p_chol);
-  matrix[Ni, Ni] r_mat = cov2cor(chol2inv(p_chol));
+  matrix[Ni, Ni] r_mat = multiply_lower_tri_self_transpose(r_chol);
   vector[Nisqd2] r_vec = matrix_log_vech(r_mat);
+  matrix[Ni, Ni] p_mat = -1 * cov2cor(chol2inv(r_chol));
   real v_mn = 0.0;
   real rmsea_mn = sqrt(v_mn);
   real v_wi = 0.0;

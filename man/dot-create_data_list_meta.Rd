@@ -56,7 +56,7 @@ each column is a variable. Column names should be labelled.}
 
 \item{conditional_re}{(LOGICAL)
 Only relevant for analysis of correlation structures.
-If TRUE, sample levels of the study-level random effect;
+If TRUE, sample levels of the study-level random effect (usually faster);
 If FALSE, don't.}
 }
 \value{
