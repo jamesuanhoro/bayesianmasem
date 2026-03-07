@@ -76,7 +76,8 @@ A function that creates data list object passed to Stan
 - conditional_re:
 
   (LOGICAL) Only relevant for analysis of correlation structures. If
-  TRUE, sample levels of the study-level random effect; If FALSE, don't.
+  TRUE, sample levels of the study-level random effect (usually faster);
+  If FALSE, don't.
 
 ## Value
 

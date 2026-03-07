@@ -12,7 +12,7 @@
 - Whitening vectors to use univariate instead of multi-normal
   likelihoods for correlation matrix inputs resulting in speedup for
   larger matrices.
-- Some code cleanup.
+- Some code cleanup
 
 ## bayesianmasem 0.2.4
 

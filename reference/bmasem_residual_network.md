@@ -23,6 +23,15 @@ bmasem_residual_network(object)
 A data.frame containing posterior samples of the partial correlation
 matrix.
 
+## References
+
+Epskamp S, Rhemtulla M, Borsboom D (2017). “Generalized Network
+Psychometrics: Combining Network and Latent Variable Models.”
+*Psychometrika*, **82**(4), 904–927. ISSN 1860-0980,
+[doi:10.1007/s11336-017-9557-x](https://doi.org/10.1007/s11336-017-9557-x)
+,
+[2024-07-01](https://jamesuanhoro.github.io/bayesianmasem/reference/2024-07-01).
+
 ## Examples
 
 ``` r
