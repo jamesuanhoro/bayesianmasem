@@ -1,8 +1,10 @@
-#' Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
+#' Pool multiple correlation matrices.
 #'
 #' @description A function to pool correlation matrices
 #' permitting fixed-, random-effects, and clustered-samples pooling.
-#' Correlation matrices must be complete. This will change in the near future.
+#' @param sample_cov (list of matrices) sample correlation matrices.
+#' The rownames and/or colnames must contain the observed variable names.
+#' There may be missing elements in these matrices.
 #' @inheritParams bmasem
 #' @returns A list containing fit indices, pooled correlation matrix and
 #' its asymptotic covariance matrix, pooled partial correlation matrix and
@@ -69,6 +71,11 @@ bmasem_stage_1 <- function(
     fac_name, " =~ ", paste0(var_names, collapse = " + ")
   )
 
+  # Ensure diagonals are 1
+  sample_cov <- lapply(sample_cov, \(x) {
+    suppressWarnings(x <- stats::cov2cor(x))
+    x
+  })
   # Run lavaan fit
   lav_fit <- lavaan::cfa(
     model,
@@ -92,11 +99,12 @@ bmasem_stage_1 <- function(
     cluster = cluster,
     correlation = TRUE,
     partab = par_table,
-    conditional_re = conditional_re
+    conditional_re = conditional_re,
+    pooling = TRUE
   )
   var_names <- rownames(data_list$loading_pattern)
   data_list <- data_list[c(
-    "Ng", "Np", "Ni", "r_obs_vec", "r_obs_vec_cov", "rm_i_l_par", "rm_i_s_par",
+    "Ng", "Np", "Ni", "r_mat_s", "rm_i_l_par", "rm_i_s_par",
     "Nc", "C_ID", "type", "conditional_re"
   )]
 

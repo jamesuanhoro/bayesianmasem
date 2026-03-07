@@ -14,7 +14,8 @@
   correlation = TRUE,
   partab = NULL,
   x_mat = NULL,
-  conditional_re = TRUE
+  conditional_re = TRUE,
+  pooling = FALSE
 )
 }
 \arguments{
@@ -58,6 +59,10 @@ each column is a variable. Column names should be labelled.}
 Only relevant for analysis of correlation structures.
 If TRUE, sample levels of the study-level random effect (usually faster);
 If FALSE, don't.}
+
+\item{pooling}{(LOGICAL)
+If TRUE: Sender is a pooling model
+If FALSE: Sender is a full model.}
 }
 \value{
 Data list object used in fitting Stan model

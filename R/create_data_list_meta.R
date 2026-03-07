@@ -2,6 +2,9 @@
 #' @description A function that creates data list object passed to Stan
 #' @param lavaan_object lavaan fit object of corresponding model
 #' @param partab lavaan parameter table output with ceq.simple & std.lv = TRUE
+#' @param pooling (LOGICAL)
+#' If TRUE: Sender is a pooling model
+#' If FALSE: Sender is a full model.
 #' @inheritParams bmasem
 #' @returns Data list object used in fitting Stan model
 #' @keywords internal
@@ -15,7 +18,8 @@
     correlation = TRUE,
     partab = NULL,
     x_mat = NULL,
-    conditional_re = TRUE) {
+    conditional_re = TRUE,
+    pooling = FALSE) {
   data_list <- list()
 
   # Get number of groups
@@ -67,24 +71,41 @@
   ), "[[", "cov")
   # Number of items
   data_list$Ni <- nrow(data_list$S[[1]])
-  # Fail on missing data
-  if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
-    stop("All correlation/covariance matrices must have complete data")
+  if (isTRUE(pooling)) {
+    # Fail on missing data if covariance approach
+    if (
+      any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0))) &&
+        !isTRUE(correlation)
+    ) {
+      stop("All covariance matrices must have complete data")
+    }
+  } else {
+    # Fail on missing data
+    if (any(unlist(lapply(data_list$S, function(x) sum(is.na(x)) > 0)))) {
+      stop("All correlation/covariance matrices must have complete data")
+    }
   }
 
   if (isTRUE(correlation)) {
     data_list$correlation <- 1
     data_list$S <- lapply(data_list$S, stats::cov2cor)
-    data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
-      vec <- stats::cov2cor(s)[lower.tri(s, diag = FALSE)]
-      g_map(vec)
-    }))
-    ni_sq <- ncol(data_list$r_obs_vec)
-    data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
-    for (i in seq_len(data_list$Ng)) {
-      data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
-        data_list$S[[i]], data_list$Np[i]
-      )
+    if (isTRUE(pooling)) {
+      data_list$r_mat_s <- lapply(data_list$S, \(x) {
+        x[is.na(x)] <- 999
+        x
+      })
+    } else {
+      data_list$r_obs_vec <- do.call("rbind", lapply(data_list$S, function(s) {
+        vec <- s[lower.tri(s, diag = FALSE)]
+        g_map(vec)
+      }))
+      ni_sq <- ncol(data_list$r_obs_vec)
+      data_list$r_obs_vec_cov <- array(dim = c(data_list$Ng, ni_sq, ni_sq))
+      for (i in seq_len(data_list$Ng)) {
+        data_list$r_obs_vec_cov[i, , ] <- get_avar_mat(
+          data_list$S[[i]], data_list$Np[i]
+        )
+      }
     }
   } else {
     data_list$correlation <- 0
