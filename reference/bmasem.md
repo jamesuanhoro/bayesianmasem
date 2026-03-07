@@ -56,7 +56,7 @@ bmasem(
 
   (list of matrices) sample covariance or correlation matrices. The
   rownames and/or colnames must contain the observed variable names. For
-  now, assumes there are no missing elements in the covariance matrices.
+  now, assumes there are no missing elements in these matrices.
 
 - sample_nobs:
 

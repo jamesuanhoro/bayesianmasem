@@ -1,6 +1,6 @@
 # Changelog
 
-## bayesianmasem (development version)
+## bayesianmasem 0.2.5
 
 - Added composite reliability calculation for each factor in
   [`bmasem_composite_reliability()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_composite_reliability.md).
@@ -12,6 +12,8 @@
 - Whitening vectors to use univariate instead of multi-normal
   likelihoods for correlation matrix inputs resulting in speedup for
   larger matrices.
+- Can handle missing elements in correlation matrices when pooling with
+  [`bmasem_stage_1()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.md)
 - Some code cleanup
 
 ## bayesianmasem 0.2.4

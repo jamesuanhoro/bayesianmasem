@@ -1,8 +1,7 @@
-# Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
+# Pool multiple correlation matrices.
 
 A function to pool correlation matrices permitting fixed-,
-random-effects, and clustered-samples pooling. Correlation matrices must
-be complete. This will change in the near future.
+random-effects, and clustered-samples pooling.
 
 ## Usage
 
@@ -31,9 +30,9 @@ bmasem_stage_1(
 
 - sample_cov:
 
-  (list of matrices) sample covariance or correlation matrices. The
-  rownames and/or colnames must contain the observed variable names. For
-  now, assumes there are no missing elements in the covariance matrices.
+  (list of matrices) sample correlation matrices. The rownames and/or
+  colnames must contain the observed variable names. There may be
+  missing elements in these matrices.
 
 - sample_nobs:
 
