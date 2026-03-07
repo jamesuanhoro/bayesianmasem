@@ -149,6 +149,14 @@ functions {
 
     return(jacob_mat);
   }
+  matrix gamma_avar(matrix omega, matrix jacob) {
+    int p = rows(omega);
+
+    matrix[p, p] omega_gamma = quad_form(omega, jacob');
+    omega_gamma = (omega_gamma + omega_gamma') / 2;
+
+    return(omega_gamma);
+  }
   vector matrix_log_vech(matrix A) {
     int p = rows(A);
     int p_ast = (p * (p - 1)) %/% 2;
@@ -217,7 +225,7 @@ transformed data {
       matrix[Nisqd2, Nisqd2] omega_r = omega_computer(r_mat_s[i]) / (1.0 * Np[i]);
       matrix[Nisqd2, Nisqd2] jacob_mat = get_jacob(r_mat_s[i]);
       r_obs_vec[i] = matrix_log_vech(r_mat_s[i]);
-      r_obs_vec_cov[i] = quad_form(omega_r, jacob_mat');
+      r_obs_vec_cov[i] = gamma_avar(omega_r, jacob_mat);
       L_vec_cov[i] = cholesky_decompose(r_obs_vec_cov[i]);
       L_vec_cov_inv[i] = inverse(L_vec_cov[i]);
       r_obs_vec_white[i] = L_vec_cov_inv[i] * r_obs_vec[i];
@@ -263,7 +271,7 @@ transformed data {
         matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(sub_mat) / (1.0 * Np[i]);
         matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(sub_mat);
         r_obs_vec[i][1:Nisqd2_i] = matrix_log_vech(sub_mat);
-        r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i] = quad_form(omega_r, jacob_mat');
+        r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i] = gamma_avar(omega_r, jacob_mat);
         L_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i] = cholesky_decompose(
           r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i]
         );
@@ -389,7 +397,7 @@ model {
           r_obs_vec_i = matrix_log_vech(r_mat_i);
           matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
           matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
-          r_obs_vec_cov_i = add_diag(quad_form(omega_r, jacob_mat'), square(m_val));
+          r_obs_vec_cov_i = add_diag(gamma_avar(omega_r, jacob_mat), square(m_val));
         } else {
           r_obs_vec_i = r_obs_vec[i][1:Nisqd2_i];
           r_obs_vec_cov_i = add_diag(r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i], square(m_val));
@@ -497,7 +505,7 @@ generated quantities {
           r_obs_vec_i = matrix_log_vech(r_mat_i);
           matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
           matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
-          r_obs_vec_cov_i = add_diag(quad_form(omega_r, jacob_mat'), square(m_val));
+          r_obs_vec_cov_i = add_diag(gamma_avar(omega_r, jacob_mat), square(m_val));
         } else {
           r_obs_vec_i = r_obs_vec[i][1:Nisqd2_i];
           r_obs_vec_cov_i = add_diag(r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i], square(m_val));
