@@ -13,7 +13,7 @@
 #' @param sample_cov (list of matrices) sample covariance or correlation
 #' matrices.
 #' The rownames and/or colnames must contain the observed variable names.
-#' For now, assumes there are no missing elements in the covariance matrices.
+#' For now, assumes there are no missing elements in these matrices.
 #' @param sample_nobs (vector of positive integer) Number of observations
 #' for each study.
 #' @param correlation (LOGICAL)

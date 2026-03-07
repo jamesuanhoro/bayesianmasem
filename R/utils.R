@@ -52,14 +52,68 @@ log_m <- function(r_mat) {
 #' @returns Strict lower half vector of log(correlation matrix)
 #' @export
 g_map <- function(r_vec) {
-  d <- 0.5 * (1 + sqrt(1 + 8 * length(r_vec)))
-  r_mat <- matrix(0, d, d)
+  p <- 0.5 * (1 + sqrt(1 + 8 * length(r_vec)))
+  r_mat <- matrix(0, p, p)
   r_mat[lower.tri(r_mat, diag = FALSE)] <- r_vec
   r_mat <- r_mat + t(r_mat)
   diag(r_mat) <- 1
   r_log_mat <- log_m(r_mat)
   r_log_vec <- r_log_mat[lower.tri(r_log_mat, diag = FALSE)]
   r_log_vec
+}
+
+#' Off-diagonal to full transformation
+#' @param v (vector) Off-diagonal elements
+#' @returns Full matrix
+#' @keywords internal
+.ivecl <- function(v) {
+  p <- 0.5 * (1 + sqrt(1 + 8 * length(v)))
+  if (!(is.vector(v)) && p %% 1 == 0) {
+    stop("Dimension of 'v' is incorrect")
+  }
+
+  mat <- matrix(0, p, p)
+  mat[lower.tri(mat)] <- v
+  mat <- mat + t(mat)
+  mat
+}
+
+#' Prepare for Frechet derivative of matrix logarithm
+#' @param r_mat (matrix) Correlation matrix
+#' @return A list with:
+#' \item{q_vecs}{Eigenvectors of \code{r_mat}}
+#' \item{f_mat}{Matrix for Frechet derivative computation}
+#' @keywords internal
+.frechet_log_prep <- function(r_mat) {
+  eig <- eigen(r_mat, symmetric = TRUE)
+  q_vecs <- eig$vectors
+  lambda <- eig$values
+  ln_lambda <- log(lambda)
+
+  f_mat <- outer(
+    seq_along(lambda), seq_along(lambda),
+    Vectorize(function(i, j) {
+      if (i == j) {
+        return(1 / lambda[i])
+      }
+      (ln_lambda[i] - ln_lambda[j]) / (lambda[i] - lambda[j])
+    })
+  )
+
+  list(q_vecs = q_vecs, f_mat = f_mat)
+}
+
+#' Frechet derivative of matrix logarithm
+#' @param h_mat Matrix to apply derivative
+#' @param prep List from \code{\link{.frechet_log_prep}}
+#' @return Matrix of same dimensions as h_mat
+#' @keywords internal
+.frechet_log_apply <- function(h_mat, prep) {
+  q_vecs <- prep$q_vecs
+  f_mat <- prep$f_mat
+  b_mat <- crossprod(q_vecs, h_mat) %*% q_vecs
+  b_mat <- f_mat * b_mat
+  q_vecs %*% b_mat %*% t(q_vecs)
 }
 
 #' Asymptotic variance matrix of lower half vector of log(correlation matrix)
@@ -77,9 +131,17 @@ get_avar_mat <- function(r_mat, n, acov_mat = NULL) {
   } else {
     omega_r <- acov_mat
   }
-  r_vec <- r_mat[lower.tri(r_mat, diag = FALSE)]
-  a_mat_inv <- pracma::jacobian(g_map, r_vec)
-  omega_gamma <- a_mat_inv %*% omega_r %*% a_mat_inv
+
+  p <- nrow(r_mat)
+  d <- (p * (p - 1)) %/% 2
+  prep <- .frechet_log_prep(r_mat)
+  jacob_mat <- matrix(0, d, d)
+  for (k in 1:d) {
+    h_mat <- .ivecl(diag(d)[, k])
+    l_mat <- .frechet_log_apply(h_mat, prep)
+    jacob_mat[, k] <- l_mat[lower.tri(l_mat)]
+  }
+  omega_gamma <- jacob_mat %*% omega_r %*% t(jacob_mat)
   # lower and upper triangular matrices may not match due to numerical issues
   omega_gamma[upper.tri(omega_gamma)] <- t(omega_gamma)[upper.tri(omega_gamma)]
   return(omega_gamma)
@@ -96,20 +158,20 @@ g_inv_map <- function(gamma_in, tol_val = 1e-13, ret_vec = FALSE) {
   mat_c <- matrix(nrow = 0, ncol = 0)
   iter <- -1
 
-  d <- 0.5 * (1 + sqrt(1 + 8 * length(gamma_in)))
-  if (!(is.vector(gamma_in)) && d %% 1 == 0) {
+  p <- 0.5 * (1 + sqrt(1 + 8 * length(gamma_in)))
+  if (!(is.vector(gamma_in)) && p %% 1 == 0) {
     stop("Dimension of 'gamma' is incorrect")
   } else if (!(tol_val >= 1e-14 && tol_val <= 1e-4)) {
     stop("Incorrect tolerance value")
   } else {
-    mat_a <- matrix(0, d, d)
+    mat_a <- matrix(0, p, p)
     mat_a[lower.tri(mat_a, diag = FALSE)] <- gamma_in
     mat_a <- mat_a + t(mat_a)
 
     diag_a <- diag(mat_a)
 
-    dist <- sqrt(d)
-    while (dist > sqrt(d) * tol_val) {
+    dist <- sqrt(p)
+    while (dist > sqrt(p) * tol_val) {
       diag_delta <- log(diag(expm::expm(mat_a)))
       diag_a <- diag_a - diag_delta
       diag(mat_a) <- diag_a
@@ -118,7 +180,7 @@ g_inv_map <- function(gamma_in, tol_val = 1e-13, ret_vec = FALSE) {
     }
 
     mat_c <- expm::expm(mat_a)
-    diag(mat_c) <- rep(1, d)
+    diag(mat_c) <- rep(1, p)
   }
 
   ret <- list(C = mat_c, iter = iter)

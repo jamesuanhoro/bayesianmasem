@@ -2,7 +2,7 @@
 % Please edit documentation in R/bmasem_stage_1.R
 \name{bmasem_stage_1}
 \alias{bmasem_stage_1}
-\title{Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.}
+\title{Pool multiple correlation matrices.}
 \usage{
 bmasem_stage_1(
   sample_cov = NULL,
@@ -24,10 +24,9 @@ bmasem_stage_1(
 )
 }
 \arguments{
-\item{sample_cov}{(list of matrices) sample covariance or correlation
-matrices.
+\item{sample_cov}{(list of matrices) sample correlation matrices.
 The rownames and/or colnames must contain the observed variable names.
-For now, assumes there are no missing elements in the covariance matrices.}
+There may be missing elements in these matrices.}
 
 \item{sample_nobs}{(vector of positive integer) Number of observations
 for each study.}
@@ -87,7 +86,6 @@ Stan object.
 \description{
 A function to pool correlation matrices
 permitting fixed-, random-effects, and clustered-samples pooling.
-Correlation matrices must be complete. This will change in the near future.
 }
 \details{
 When \code{type = "dep"}, the user must supply the cluster IDs, see cluster
