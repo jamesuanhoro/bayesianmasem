@@ -24,7 +24,14 @@ if (!file.exists(bin)) {
 }
 bin_stan <- file.path(bin, "stan")
 fs::dir_copy(path = "stan", new_path = bin_stan)
-instantiate::stan_package_compile(
-  models = instantiate::stan_package_model_files(path = bin_stan),
-  stanc_options = list("O1")
+callr::r(
+  func = function(bin_stan) {
+    instantiate::stan_package_compile(
+      models = instantiate::stan_package_model_files(path = bin_stan),
+      stanc_options = list("O1")
+    )
+  },
+  args = list(bin_stan = bin_stan),
+  show = TRUE,
+  stderr = "2>&1"
 )
