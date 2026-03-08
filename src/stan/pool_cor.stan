@@ -149,6 +149,14 @@ functions {
 
     return(jacob_mat);
   }
+  matrix gamma_avar(matrix omega, matrix jacob) {
+    int p = rows(omega);
+
+    matrix[p, p] omega_gamma = quad_form(omega, jacob');
+    omega_gamma = (omega_gamma + omega_gamma') / 2;
+
+    return(omega_gamma);
+  }
   vector matrix_log_vech(matrix A) {
     int p = rows(A);
     int p_ast = (p * (p - 1)) %/% 2;
@@ -217,7 +225,7 @@ transformed data {
       matrix[Nisqd2, Nisqd2] omega_r = omega_computer(r_mat_s[i]) / (1.0 * Np[i]);
       matrix[Nisqd2, Nisqd2] jacob_mat = get_jacob(r_mat_s[i]);
       r_obs_vec[i] = matrix_log_vech(r_mat_s[i]);
-      r_obs_vec_cov[i] = quad_form(omega_r, jacob_mat');
+      r_obs_vec_cov[i] = gamma_avar(omega_r, jacob_mat);
       L_vec_cov[i] = cholesky_decompose(r_obs_vec_cov[i]);
       L_vec_cov_inv[i] = inverse(L_vec_cov[i]);
       r_obs_vec_white[i] = L_vec_cov_inv[i] * r_obs_vec[i];
@@ -256,6 +264,22 @@ transformed data {
             N_missing_items_array[j, i] = 1;
           }
         }
+      }
+
+      if (missing_element_indicator[i] == 0) {
+        int Nisqd2_i = (Ni_i * (Ni_i - 1)) %/% 2;
+        matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(sub_mat) / (1.0 * Np[i]);
+        matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(sub_mat);
+        r_obs_vec[i][1:Nisqd2_i] = matrix_log_vech(sub_mat);
+        r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i] = gamma_avar(omega_r, jacob_mat);
+        L_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i] = cholesky_decompose(
+          r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i]
+        );
+        L_vec_cov_inv[i][1:Nisqd2_i, 1:Nisqd2_i] = inverse(
+          L_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i]
+        );
+        r_obs_vec_white[i][1:Nisqd2_i] = L_vec_cov_inv[i][1:Nisqd2_i, 1:Nisqd2_i] *
+          r_obs_vec[i][1:Nisqd2_i];
       }
     }
     N_missing_items += sum(N_missing_items_array[, i]);
@@ -330,12 +354,25 @@ model {
       } else {
         int Ni_i = presence_count[i];
         int Nisqd2_i = (Ni_i * (Ni_i - 1)) %/% 2;
+        m_val = 0;
+        if (type >= 2) m_val = exp(ln_v_int_wi[1]);
+        vector[Nisqd2_i] r_obs_vec_i;
+        matrix[Nisqd2_i, Nisqd2_i] r_obs_vec_cov_i;
+        matrix[Nisqd2_i, Nisqd2_i] L_vec_cov_i;
 
         // create imputed matrix
         matrix[Ni_i, Ni_i] r_mat_i = r_mat_s[i][
           presence_indicator[1:Ni_i, i],
           presence_indicator[1:Ni_i, i]
         ];
+
+        // get i-specific log-scale vector
+        vector[Nisqd2_i] r_vec_i = matrix_log_vech(
+          r_mat[
+            presence_indicator[1:Ni_i, i],
+            presence_indicator[1:Ni_i, i]
+          ]
+        );
 
         if (missing_element_indicator[i] == 1) {
           for (j in 1:Ni_i) {
@@ -356,27 +393,17 @@ model {
           }
 
           for (j in 1:Ni_i) r_mat_i[j, j] = 1.0;
+
+          r_obs_vec_i = matrix_log_vech(r_mat_i);
+          matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
+          matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
+          r_obs_vec_cov_i = add_diag(gamma_avar(omega_r, jacob_mat), square(m_val));
+        } else {
+          r_obs_vec_i = r_obs_vec[i][1:Nisqd2_i];
+          r_obs_vec_cov_i = add_diag(r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i], square(m_val));
         }
 
-        // get i-specific log-scale vector
-        vector[Nisqd2_i] r_vec_i = matrix_log_vech(
-          r_mat[
-            presence_indicator[1:Ni_i, i],
-            presence_indicator[1:Ni_i, i]
-          ]
-        );
-
-        // create required vector, matrices
-        m_val = 0;
-        if (type >= 2) m_val = exp(ln_v_int_wi[1]);
-        vector[Nisqd2_i] r_obs_vec_i = matrix_log_vech(r_mat_i);
-        matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
-        matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
-        matrix[Nisqd2_i, Nisqd2_i] r_obs_vec_cov_i = add_diag(
-          quad_form(omega_r, jacob_mat'), square(m_val)
-        );
-        matrix[Nisqd2_i, Nisqd2_i] L_vec_cov_i = cholesky_decompose(r_obs_vec_cov_i);
-
+        L_vec_cov_i = cholesky_decompose(r_obs_vec_cov_i);
         // diag has been added already!
         if (type <= 2) {
           target += multi_normal_cholesky_lpdf(r_obs_vec_i | r_vec_i, L_vec_cov_i);
@@ -411,10 +438,10 @@ generated quantities {
     int complete_pos = 0;
     int missing_pos = 0;
     int missing_pos_i = 0;
-    
+
     for (i in 1:Ng) {
       real m_val;
-      
+
       if (missing_var_indicator[i] == 0) {
         vector[Nisqd2] r_vec_sim;
         vector[Nisqd2] tmp_loc = r_vec;
@@ -434,6 +461,11 @@ generated quantities {
         int Ni_i = presence_count[i];
         int Nisqd2_i = (Ni_i * (Ni_i - 1)) %/% 2;
         vector[Nisqd2_i] r_vec_sim_i;
+        m_val = 0;
+        if (type >= 2) m_val = exp(ln_v_int_wi[1]);
+        vector[Nisqd2_i] r_obs_vec_i;
+        matrix[Nisqd2_i, Nisqd2_i] r_obs_vec_cov_i;
+        matrix[Nisqd2_i, Nisqd2_i] L_vec_cov_i;
         vector[Nisqd2_i] tmp_loc;
 
         // create imputed matrix
@@ -441,6 +473,14 @@ generated quantities {
           presence_indicator[1:Ni_i, i],
           presence_indicator[1:Ni_i, i]
         ];
+
+        // get i-specific log-scale vector
+        vector[Nisqd2_i] r_vec_i = matrix_log_vech(
+          r_mat[
+            presence_indicator[1:Ni_i, i],
+            presence_indicator[1:Ni_i, i]
+          ]
+        );
 
         if (missing_element_indicator[i] == 1) {
           for (j in 1:Ni_i) {
@@ -461,26 +501,17 @@ generated quantities {
           }
 
           for (j in 1:Ni_i) r_mat_i[j, j] = 1.0;
+
+          r_obs_vec_i = matrix_log_vech(r_mat_i);
+          matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
+          matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
+          r_obs_vec_cov_i = add_diag(gamma_avar(omega_r, jacob_mat), square(m_val));
+        } else {
+          r_obs_vec_i = r_obs_vec[i][1:Nisqd2_i];
+          r_obs_vec_cov_i = add_diag(r_obs_vec_cov[i][1:Nisqd2_i, 1:Nisqd2_i], square(m_val));
         }
 
-        // get i-specific log-scale vector
-        vector[Nisqd2_i] r_vec_i = matrix_log_vech(
-          r_mat[
-            presence_indicator[1:Ni_i, i],
-            presence_indicator[1:Ni_i, i]
-          ]
-        );
-
-        // create required vector, matrices
-        m_val = 0;
-        if (type >= 2) m_val = exp(ln_v_int_wi[1]);
-        vector[Nisqd2_i] r_obs_vec_i = matrix_log_vech(r_mat_i);
-        matrix[Nisqd2_i, Nisqd2_i] omega_r = omega_computer(r_mat_i) / (1.0 * Np[i]);
-        matrix[Nisqd2_i, Nisqd2_i] jacob_mat = get_jacob(r_mat_i);
-        matrix[Nisqd2_i, Nisqd2_i] r_obs_vec_cov_i = add_diag(
-          quad_form(omega_r, jacob_mat'), square(m_val)
-        );
-
+        L_vec_cov_i = cholesky_decompose(r_obs_vec_cov_i);
         // diag has been added already!
         if (type <= 2) {
           tmp_loc = r_vec_i;
