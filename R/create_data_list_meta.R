@@ -63,6 +63,8 @@
   data_list$rm_i_s_par <- priors@sr_par # meta-reg scale(intercept)
   data_list$rm_b_s_par <- priors@br_par # meta-reg scale(beta)
 
+  data_list$pa_indicator <- 0
+
   # Sample size
   data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
   # Sample cov

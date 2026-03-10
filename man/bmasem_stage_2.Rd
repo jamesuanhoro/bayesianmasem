@@ -2,7 +2,7 @@
 % Please edit documentation in R/bmasem_stage_2.R
 \name{bmasem_stage_2}
 \alias{bmasem_stage_2}
-\title{Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.}
+\title{Fit Bayesian meta-analytic CFAs and path models with minor factors assumed.}
 \usage{
 bmasem_stage_2(
   model = NULL,
@@ -74,7 +74,7 @@ An object of \code{\link{bmasem-class}}
 }
 \description{
 A function that takes a pooled correlation matrix object
-and returns a fitted SEM.
+and returns a fitted CFA or path model.
 }
 \details{
 CFAs assume standardized factors.

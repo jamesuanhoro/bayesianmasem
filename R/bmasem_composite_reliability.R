@@ -50,8 +50,12 @@ bmasem_composite_reliability <- function(
     stop("Interval must be a number between 0 and 1")
   }
 
-  stan_draws <- posterior::as_draws(object@stan_fit)
   data_list <- object@data_list
+  if (data_list$pa_indicator == 1) {
+    stop("Model must be a CFA not a path analysis.")
+  }
+
+  stan_draws <- posterior::as_draws(object@stan_fit)
 
   index_mat <- 1 * (
     data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) |

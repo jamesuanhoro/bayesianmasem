@@ -1,19 +1,15 @@
-#' Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
+#' Fit Bayesian meta-analytic CFAs and path models with minor factors assumed.
 #'
 #' @description A function to fit fixed-, random-effects, and clustered
-#' Bayesian meta-analytic CFAs with minor factors assumed.
-#' Does not yet accomodate moderators,
-#' and correlation matrices must be complete.
-#' This will change in the near future.
+#' Bayesian meta-analytic CFAs for covariance and correlation matrices and
+#' path models for correlation matrices with minor factors assumed.
+#' The function accomodate moderators.
+#' When fitting path models, correlation matrices may be incomplete.
+#' Input matrices for CFA must be complete.
 #' @param model A description of the user-specified model, lavaan syntax.
-#' @param data An optional data frame containing the observed variables used in
-#' the model.
-#' @param group An optional string identifying the grouping variable in
-#' the data object.
 #' @param sample_cov (list of matrices) sample covariance or correlation
 #' matrices.
 #' The rownames and/or colnames must contain the observed variable names.
-#' For now, assumes there are no missing elements in these matrices.
 #' @param sample_nobs (vector of positive integer) Number of observations
 #' for each study.
 #' @param correlation (LOGICAL)
@@ -45,7 +41,7 @@
 #' @param conditional_re (LOGICAL)
 #' Only relevant for analysis of correlation structures.
 #' If TRUE, sample levels of the study-level random effect (usually faster);
-#' If FALSE, don't.
+#' If FALSE, don't (usually more efficient).
 #' @param seed (positive integer) seed, set to obtain replicable results.
 #' @param warmup (positive integer) The number of warmup iterations to run per
 #' chain.
@@ -111,8 +107,6 @@
 #' @export
 bmasem <- function(
     model = NULL,
-    data = NULL,
-    group = NULL,
     sample_cov = NULL,
     sample_nobs = NULL,
     correlation = TRUE,
@@ -150,26 +144,36 @@ bmasem <- function(
   # ignores moderators.
   .user_input_check("type", type)
 
-  # Must provide either data and group or sample_cov and sample_nobs
-  .user_input_check("data", data, group, sample_cov, sample_nobs)
+  # Must provide sample_cov and sample_nobs
+  .user_input_check("data", NULL, NULL, sample_cov, sample_nobs)
 
   # check for cluster when type = "dep"
   .user_input_check("cluster", type, cluster)
 
   # Run lavaan fit
-  if (!is.null(data)) {
+  avg_mat <- apply(simplify2array(sample_cov), 1:2, mean, na.rm = TRUE)
+  lav_fit_init <- lavaan::cfa(
+    model,
+    sample.cov = avg_mat, sample.nobs = sum(sample_nobs), std.lv = TRUE,
+    likelihood = "wishart", ceq.simple = TRUE,
+    do.fit = FALSE, orthogonal = orthogonal
+  )
+  param_structure <- lavaan::lavInspect(lav_fit_init)
+  is_cfa <- is.null(param_structure$beta)
+  if (is_cfa) {
     lav_fit <- lavaan::cfa(
       model,
-      data = data, group = group, std.lv = TRUE,
+      sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
       likelihood = "wishart", ceq.simple = TRUE,
       do.fit = FALSE, orthogonal = orthogonal
     )
   } else {
     lav_fit <- lavaan::cfa(
       model,
-      sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
+      sample.cov = rep(list(avg_mat), length(sample_nobs)),
+      sample.nobs = sample_nobs, std.lv = TRUE,
       likelihood = "wishart", ceq.simple = TRUE,
-      do.fit = FALSE, orthogonal = orthogonal
+      do.fit = FALSE
     )
   }
 
@@ -179,33 +183,50 @@ bmasem <- function(
   )
 
   # Obtain data list for Stan
-  data_list <- .create_data_list_meta(
-    lavaan_object = lav_fit,
-    method = method,
-    type = type,
-    simple_struc = simple_struc,
-    priors = priors,
-    cluster = cluster,
-    correlation = correlation,
-    partab = par_table,
-    x_mat = x_mat,
-    conditional_re = conditional_re
-  )
-
-  message("User input fully processed :)\n Now to modeling.")
-
-  cfa_model <- instantiate::stan_package_model(
-    name = "cfa_cor", package = "bayesianmasem"
-  )
-  if (isFALSE(correlation)) {
-    cfa_model <- instantiate::stan_package_model(
-      name = "cfa_cov", package = "bayesianmasem"
+  if (is_cfa) {
+    data_list <- .create_data_list_meta(
+      lavaan_object = lav_fit,
+      method = method,
+      type = type,
+      simple_struc = simple_struc,
+      priors = priors,
+      cluster = cluster,
+      correlation = correlation,
+      partab = par_table,
+      x_mat = x_mat,
+      conditional_re = conditional_re
+    )
+    if (isFALSE(correlation)) {
+      sem_model <- instantiate::stan_package_model(
+        name = "cfa_cov", package = "bayesianmasem"
+      )
+    } else {
+      sem_model <- instantiate::stan_package_model(
+        name = "cfa_cor", package = "bayesianmasem"
+      )
+    }
+  } else {
+    data_list <- .create_data_list_pa_meta(
+      lavaan_object = lav_fit,
+      method = method,
+      type = type,
+      priors = priors,
+      cluster = cluster,
+      partab = par_table,
+      x_mat = x_mat,
+      conditional_re = conditional_re,
+      old_data = sample_cov
+    )
+    sem_model <- instantiate::stan_package_model(
+      name = "pa_cor", package = "bayesianmasem"
     )
   }
 
+  message("User input fully processed :)\n Now to modeling.")
+
   message("Fitting Stan model ...")
 
-  stan_fit <- cfa_model$sample(
+  stan_fit <- sem_model$sample(
     data = data_list,
     seed = seed,
     iter_warmup = warmup,

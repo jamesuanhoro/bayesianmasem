@@ -4,6 +4,10 @@
 \name{bmasempriors-class}
 \alias{bmasempriors-class}
 \title{A class for setting up priors.}
+\arguments{
+\item{sc_par}{(positive real)
+The scale parameter of the normal prior on coefficients.}
+}
 \description{
 A class for setting up priors.
 }
