@@ -7,16 +7,9 @@
 .check_bm_data(data, group, sample_cov, sample_nobs)
 }
 \arguments{
-\item{data}{An optional data frame containing the observed variables used in
-the model.}
-
-\item{group}{An optional string identifying the grouping variable in
-the data object.}
-
 \item{sample_cov}{(list of matrices) sample covariance or correlation
 matrices.
-The rownames and/or colnames must contain the observed variable names.
-For now, assumes there are no missing elements in these matrices.}
+The rownames and/or colnames must contain the observed variable names.}
 
 \item{sample_nobs}{(vector of positive integer) Number of observations
 for each study.}

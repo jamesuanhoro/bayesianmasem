@@ -2,12 +2,10 @@
 % Please edit documentation in R/bmasem.R
 \name{bmasem}
 \alias{bmasem}
-\title{Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.}
+\title{Fit Bayesian meta-analytic CFAs and path models with minor factors assumed.}
 \usage{
 bmasem(
   model = NULL,
-  data = NULL,
-  group = NULL,
   sample_cov = NULL,
   sample_nobs = NULL,
   correlation = TRUE,
@@ -34,16 +32,9 @@ bmasem(
 \arguments{
 \item{model}{A description of the user-specified model, lavaan syntax.}
 
-\item{data}{An optional data frame containing the observed variables used in
-the model.}
-
-\item{group}{An optional string identifying the grouping variable in
-the data object.}
-
 \item{sample_cov}{(list of matrices) sample covariance or correlation
 matrices.
-The rownames and/or colnames must contain the observed variable names.
-For now, assumes there are no missing elements in these matrices.}
+The rownames and/or colnames must contain the observed variable names.}
 
 \item{sample_nobs}{(vector of positive integer) Number of observations
 for each study.}
@@ -114,17 +105,18 @@ This feature is experimental, see details below.}
 \item{conditional_re}{(LOGICAL)
 Only relevant for analysis of correlation structures.
 If TRUE, sample levels of the study-level random effect (usually faster);
-If FALSE, don't.}
+If FALSE, don't (usually more efficient).}
 }
 \value{
 An object of \code{\link{bmasem-class}}
 }
 \description{
 A function to fit fixed-, random-effects, and clustered
-Bayesian meta-analytic CFAs with minor factors assumed.
-Does not yet accomodate moderators,
-and correlation matrices must be complete.
-This will change in the near future.
+Bayesian meta-analytic CFAs for covariance and correlation matrices and
+path models for correlation matrices with minor factors assumed.
+The function accomodate moderators.
+When fitting path models, correlation matrices may be incomplete.
+Input matrices for CFA must be complete.
 }
 \details{
 CFAs assume standardized factors.

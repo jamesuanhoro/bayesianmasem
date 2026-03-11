@@ -1,7 +1,7 @@
-#' Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
+#' Fit Bayesian meta-analytic CFAs and path models with minor factors assumed.
 #'
 #' @description A function that takes a pooled correlation matrix object
-#' and returns a fitted SEM.
+#' and returns a fitted CFA or path model.
 #' @param pool_fit The list returned by the \code{bmasem_stage_1} function.
 #' @inheritParams bmasem
 #' @returns An object of \code{\link{bmasem-class}}
@@ -87,26 +87,52 @@ bmasem_stage_2 <- function(
     ceq.simple = TRUE, std.lv = TRUE
   )
 
-  # Obtain data list for Stan
-  data_list <- .create_data_list_pooled(
-    lavaan_object = lav_fit,
-    method = method,
-    simple_struc = simple_struc,
-    priors = priors,
-    partab = par_table,
-    acov_mat = pool_fit$r_mat_cov,
-    old_names = rownames(pool_fit$r_mat)
-  )
+  param_structure <- lavaan::lavInspect(lav_fit)
+  is_cfa <- is.null(param_structure$beta)
+  if (is_cfa) {
+    data_list <- .create_data_list_pooled(
+      lavaan_object = lav_fit,
+      method = method,
+      simple_struc = simple_struc,
+      priors = priors,
+      partab = par_table,
+      acov_mat = pool_fit$r_mat_cov,
+      old_names = rownames(pool_fit$r_mat)
+    )
+    sem_model <- instantiate::stan_package_model(
+      name = "cfa_cor", package = "bayesianmasem"
+    )
+  } else {
+    lav_fit <- lavaan::cfa(
+      model,
+      sample.cov = pool_fit$r_mat,
+      sample.nobs = sum(pool_fit$data_list$Np),
+      std.lv = TRUE,
+      likelihood = "wishart", ceq.simple = TRUE,
+      do.fit = FALSE, orthogonal = orthogonal, fixed.x = FALSE
+    )
+    par_table <- lavaan::lavaanify(
+      model,
+      ceq.simple = TRUE, std.lv = TRUE
+    )
+    data_list <- .create_data_list_pa_pooled(
+      lavaan_object = lav_fit,
+      method = method,
+      priors = priors,
+      partab = par_table,
+      acov_mat = pool_fit$r_mat_cov,
+      old_names = rownames(pool_fit$r_mat)
+    )
+    sem_model <- instantiate::stan_package_model(
+      name = "pa_cor", package = "bayesianmasem"
+    )
+  }
 
   message("User input fully processed :)\n Now to modeling.")
 
-  cfa_model <- instantiate::stan_package_model(
-    name = "cfa_cor", package = "bayesianmasem"
-  )
-
   message("Fitting Stan model ...")
 
-  stan_fit <- cfa_model$sample(
+  stan_fit <- sem_model$sample(
     data = data_list,
     seed = seed,
     iter_warmup = warmup,

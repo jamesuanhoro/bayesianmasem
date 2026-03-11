@@ -24,6 +24,9 @@ of the Student-t(3,0,) prior on residual standard deviations.}
 \item{\code{rc_par}}{(positive real) The shape parameter of the Beta(rc_par, rc_par)
 prior on the residual error correlations.}
 
+\item{\code{sc_par}}{(positive real)
+The scale parameter of the normal prior on coefficients.}
+
 \item{\code{mr_par}}{(real) The location parameter of the normal prior
 on the log-RMSEA.}
 

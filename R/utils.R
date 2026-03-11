@@ -324,21 +324,27 @@ get_asy_cov <- function(r_mat) {
 #' @returns A function with initial values
 #' @keywords internal
 .init_fx <- function(data_list) {
+  if (data_list$pa_indicator != 1) {
+    len_lc <- data_list$complex_struc * sum(
+      data_list$loading_pattern == 0 & data_list$loading_fixed == -999
+    )
+    resids <- array(
+      0, (data_list$method < 90) * (data_list$Ni^2 - data_list$Ni) %/% 2
+    )
+  } else {
+    len_lc <- 0
+    resids <- array(
+      0, (data_list$method < 90) * sum(data_list$cond_ind_mat) %/% 2
+    )
+  }
   function() {
     list(
       rms_src_p = array(.025, (data_list$method != 100) * 1),
       ln_v_int_wi = array(data_list$rm_i_l_par, (data_list$type >= 2) * 1),
       ln_v_beta_wi = array(0, data_list$p),
       ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1),
-      resids = array(
-        0, (data_list$method < 90) * (data_list$Ni^2 - data_list$Ni) %/% 2
-      ),
-      loadings_complex = array(
-        0,
-        data_list$complex_struc * sum(
-          data_list$loading_pattern == 0 & data_list$loading_fixed == -999
-        )
-      )
+      resids = resids,
+      loadings_complex = array(0, len_lc)
     )
   }
 }
@@ -368,9 +374,8 @@ get_asy_cov <- function(r_mat) {
       (is.null(sample_cov) || is.null(sample_nobs))
   ) {
     stop(paste0(
-      "User must provide either:\n\t",
-      "(i) a dataset and group variable or\n\t",
-      "(ii) sample covariance matrices and sample sizes"
+      "User must provide sample covariance or ",
+      "correlation matrices and sample sizes"
     ))
   }
 }
@@ -517,34 +522,64 @@ get_asy_cov <- function(r_mat) {
 
   params <- c(rms_params, rmsea_params)
 
-  phi_idxs <- which(
-    lower.tri(data_list$corr_mask) & data_list$corr_mask == 1,
-    arr.ind = TRUE
-  )
-  if (nrow(phi_idxs) > 0) {
-    phi_params <- paste0("phi_mat[", apply(
-      phi_idxs, 1, paste0,
-      collapse = ","
-    ), "]")
-    names(phi_params) <- apply(phi_idxs, 1, function(x) {
-      paste0(fac_names[x[1]], "~~", fac_names[x[2]])
+  if (data_list$sem_indicator == 1) {
+    # Get R-square
+    rsquare_params <- paste0("r_square[", seq_along(fac_names), "]")
+    names(rsquare_params) <- paste0("r_square(", fac_names, ")")
+    params <- c(params, rsquare_params)
+
+    # Get factor coefficients
+    coef_order <- which(
+      data_list$coef_pattern >= 1 | data_list$coef_fixed != -999,
+      arr.ind = TRUE
+    )
+    coef_order <- coef_order[
+      order(coef_order[, "row"], coef_order[, "col"]), ,
+      drop = FALSE
+    ]
+    coef_params <- paste0(
+      "Coef_mat[", apply(coef_order, 1, paste0, collapse = ","), "]"
+    )
+    names(coef_params) <- apply(coef_order, 1, function(x) {
+      paste0(fac_names[x[1]], "~", ind_names[x[2]])
     })
-    params <- c(params, phi_params)
+
+    params <- c(params, coef_params)
   }
 
-  load_idxs <- which(
-    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) &
-      data_list$loading_fixed == -999,
-    arr.ind = TRUE
-  )
-  if (nrow(load_idxs) > 0) {
-    load_params <- paste0(
-      "Load_mat[", apply(load_idxs, 1, paste0, collapse = ","), "]"
+  if (data_list$pa_indicator != 1) {
+    phi_idxs <- which(
+      lower.tri(data_list$corr_mask) & data_list$corr_mask == 1,
+      arr.ind = TRUE
     )
-    names(load_params) <- apply(load_idxs, 1, function(x) {
-      paste0(fac_names[x[2]], "=~", ind_names[x[1]])
-    })
-    params <- c(params, load_params)
+    if (nrow(phi_idxs) > 0) {
+      phi_params <- paste0("phi_mat[", apply(
+        phi_idxs, 1, paste0,
+        collapse = ","
+      ), "]")
+      names(phi_params) <- apply(phi_idxs, 1, function(x) {
+        paste0(fac_names[x[1]], "~~", fac_names[x[2]])
+      })
+      params <- c(params, phi_params)
+    }
+  }
+
+  if (data_list$pa_indicator != 1) {
+    load_idxs <- which(
+      data_list$loading_pattern >=
+        ifelse(data_list$complex_struc == 1, -999, 1) &
+        data_list$loading_fixed == -999,
+      arr.ind = TRUE
+    )
+    if (nrow(load_idxs) > 0) {
+      load_params <- paste0(
+        "Load_mat[", apply(load_idxs, 1, paste0, collapse = ","), "]"
+      )
+      names(load_params) <- apply(load_idxs, 1, function(x) {
+        paste0(fac_names[x[2]], "=~", ind_names[x[1]])
+      })
+      params <- c(params, load_params)
+    }
   }
 
   if (data_list$Nce > 0) {
@@ -556,7 +591,7 @@ get_asy_cov <- function(r_mat) {
     params <- c(params, rc_params)
   }
 
-  if (sum(data_list$res_var_pattern) > 0) {
+  if (data_list$correlation == 0 && sum(data_list$res_var_pattern) > 0) {
     rv_idxs <- which(data_list$res_var_pattern != 0)
     rv_params <- paste0("res_var[", rv_idxs, "]")
     names(rv_params) <- paste0(ind_names[rv_idxs], "~~", ind_names[rv_idxs])
@@ -592,21 +627,45 @@ get_asy_cov <- function(r_mat) {
   params <- c("ppp", "rms_src", rmsea_params)
   from_list <- c("PPP", "RMSE", rmsea_names)
 
-  phi_idxs <- which(lower.tri(data_list$corr_mask), arr.ind = TRUE)
-  if (nrow(phi_idxs) > 0) {
-    phi_idxs <- paste0("phi_mat[", apply(
-      phi_idxs, 1, paste0,
-      collapse = ","
-    ), "]")
-    params <- c(params, phi_idxs)
+  if (data_list$sem_indicator == 1) {
+    # Get R-square
+    params <- c(params, "r_square")
+
+    # Get factor coefficients
+    coef_order <- which(
+      data_list$coef_pattern >= 1 | data_list$coef_fixed != -999,
+      arr.ind = TRUE
+    )
+    coef_order <- coef_order[
+      order(coef_order[, "row"], coef_order[, "col"]), ,
+      drop = FALSE
+    ]
+    coef_idxs <- paste0(
+      "Coef_mat[", apply(coef_order, 1, paste0, collapse = ","), "]"
+    )
+    params <- c(params, coef_idxs)
   }
 
-  load_idxs <- paste0("Load_mat[", apply(which(
-    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) |
-      data_list$loading_fixed != -999,
-    arr.ind = TRUE
-  ), 1, paste0, collapse = ","), "]")
-  params <- c(params, load_idxs)
+  if (data_list$pa_indicator != 1) {
+    phi_idxs <- which(lower.tri(data_list$corr_mask), arr.ind = TRUE)
+    if (nrow(phi_idxs) > 0) {
+      phi_idxs <- paste0("phi_mat[", apply(
+        phi_idxs, 1, paste0,
+        collapse = ","
+      ), "]")
+      params <- c(params, phi_idxs)
+    }
+  }
+
+  if (data_list$pa_indicator != 1) {
+    load_idxs <- paste0("Load_mat[", apply(which(
+      data_list$loading_pattern >=
+        ifelse(data_list$complex_struc == 1, -999, 1) |
+        data_list$loading_fixed != -999,
+      arr.ind = TRUE
+    ), 1, paste0, collapse = ","), "]")
+    params <- c(params, load_idxs)
+  }
 
   if (data_list$Nce > 0) {
     params <- c(params, "res_cor")
@@ -675,6 +734,30 @@ get_asy_cov <- function(r_mat) {
     )],
     to = indicator_labels[as.integer(
       gsub("res_var\\[|\\]", "", major_parameters[idxs, ]$variable)
+    )]
+  )
+
+  idxs <- which(grepl("r\\_square", major_parameters$variable))
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "R square", op = "~~",
+    from = factor_labels[as.integer(
+      gsub("r_square\\[|\\]", "", major_parameters[idxs, ]$variable)
+    )],
+    to = factor_labels[as.integer(
+      gsub("r_square\\[|\\]", "", major_parameters[idxs, ]$variable)
+    )]
+  )
+
+  idxs <- which(grepl("Coef\\_mat", major_parameters$variable))
+  major_parameters <- .modify_major_params(
+    major_parameters, idxs,
+    group = "Regression coefficients", op = "~",
+    from = factor_labels[as.integer(
+      gsub("Coef_mat\\[|,\\d+\\]", "", major_parameters[idxs, ]$variable)
+    )],
+    to = factor_labels[as.integer(
+      gsub("Coef_mat\\[\\d+,|\\]", "", major_parameters[idxs, ]$variable)
     )]
   )
 
