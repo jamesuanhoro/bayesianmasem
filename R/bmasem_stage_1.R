@@ -72,6 +72,8 @@ bmasem_stage_1 <- function(
   )
 
   # Ensure diagonals are 1
+  avg_mat <- diag(nrow(sample_cov[[1]]))
+  dimnames(avg_mat) <- dimnames(sample_cov[[1]])
   sample_cov <- lapply(sample_cov, \(x) {
     suppressWarnings(x <- stats::cov2cor(x))
     x
@@ -79,7 +81,8 @@ bmasem_stage_1 <- function(
   # Run lavaan fit
   lav_fit <- lavaan::cfa(
     model,
-    sample.cov = sample_cov, sample.nobs = sample_nobs, std.lv = TRUE,
+    sample.cov = rep(list(avg_mat), length(sample_nobs)),
+    sample.nobs = sample_nobs, std.lv = TRUE,
     likelihood = "wishart", ceq.simple = TRUE,
     do.fit = FALSE
   )
@@ -100,7 +103,8 @@ bmasem_stage_1 <- function(
     correlation = TRUE,
     partab = par_table,
     conditional_re = conditional_re,
-    pooling = TRUE
+    pooling = TRUE,
+    old_data = sample_cov
   )
   var_names <- rownames(data_list$loading_pattern)
   data_list <- data_list[c(

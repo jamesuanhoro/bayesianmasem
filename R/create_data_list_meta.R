@@ -5,6 +5,7 @@
 #' @param pooling (LOGICAL)
 #' If TRUE: Sender is a pooling model
 #' If FALSE: Sender is a full model.
+#' @param old_data original list of matrices, needed for PA
 #' @inheritParams bmasem
 #' @returns Data list object used in fitting Stan model
 #' @keywords internal
@@ -19,7 +20,8 @@
     partab = NULL,
     x_mat = NULL,
     conditional_re = TRUE,
-    pooling = FALSE) {
+    pooling = FALSE,
+    old_data = NULL) {
   data_list <- list()
 
   # Get number of groups
@@ -68,9 +70,19 @@
   # Sample size
   data_list$Np <- lavaan::lavInspect(lavaan_object, "nobs")
   # Sample cov
-  data_list$S <- lapply(lavaan::lavInspect(
-    lavaan_object, "SampStat"
-  ), "[[", "cov")
+  if (is.null(old_data)) {
+    data_list$S <- lapply(lavaan::lavInspect(
+      lavaan_object, "SampStat"
+    ), "[[", "cov")
+  } else {
+    data_list$S_new <- lapply(lavaan::lavInspect(
+      lavaan_object, "SampStat"
+    ), "[[", "cov")
+    new_var_names <- rownames(data_list$S_new[[1]])
+    data_list$S <- lapply(old_data, \(x) {
+      x[new_var_names, new_var_names]
+    })
+  }
   # Number of items
   data_list$Ni <- nrow(data_list$S[[1]])
   if (isTRUE(pooling)) {

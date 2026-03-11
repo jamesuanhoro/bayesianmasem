@@ -103,6 +103,18 @@ bmasem_stage_2 <- function(
       name = "cfa_cor", package = "bayesianmasem"
     )
   } else {
+    lav_fit <- lavaan::cfa(
+      model,
+      sample.cov = pool_fit$r_mat,
+      sample.nobs = sum(pool_fit$data_list$Np),
+      std.lv = TRUE,
+      likelihood = "wishart", ceq.simple = TRUE,
+      do.fit = FALSE, orthogonal = orthogonal, fixed.x = FALSE
+    )
+    par_table <- lavaan::lavaanify(
+      model,
+      ceq.simple = TRUE, std.lv = TRUE
+    )
     data_list <- .create_data_list_pa_pooled(
       lavaan_object = lav_fit,
       method = method,

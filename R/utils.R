@@ -324,21 +324,27 @@ get_asy_cov <- function(r_mat) {
 #' @returns A function with initial values
 #' @keywords internal
 .init_fx <- function(data_list) {
+  if (data_list$pa_indicator != 1) {
+    len_lc <- data_list$complex_struc * sum(
+      data_list$loading_pattern == 0 & data_list$loading_fixed == -999
+    )
+    resids <- array(
+      0, (data_list$method < 90) * (data_list$Ni^2 - data_list$Ni) %/% 2
+    )
+  } else {
+    len_lc <- 0
+    resids <- array(
+      0, (data_list$method < 90) * sum(data_list$cond_ind_mat) %/% 2
+    )
+  }
   function() {
     list(
       rms_src_p = array(.025, (data_list$method != 100) * 1),
       ln_v_int_wi = array(data_list$rm_i_l_par, (data_list$type >= 2) * 1),
       ln_v_beta_wi = array(0, data_list$p),
       ln_v_int_be = array(data_list$rm_i_l_par, (data_list$type == 3) * 1),
-      resids = array(
-        0, (data_list$method < 90) * (data_list$Ni^2 - data_list$Ni) %/% 2
-      ),
-      loadings_complex = array(
-        0,
-        data_list$complex_struc * sum(
-          data_list$loading_pattern == 0 & data_list$loading_fixed == -999
-        )
-      )
+      resids = resids,
+      loadings_complex = array(0, len_lc)
     )
   }
 }
@@ -516,34 +522,58 @@ get_asy_cov <- function(r_mat) {
 
   params <- c(rms_params, rmsea_params)
 
-  phi_idxs <- which(
-    lower.tri(data_list$corr_mask) & data_list$corr_mask == 1,
-    arr.ind = TRUE
-  )
-  if (nrow(phi_idxs) > 0) {
-    phi_params <- paste0("phi_mat[", apply(
-      phi_idxs, 1, paste0,
-      collapse = ","
-    ), "]")
-    names(phi_params) <- apply(phi_idxs, 1, function(x) {
-      paste0(fac_names[x[1]], "~~", fac_names[x[2]])
-    })
-    params <- c(params, phi_params)
+  if (data_list$sem_indicator == 1) {
+    # Get R-square
+    params <- c(params, paste0("r_square[", seq_along(fac_names), "]"))
+
+    # Get factor coefficients
+    coef_order <- which(
+      data_list$coef_pattern >= 1 | data_list$coef_fixed != -999,
+      arr.ind = TRUE
+    )
+    coef_order <- coef_order[
+      order(coef_order[, "row"], coef_order[, "col"]), ,
+      drop = FALSE
+    ]
+    coef_idxs <- paste0(
+      "Coef_mat[", apply(coef_order, 1, paste0, collapse = ","), "]"
+    )
+    params <- c(params, coef_idxs)
   }
 
-  load_idxs <- which(
-    data_list$loading_pattern >= ifelse(data_list$complex_struc == 1, -999, 1) &
-      data_list$loading_fixed == -999,
-    arr.ind = TRUE
-  )
-  if (nrow(load_idxs) > 0) {
-    load_params <- paste0(
-      "Load_mat[", apply(load_idxs, 1, paste0, collapse = ","), "]"
+  if (data_list$pa_indicator != 1) {
+    phi_idxs <- which(
+      lower.tri(data_list$corr_mask) & data_list$corr_mask == 1,
+      arr.ind = TRUE
     )
-    names(load_params) <- apply(load_idxs, 1, function(x) {
-      paste0(fac_names[x[2]], "=~", ind_names[x[1]])
-    })
-    params <- c(params, load_params)
+    if (nrow(phi_idxs) > 0) {
+      phi_params <- paste0("phi_mat[", apply(
+        phi_idxs, 1, paste0,
+        collapse = ","
+      ), "]")
+      names(phi_params) <- apply(phi_idxs, 1, function(x) {
+        paste0(fac_names[x[1]], "~~", fac_names[x[2]])
+      })
+      params <- c(params, phi_params)
+    }
+  }
+
+  if (data_list$pa_indicator != 1) {
+    load_idxs <- which(
+      data_list$loading_pattern >=
+        ifelse(data_list$complex_struc == 1, -999, 1) &
+        data_list$loading_fixed == -999,
+      arr.ind = TRUE
+    )
+    if (nrow(load_idxs) > 0) {
+      load_params <- paste0(
+        "Load_mat[", apply(load_idxs, 1, paste0, collapse = ","), "]"
+      )
+      names(load_params) <- apply(load_idxs, 1, function(x) {
+        paste0(fac_names[x[2]], "=~", ind_names[x[1]])
+      })
+      params <- c(params, load_params)
+    }
   }
 
   if (data_list$Nce > 0) {
@@ -555,7 +585,7 @@ get_asy_cov <- function(r_mat) {
     params <- c(params, rc_params)
   }
 
-  if (sum(data_list$res_var_pattern) > 0) {
+  if (data_list$correlation == 0 && sum(data_list$res_var_pattern) > 0) {
     rv_idxs <- which(data_list$res_var_pattern != 0)
     rv_params <- paste0("res_var[", rv_idxs, "]")
     names(rv_params) <- paste0(ind_names[rv_idxs], "~~", ind_names[rv_idxs])

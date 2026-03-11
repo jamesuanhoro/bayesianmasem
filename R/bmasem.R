@@ -151,7 +151,8 @@ bmasem <- function(
   .user_input_check("cluster", type, cluster)
 
   # Run lavaan fit
-  avg_mat <- apply(simplify2array(sample_cov), 1:2, mean, na.rm = TRUE)
+  avg_mat <- diag(nrow(sample_cov[[1]]))
+  dimnames(avg_mat) <- dimnames(sample_cov[[1]])
   lav_fit_init <- lavaan::cfa(
     model,
     sample.cov = avg_mat, sample.nobs = sum(sample_nobs), std.lv = TRUE,
@@ -173,7 +174,7 @@ bmasem <- function(
       sample.cov = rep(list(avg_mat), length(sample_nobs)),
       sample.nobs = sample_nobs, std.lv = TRUE,
       likelihood = "wishart", ceq.simple = TRUE,
-      do.fit = FALSE
+      do.fit = FALSE, orthogonal = orthogonal, fixed.x = FALSE
     )
   }
 

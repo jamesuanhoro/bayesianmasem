@@ -71,6 +71,31 @@ bmasem_test_pp_shared <- function(
   }
 }
 
+bmasem_test_pp_pa_shared <- function(
+    print_out, method, simple = TRUE) {
+  testthat::expect_true(grepl(method, print_out, ignore.case = TRUE))
+  testthat::expect_true(grepl("Goodness of fit", print_out, ignore.case = TRUE))
+  testthat::expect_true(grepl("PPP", print_out, ignore.case = TRUE))
+  testthat::expect_true(grepl("RMSE", print_out, ignore.case = TRUE))
+  testthat::expect_true(grepl("RMSEA", print_out, ignore.case = TRUE))
+  testthat::expect_true(
+    grepl("R square", print_out, ignore.case = TRUE)
+  )
+  testthat::expect_true(
+    grepl("Regression coefficients", print_out, ignore.case = TRUE)
+  )
+  if (isFALSE(simple)) {
+    testthat::expect_true(grepl("Location", print_out, ignore.case = TRUE))
+    testthat::expect_true(grepl("Dispersion", print_out, ignore.case = TRUE))
+    testthat::expect_true(grepl("convergence", print_out, ignore.case = TRUE))
+    testthat::expect_true(grepl("median", print_out, ignore.case = TRUE))
+    testthat::expect_true(grepl("mad", print_out, ignore.case = TRUE))
+  }
+  testthat::expect_true(
+    grepl("Error correlations", print_out, ignore.case = TRUE)
+  )
+}
+
 test_warm <- 300
 test_samp <- 300
 test_chns <- 1

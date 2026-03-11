@@ -227,7 +227,11 @@
   }
 
   data_list$correlation <- 1
-  data_list$S <- lapply(data_list$S, stats::cov2cor)
+
+  data_list$S <- lapply(data_list$S, \(x) {
+    suppressWarnings(x <- stats::cov2cor(x))
+    x
+  })
   data_list$r_mat_s <- lapply(data_list$S, \(x) {
     x[is.na(x)] <- 999
     x
