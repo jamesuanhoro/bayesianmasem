@@ -108,7 +108,7 @@ bmasem_stage_1(
 
   (LOGICAL) Only relevant for analysis of correlation structures. If
   TRUE, sample levels of the study-level random effect (usually faster);
-  If FALSE, don't.
+  If FALSE, don't (usually more efficient).
 
 ## Value
 

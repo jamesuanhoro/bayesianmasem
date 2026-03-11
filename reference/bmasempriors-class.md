@@ -27,6 +27,11 @@ A class for setting up priors.
   (positive real) The shape parameter of the Beta(rc_par, rc_par) prior
   on the residual error correlations.
 
+- `sc_par`:
+
+  (positive real) The scale parameter of the normal prior on
+  coefficients.
+
 - `mr_par`:
 
   (real) The location parameter of the normal prior on the log-RMSEA.

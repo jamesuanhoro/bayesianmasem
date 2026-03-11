@@ -10,21 +10,10 @@ mini-check for data inputs
 
 ## Arguments
 
-- data:
-
-  An optional data frame containing the observed variables used in the
-  model.
-
-- group:
-
-  An optional string identifying the grouping variable in the data
-  object.
-
 - sample_cov:
 
   (list of matrices) sample covariance or correlation matrices. The
-  rownames and/or colnames must contain the observed variable names. For
-  now, assumes there are no missing elements in these matrices.
+  rownames and/or colnames must contain the observed variable names.
 
 - sample_nobs:
 

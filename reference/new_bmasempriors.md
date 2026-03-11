@@ -11,6 +11,7 @@ new_bmasempriors(
   sl_par = 0.5,
   rs_par = 1,
   rc_par = 2,
+  sc_par = 0.5,
   mr_par = log(0.08),
   sr_par = 0.7,
   br_par = 0.5,
@@ -42,6 +43,11 @@ new_bmasempriors(
 
   (positive real) The shape parameter of the Beta(rc_par, rc_par) prior
   on the residual error correlations.
+
+- sc_par:
+
+  (positive real) The scale parameter of the normal prior on
+  coefficients.
 
 - mr_par:
 

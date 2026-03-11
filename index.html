@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bayesianmasem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 <div class="section level2">
 <h2 id="package-overview">Package overview<a class="anchor" aria-label="anchor" href="#package-overview"></a>
 </h2>
-<p>This is a package for Bayesian meta-analytic structural equation models (MASEM, Cheung and Chan 2009), specifically meta-analysis of confirmatory factor models. The package fits fixed-, random- and dependent-samples MASEMs.</p>
+<p>This is a package for Bayesian meta-analytic structural equation models (MASEM, Cheung and Chan 2009), specifically meta-analysis of confirmatory factor and path models. The package fits fixed-, random- and dependent-samples MASEMs.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -77,6 +77,8 @@
 <li>Estimates minor factor influences (Uanhoro 2023), i.e. full residual correlation matrix reflecting misspecification in the true shared correlation matrix</li>
 <li>Ability to relax simple-structure, i.e. allow for estimation of all cross-loadings using shrinkage-to-zero priors leading to more accurate estimates of interfactor correlations.</li>
 <li>Built atop <a href="https://mc-stan.org/" class="external-link">Stan</a> (an efficient Bayesian sampler).</li>
+<li>Allows both one (<code><a href="reference/bmasem.html">bmasem()</a></code>) and two-stage (<code><a href="reference/bmasem_stage_1.html">bmasem_stage_1()</a></code> and <code><a href="reference/bmasem_stage_2.html">bmasem_stage_2()</a></code> estimation</li>
+<li>Handles missing correlations and variables in path analysis models of correlation matrices.</li>
 </ul>
 </div>
 <div class="section level2">

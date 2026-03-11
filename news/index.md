@@ -1,5 +1,12 @@
 # Changelog
 
+## bayesianmasem 0.3.0
+
+- Added path analysis (PA) that permits missing elements in correlation
+  matrix!
+- Updated documentation
+- Added tests for PA
+
 ## bayesianmasem 0.2.5
 
 - Added composite reliability calculation for each factor in

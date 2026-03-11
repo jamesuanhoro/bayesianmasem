@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bayesianmasem</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
 <span>  sl_par <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  rs_par <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  rc_par <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  sc_par <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  mr_par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">0.08</span><span class="op">)</span>,</span>
 <span>  sr_par <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  br_par <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -78,6 +79,11 @@ of the Student-t(3,0,) prior on residual standard deviations.</p></dd>
 <dt id="arg-rc-par">rc_par<a class="anchor" aria-label="anchor" href="#arg-rc-par"></a></dt>
 <dd><p>(positive real) The shape parameter of the Beta(rc_par, rc_par)
 prior on the residual error correlations.</p></dd>
+
+
+<dt id="arg-sc-par">sc_par<a class="anchor" aria-label="anchor" href="#arg-sc-par"></a></dt>
+<dd><p>(positive real)
+The scale parameter of the normal prior on coefficients.</p></dd>
 
 
 <dt id="arg-mr-par">mr_par<a class="anchor" aria-label="anchor" href="#arg-mr-par"></a></dt>

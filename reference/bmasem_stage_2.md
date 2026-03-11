@@ -1,7 +1,7 @@
-# Fit random-effects Bayesian meta-analytic CFAs with minor factors assumed.
+# Fit Bayesian meta-analytic CFAs and path models with minor factors assumed.
 
 A function that takes a pooled correlation matrix object and returns a
-fitted SEM.
+fitted CFA or path model.
 
 ## Usage
 

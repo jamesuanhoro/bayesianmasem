@@ -5,18 +5,15 @@ A function that creates data list object passed to Stan
 ## Usage
 
 ``` r
-.create_data_list_meta(
+.create_data_list_pa_meta(
   lavaan_object = NULL,
   method = "normal",
   type = "re",
-  simple_struc = TRUE,
   priors = NULL,
   cluster = NULL,
-  correlation = TRUE,
   partab = NULL,
   x_mat = NULL,
   conditional_re = TRUE,
-  pooling = FALSE,
   old_data = NULL
 )
 ```
@@ -38,11 +35,6 @@ A function that creates data list object passed to Stan
   random-effects, and dependent-samples MASEM respectively. The "dep"
   argument is experimental, see details below.
 
-- simple_struc:
-
-  (LOGICAL) Only relevant for CFAs. If TRUE (default): assume simple
-  structure; If FALSE: estimate all cross-loadings using generalized
-
 - priors:
 
   An object of
@@ -59,12 +51,6 @@ A function that creates data list object passed to Stan
   `cluster = c(1, 1, 1, 2, 2)`. This feature is experimental, see
   details below.
 
-- correlation:
-
-  (LOGICAL) If TRUE (default): analyze correlation matrices based on
-  logarithm of a matrix transformation (Archakov and Hansen 2021) ; If
-  FALSE: analyze covariance matrices methods in (Uanhoro 2023) .
-
 - partab:
 
   lavaan parameter table output with ceq.simple & std.lv = TRUE
@@ -80,11 +66,6 @@ A function that creates data list object passed to Stan
   (LOGICAL) Only relevant for analysis of correlation structures. If
   TRUE, sample levels of the study-level random effect (usually faster);
   If FALSE, don't (usually more efficient).
-
-- pooling:
-
-  (LOGICAL) If TRUE: Sender is a pooling model If FALSE: Sender is a
-  full model.
 
 - old_data:
 

@@ -10,8 +10,10 @@
 - [`bmasem-class`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem-class.md)
   : A class for models fitted with the package.
 - [`bmasem()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem.md)
-  : Fit random-effects Bayesian meta-analytic CFAs with minor factors
+  : Fit Bayesian meta-analytic CFAs and path models with minor factors
   assumed.
+- [`bmasem_ci_results()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_ci_results.md)
+  : Conditional indepepence estimates for path analysis
 - [`bmasem_composite_reliability()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_composite_reliability.md)
   : Obtain composite reliability from a fitted model
 - [`bmasem_plot()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_plot.md)
@@ -21,10 +23,14 @@
 - [`bmasem_stage_1()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.md)
   : Pool multiple correlation matrices.
 - [`bmasem_stage_2()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.md)
-  : Fit random-effects Bayesian meta-analytic CFAs with minor factors
+  : Fit Bayesian meta-analytic CFAs and path models with minor factors
   assumed.
 - [`bmasempriors-class`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasempriors-class.md)
   : A class for setting up priors.
+- [`boer16`](https://jamesuanhoro.github.io/bayesianmasem/reference/boer16.md)
+  : Another dataset from the metaSEM package.
+- [`cooke16`](https://jamesuanhoro.github.io/bayesianmasem/reference/cooke16.md)
+  : Another dataset from the metaSEM package.
 - [`g_inv_map()`](https://jamesuanhoro.github.io/bayesianmasem/reference/g_inv_map.md)
   : Transform unbounded vector to correlation matrix
 - [`g_map()`](https://jamesuanhoro.github.io/bayesianmasem/reference/g_map.md)
