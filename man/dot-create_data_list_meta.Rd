@@ -15,7 +15,8 @@
   partab = NULL,
   x_mat = NULL,
   conditional_re = TRUE,
-  pooling = FALSE
+  pooling = FALSE,
+  old_data = NULL
 )
 }
 \arguments{
@@ -63,6 +64,8 @@ If FALSE, don't (usually more efficient).}
 \item{pooling}{(LOGICAL)
 If TRUE: Sender is a pooling model
 If FALSE: Sender is a full model.}
+
+\item{old_data}{original list of matrices, needed for PA}
 }
 \value{
 Data list object used in fitting Stan model

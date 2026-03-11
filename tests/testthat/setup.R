@@ -96,6 +96,35 @@ bmasem_test_pp_pa_shared <- function(
   )
 }
 
+bmasem_test_pa_ci <- function(fit, summarize) {
+  if (fit@data_list$method < 90 && sum(fit@data_list$cond_ind_mat) > 0) {
+    if (isFALSE(summarize)) {
+      testthat::expect_true(
+        "draws_df" %in% class(bmasem_ci_results(fit, summarize = FALSE))
+      )
+    } else {
+      testthat::expect_true(
+        class(bmasem_ci_results(fit, summarize = TRUE)) == "data.frame"
+      )
+    }
+  } else {
+    if (fit@data_list$method >= 90) {
+      err_msg <- paste0(
+        "There are no residuals to plot when ",
+        "method == \"none\", \"WB\", \"WB-cond\", \"WW\"."
+      )
+      testthat::expect_error(bmasem_ci_results(fit), err_msg)
+    } else {
+      if (sum(fit@data_list$cond_ind_mat) == 0) {
+        msg <- paste0(
+          "All possible associations are modelled."
+        )
+        testthat::expect_message(bmasem_ci_results(fit), msg)
+      }
+    }
+  }
+}
+
 test_warm <- 300
 test_samp <- 300
 test_chns <- 1

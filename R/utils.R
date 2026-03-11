@@ -524,7 +524,9 @@ get_asy_cov <- function(r_mat) {
 
   if (data_list$sem_indicator == 1) {
     # Get R-square
-    params <- c(params, paste0("r_square[", seq_along(fac_names), "]"))
+    rsquare_params <- paste0("r_square[", seq_along(fac_names), "]")
+    names(rsquare_params) <- paste0("r_square(", fac_names, ")")
+    params <- c(params, rsquare_params)
 
     # Get factor coefficients
     coef_order <- which(
@@ -535,10 +537,14 @@ get_asy_cov <- function(r_mat) {
       order(coef_order[, "row"], coef_order[, "col"]), ,
       drop = FALSE
     ]
-    coef_idxs <- paste0(
+    coef_params <- paste0(
       "Coef_mat[", apply(coef_order, 1, paste0, collapse = ","), "]"
     )
-    params <- c(params, coef_idxs)
+    names(coef_params) <- apply(coef_order, 1, function(x) {
+      paste0(fac_names[x[1]], "~", ind_names[x[2]])
+    })
+
+    params <- c(params, coef_params)
   }
 
   if (data_list$pa_indicator != 1) {

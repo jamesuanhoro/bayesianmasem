@@ -5,14 +5,10 @@ bibliography: inst/REFERENCES.bib
 
 # bayesianmasem
 
-```{r include=FALSE}
-devtools::load_all()
-```
-
 [![Project Status: Active  The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub](https://img.shields.io/github/license/jamesuanhoro/bayesianmasem)
 [![Codecov test coverage](https://codecov.io/gh/jamesuanhoro/bayesianmasem/branch/main/graph/badge.svg)](https://app.codecov.io/gh/jamesuanhoro/bayesianmasem?branch=main)
-[![minimal R version](https://img.shields.io/badge/R%3E%3D-`r .minimum_r_version()`-6666ff.svg)](https://cran.r-project.org/)
+[![minimal R version](https://img.shields.io/badge/R%3E%3D-`r bayesianmasem:::.minimum_r_version()`-6666ff.svg)](https://cran.r-project.org/)
 ![GitHub R package version](https://img.shields.io/github/r-package/v/jamesuanhoro/bayesianmasem)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/bayesianmasem)](https://cran.r-project.org/package=bayesianmasem)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem)
@@ -30,7 +26,7 @@ devtools::load_all()
 
 This is a package for Bayesian meta-analytic structural equation models
 [MASEM, @cheung_two-stage_2009],
-specifically meta-analysis of confirmatory factor models.
+specifically meta-analysis of confirmatory factor and path models.
 The package fits fixed-, random- and dependent-samples MASEMs.
 
 ## Features
@@ -47,6 +43,10 @@ matrix reflecting misspecification in the true shared correlation matrix
 cross-loadings using shrinkage-to-zero priors leading to more accurate
 estimates of interfactor correlations.
 - Built atop [Stan](https://mc-stan.org/) (an efficient Bayesian sampler).
+- Allows both one (`bmasem()`) and two-stage (`bmasem_stage_1()` and
+`bmasem_stage_2()` estimation
+- Handles missing correlations and variables in path analysis
+models of correlation matrices.
 
 ## Installation
 

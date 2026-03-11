@@ -24,6 +24,8 @@ test_that("Corr: Dependent samples works for PA on Cooke16", {
   )))
   bmasem_test_hist(fit)
   bmasem_test_trace(fit)
+  bmasem_test_pa_ci(fit, TRUE)
+  bmasem_test_pa_ci(fit, FALSE)
   expect_error(
     print_out <- capture_output(pp_summary(fit), width = 300),
     NA

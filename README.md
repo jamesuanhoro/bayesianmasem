@@ -28,8 +28,8 @@ commit](https://img.shields.io/github/last-commit/jamesuanhoro/bayesianmasem)
 
 This is a package for Bayesian meta-analytic structural equation models
 (MASEM, Cheung and Chan 2009), specifically meta-analysis of
-confirmatory factor models. The package fits fixed-, random- and
-dependent-samples MASEMs.
+confirmatory factor and path models. The package fits fixed-, random-
+and dependent-samples MASEMs.
 
 ## Features
 
@@ -46,6 +46,10 @@ Features of `bayesianmasem` include:
   estimates of interfactor correlations.
 - Built atop [Stan](https://mc-stan.org/) (an efficient Bayesian
   sampler).
+- Allows both one (`bmasem()`) and two-stage (`bmasem_stage_1()` and
+  `bmasem_stage_2()` estimation
+- Handles missing correlations and variables in path analysis models of
+  correlation matrices.
 
 ## Installation
 

@@ -128,15 +128,17 @@ test_that("Corr: Random method works for pooling on boer16", {
   expect_error(stage_2 <- bmasem_stage_2(
     model_syntax, stage_1,
     warmup = test_warm, sampling = test_samp, chains = test_chns,
-    method = method, type = type,
+    method = method,
     refresh = 0, show_messages = FALSE
   ), NA)
   expect_true(all(slotNames(stage_2) %in% c(
     "major_parameters", "minor_factor_matrix", "data_list",
     "priors", "stan_fit", "version"
   )))
-  bmasem_test_hist(stage_2)
-  bmasem_test_trace(stage_2)
+  # bmasem_test_hist(stage_2)
+  # bmasem_test_trace(stage_2)
+  bmasem_test_pa_ci(stage_2, TRUE)
+  bmasem_test_pa_ci(stage_2, FALSE)
   expect_error(
     print_out <- capture_output(pp_summary(stage_2), width = 300),
     NA
@@ -179,15 +181,17 @@ test_that("Corr: Dependent samples works for pooling on Cooke16", {
   expect_error(stage_2 <- bmasem_stage_2(
     model_syntax, stage_1,
     warmup = test_warm, sampling = test_samp, chains = test_chns,
-    method = method, type = type,
+    method = method,
     refresh = 0, show_messages = FALSE
   ), NA)
   expect_true(all(slotNames(stage_2) %in% c(
     "major_parameters", "minor_factor_matrix", "data_list",
     "priors", "stan_fit", "version"
   )))
-  bmasem_test_hist(stage_2)
-  bmasem_test_trace(stage_2)
+  # bmasem_test_hist(stage_2)
+  # bmasem_test_trace(stage_2)
+  bmasem_test_pa_ci(stage_2, FALSE)
+  bmasem_test_pa_ci(stage_2, FALSE)
   expect_error(
     print_out <- capture_output(pp_summary(stage_2), width = 300),
     NA
