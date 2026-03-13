@@ -316,7 +316,7 @@ model {
     int missing_pos_i = 0;
 
     if (type == 3) {
-      to_vector(g_clus) ~ normal(0, exp(ln_v_int_be[1]));
+      to_vector(g_clus) ~ std_normal();
     }
 
     for (i in 1:Ng) {
@@ -334,7 +334,9 @@ model {
               target += normal_lupdf(r_obs_vec_white[i] | L_vec_cov_inv[i] * c_clus[complete_pos], 1);
             } else if (type == 3) {
               target += normal_lupdf(
-                r_obs_vec_white[i] | L_vec_cov_inv[i] * (c_clus[complete_pos] + g_clus[, C_ID[i]]), 1
+                r_obs_vec_white[i] | L_vec_cov_inv[i] * (
+                  c_clus[complete_pos] + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]]
+                ), 1
               );
             }
           } else if (conditional_re == 0) {
@@ -345,7 +347,7 @@ model {
               );
             } else if (type == 3) {
               target += multi_normal_cholesky_lupdf(
-                r_obs_vec[i] | r_vec + g_clus[, C_ID[i]],
+                r_obs_vec[i] | r_vec + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]],
                 cholesky_decompose(add_diag(r_obs_vec_cov[i], square(m_val)))
               );
             }
@@ -409,7 +411,9 @@ model {
           target += multi_normal_cholesky_lpdf(r_obs_vec_i | r_vec_i, L_vec_cov_i);
         } else if (type == 3) {
           target += multi_normal_cholesky_lpdf(
-            r_obs_vec_i | (r_vec_i + g_clus[1:Nisqd2_i, C_ID[i]]), L_vec_cov_i
+            r_obs_vec_i | (
+              r_vec_i + exp(ln_v_int_be[1]) * g_clus[1:Nisqd2_i, C_ID[i]]
+            ), L_vec_cov_i
           );
         }
       }
@@ -450,7 +454,7 @@ generated quantities {
           m_val = exp(ln_v_int_wi[1]);
           tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
           if (type == 3) {
-            tmp_loc = r_vec + g_clus[, C_ID[i]];
+            tmp_loc = r_vec + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]];
           }
         }
         log_lik[i] = multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
@@ -516,7 +520,7 @@ generated quantities {
         if (type <= 2) {
           tmp_loc = r_vec_i;
         } else if (type == 3) {
-          tmp_loc = r_vec_i + g_clus[1:Nisqd2_i, C_ID[i]];
+          tmp_loc = r_vec_i + exp(ln_v_int_be[1]) * g_clus[1:Nisqd2_i, C_ID[i]];
         }
         log_lik[i] = multi_normal_lpdf(r_obs_vec_i | tmp_loc, r_obs_vec_cov_i);
         r_vec_sim_i = multi_normal_rng(tmp_loc, r_obs_vec_cov_i);

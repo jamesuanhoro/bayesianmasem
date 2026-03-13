@@ -47,7 +47,7 @@ Features of `bayesianmasem` include:
 - Built atop [Stan](https://mc-stan.org/) (an efficient Bayesian
   sampler).
 - Allows both one (`bmasem()`) and two-stage (`bmasem_stage_1()` and
-  `bmasem_stage_2()` estimation
+  `bmasem_stage_2()`) estimation
 - Handles missing correlations and variables in path analysis models of
   correlation matrices.
 
