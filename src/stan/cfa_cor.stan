@@ -277,7 +277,7 @@ model {
     r_vec = matrix_log_vech(Omega);
 
     if (type == 3) {
-      to_vector(g_clus) ~ normal(0, exp(ln_v_int_be[1]));
+      to_vector(g_clus) ~ std_normal();
     }
 
     for (i in 1:Ng) {
@@ -293,7 +293,9 @@ model {
             target += normal_lupdf(r_obs_vec_white[i] | L_vec_cov_inv[i] * c_clus[i], 1);
           } else if (type == 3) {
             target += normal_lupdf(
-              r_obs_vec_white[i] | L_vec_cov_inv[i] * (c_clus[i] + g_clus[, C_ID[i]]), 1
+              r_obs_vec_white[i] | L_vec_cov_inv[i] * (
+                c_clus[i] + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]]
+              ), 1
             );
           }
         } else if (conditional_re == 0) {
@@ -304,7 +306,7 @@ model {
             );
           } else if (type == 3) {
             target += multi_normal_cholesky_lupdf(
-              r_obs_vec[i] | r_vec + g_clus[, C_ID[i]],
+              r_obs_vec[i] | r_vec + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]],
               cholesky_decompose(add_diag(r_obs_vec_cov[i], square(m_val)))
             );
           }
@@ -416,7 +418,7 @@ generated quantities {
         m_val = exp(ln_v_int_wi[1] + X[i, ] * ln_v_beta_wi);
         tmp_cov = add_diag(r_obs_vec_cov[i], square(m_val));
         if (type == 3) {
-          tmp_loc = r_vec + g_clus[, C_ID[i]];
+          tmp_loc = r_vec + exp(ln_v_int_be[1]) * g_clus[, C_ID[i]];
         }
       }
       log_lik[i] = multi_normal_lpdf(r_obs_vec[i] | tmp_loc, tmp_cov);
