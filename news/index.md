@@ -6,6 +6,7 @@
   matrix!
 - Updated documentation
 - Added tests for PA
+- More efficient estimation of correlation dependent-sample models
 
 ## bayesianmasem 0.2.5
 

@@ -48,7 +48,7 @@ Features of `bayesianmasem` include:
   and two-stage
   ([`bmasem_stage_1()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_1.md)
   and
-  [`bmasem_stage_2()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.md)
+  [`bmasem_stage_2()`](https://jamesuanhoro.github.io/bayesianmasem/reference/bmasem_stage_2.md))
   estimation
 - Handles missing correlations and variables in path analysis models of
   correlation matrices.
